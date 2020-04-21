@@ -1,0 +1,70 @@
+NOVA 2020 Invitro
+~~~~~~~~~~~~~~~~~
+
+Something inspired by KAOS or COMA demos, i.e. 90's Amiga acid: N-O-V-A NOVA!
+Rely heavily on awesome music from Rhino and keep tech simple, lots of sync to the beat
+Would have to complete in 4 weeks, so by 16 May to be useful to release
+
+Assuming Rhino is happy to compose a tune then need to decide whether to use software bass or not
+=> this determines how sophisticated the tech could / should be
+
+Then need to decide whether to do any rupture or scanline effects or just keep it simple.
+
+Drive everything from the music player, trigger FX on frames, beats and patterns.
+Run the music player in vsync and always tick the scripting engine for fn calls and/or common settings per frame.
+Could have many of the changes be fairly random as long as it was sync'd to the music.
+
+An acid track needs to be able to switch between simple effects instantly, typically:
+- b&w static
+- monochrome logos / icons / images in garish colours
+- large full screen vu-bars / meters
+- short looping animations timed to the beat
+- simple animated lines or trippy effects
+- ideally be able to do 1x1 2x2 4x4 type split screens
+- lots of colour cycling
+
+Assumptions:
+- Master / plenty of SWRAM
+- Store lots of 1bpp bitmaps in SWRAM using Exo
+- Keep Fx code simple to reduce CPU overhead
+- Decompress next bitmap into second buffer
+- Use 32 column MODE 4 / MODE 5 = 8K screens? => could then afford up to 3x of them in main RAM. (&2000, &4000, &6000)
+- Run decompress in 'main thread' on request
+
+Questions:
+- Software bass, if so how many channels? Just one?
+- Does a draw routine need to be driven from stable raster or would a regular IRQ be sufficient? E.g. one every N rows
+- How to do animations without rupture? Maybe compromise and have a draw fn called 4x per frame, start of every 8 rows, then row 32 for audio driver?
+- Could use MODE 8 for colour cycling?
+- How to schedule decompression without always having to specify it manually?
+  => have a readahead pointer that searches for the next FX
+
+Effects:
+- Static => have an Y rows of random noise then randomise offset into this per N rows each frame
+- Vu bars => could use rupture to select a row of graphics at appropriate width
+          => or have a screen with vu-bars and just set CRTC horizontal displayed at key points in the frame
+- Animations => use smaller screens either 1/2 or 1/4 size or rupture.
+
+Organise as an FX Tracker
+- Pattern of FX that lasts the same length as a pattern of music
+- Can then have a sequence of FX patterns, so repeated, some matching specific music patterns
+- Might be simpler to have pattenr properties
+    - E.g. MODE 4 pattern or MODE 5 pattern
+- Set FX on the beat
+  Q. do we need to set FX on lines?
+- Each FX has:
+    - a preload fn which is run on main thread
+    - a make fn when set (or just put this after preload?)
+    - a draw fn called N times per frame
+    - a tick fn called once per frame (or use last draw callback?)
+    - a kill fn when destroyed? (if required)
+- Potentially have a separate palette controller set per FX pattern?
+
+Example of Outro tune.
+Playback @ 50Hz, Speed = 4 => one tracker line every 4 frames
+Pattern length = 128 => one pattern is 128*4 = 512 frames = 10.24s
+Bass drum on 0, 12, 16+0, 16+12, 32+0, etc.
+Snare on 8, 16+8, 32+8 etc.
+So pattern is divided into 128/16=8 parts
+
+Will need to watch out for CPU spikes on beat or even tracker lines - need to spread out load.

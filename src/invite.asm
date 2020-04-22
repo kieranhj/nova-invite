@@ -8,9 +8,9 @@ _DEBUG_RASTERS = TRUE
 INCLUDE "src/zp.h.asm"
 INCLUDE "src/music.h.asm"
 
-TRACK_SPEED = 4
+TRACK_SPEED = 3
 TRACK_PATTERN_LENGTH = 128
-TRACK_PATTERN_SEGMENT = 16
+TRACK_PATTERN_SEGMENT = 8
 
 \ ******************************************************************
 \ *	OS defines
@@ -130,6 +130,7 @@ INCLUDE "lib/exo.h.asm"
 .prev_buffer_HI     skip 1
 
 .exo_no             skip 1
+.tracker_vsync      skip 1
 .tracker_line       skip 1
 .tracker_pattern    skip 1
 .is_beat_line       skip 1
@@ -284,19 +285,21 @@ GUARD screen3_addr
     lda next_buffer_HI
     jsr decrunch_to_page_A
 
+    IF 1
     {
         .wait_for_beat
         jsr wait_for_vsync
         lda is_beat_line
         beq wait_for_beat
     }
+    ENDIF
 
     jsr display_next_buffer
 
     {
         ldx exo_no
         inx
-        cpx #6
+        cpx #10
         bne ok
         ldx #0
         .ok
@@ -356,9 +359,14 @@ GUARD screen3_addr
 
     \\ Update tracker counters
     {
-        lda vsync_count
-        and #TRACK_SPEED-1
-        bne is_mid_line
+        ldx tracker_vsync
+        inx
+        cpx #TRACK_SPEED
+        stx tracker_vsync
+        bcc is_mid_line
+
+        ldx #0
+        stx tracker_vsync
 
         \\ Moved to new line in the pattern
 
@@ -501,6 +509,8 @@ EQUS "BANK0", 13
 	EQUB HI(screen1_addr/8)	; R12 screen start address, high
 	EQUB LO(screen1_addr/8)	; R13 screen start address, low
 }
+
+.dummy  equb 1,2,3,4
 
 .data_end
 

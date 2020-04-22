@@ -13,6 +13,12 @@ bin\exomizer.exe level -M256 build/v.bin@0x0000 -o build/v.exo
 bin\exomizer.exe level -M256 build/a.bin@0x0000 -o build/a.exo
 bin\exomizer.exe level -M256 build/nova.bin@0x0000 -o build/nova.exo
 bin\exomizer.exe level -M256 build/nova4.bin@0x0000 -o build/nova4.exo
+
+bin\exomizer.exe level -M256 data/a.atom@0x0000 -o build/atom.exo
+bin\exomizer.exe level -M256 data/a.cross@0x0000 -o build/cross.exo
+bin\exomizer.exe level -M256 data/a.galaxy@0x0000 -o build/galaxy.exo
+bin\exomizer.exe level -M256 data/a.world@0x0000 -o build/world.exo
+
 rem python ..\vgm-packer\vgmpacker.py "data/intro_test.vgm" -o build/intro_theme.vgc
 rem python ..\vgm-packer\vgmpacker.py "data/main_test.vgm" -o build/main_theme.vgc
-python ..\vgm-packer\vgmpacker.py "data/outro_test.vgm" -o build/outro_theme.vgc
+python ..\vgm-packer\vgmpacker.py "data/acid_test.vgm" -o build/acid_test.vgc

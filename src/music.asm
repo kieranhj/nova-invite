@@ -120,7 +120,7 @@ INCLUDE "lib/vgcplayer.asm"
 .data_start
 PAGE_ALIGN
 .vgc_data_tune
-INCBIN "build/outro_theme.vgc"
+INCBIN "build/acid_test.vgc"
 .data_end
 .end
 

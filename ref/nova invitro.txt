@@ -146,23 +146,15 @@ Pattern time = 384 vsyncs = 7.68s
 Most assets should be able to load within a beat.
 
 BEGIN_PATTERN 1
-
 LINE 1  ; EQUB 01
-
 BEAT 1  SHOW_PIC2   asset_pic2_n, 0
         SET_COL     1, PAL_cyan
-
 BEAT 2  ;   (just expanded to LINE 2*8)
         SHOW_ANIM16 asset_anim16_cross
-
 BEAT 3  SET_BEAT_FN cycle_fg_on_beat
-
 BEAT 4  
-
 LINE 21
-
 END_PATTERN     ; EQUB 128 (just > pattern length)
-
 
 SHOW_PIC2 asset_id, screen_no       ; is actually:
     LOAD_ASSET      asset_id, screen_no  ; (8 lines prior)
@@ -176,7 +168,6 @@ Options:
     - compile the script twice, keeping a separate list of asset requests
 => challenge in that you need to preload before parsing the next pattern if
    you want to have a new FX on the first line...
-
 Do it manually first, then automate later.
 
 16 colours for animation conversion:
@@ -199,9 +190,10 @@ Do it manually first, then automate later.
 [15] = {127, 127, 127}
 
 On reflection, I hate the idea of sequencing by text file.
-Use the Arkos Tracker 2 events line.
+For Patarty this was slow and painful and error prone.
+Use the Arkos Tracker 2 events line!
 Format is simple:
-<word> number of lines to wait + 1 (so 1 => immediate)
+<word> number of lines to wait + 1 (so 1 = immediate)
 <byte> event number
 
 From the users POV only commands are:
@@ -210,4 +202,22 @@ From the users POV only commands are:
 - Colour
 - Special FX
 
-We can determine how this is encoded later.
+Perhaps encode &xy; where x:
+    0y = control codes
+    1y = image #
+    2y = animation #
+    3y = set fg colour #
+    4y = special Fx #
+
+Let's just say y is the asset number for now.
+Can worry about randomisation or lists later.
+Might need to think about how to do multiple things on same line,
+e.g. show image in a specific colour.
+=> Can always bake a default colour in with the image.
+=> Or have a command that sets image colour not immediate colour
+
+Control codes can be things like, hide screen, show prev buffer, etc.
+
+In terms of preloading, keep things simple.
+When getting the delay value, call the preload fn for that event type,
+passing in the event data.

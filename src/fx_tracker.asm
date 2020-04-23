@@ -97,12 +97,12 @@ ENDMACRO
 
     and #&f0
     lsr a:lsr a:tax
-    lda event_fn_table+2, X
+    lda event_fn_table+3, X
     beq no_preload
 
-    sta jmp_to_preload+1
-    lda event_fn_table+3, X
     sta jmp_to_preload+2
+    lda event_fn_table+2, X
+    sta jmp_to_preload+1
     
     lda (events_ptr), Y
     sta preload_id
@@ -186,7 +186,8 @@ ENDMACRO
 .handle_set_colour
 {
     eor #7
-    jmp set_fg_colour
+    sta last_fg_colour
+    jmp set_mode4_fg_colour
 }
 
 .event_fn_table
@@ -194,7 +195,7 @@ ENDMACRO
 \\ Event handler and preload fn per event type &xy
     EQUW do_nothing,            0               ; &0y
     EQUW handle_image,          preload_image   ; &1y   y = image no.
-    EQUW handle_anim,           0               ; &2y
+    EQUW handle_anim,           preload_image   ; &2y
     EQUW handle_set_colour,     0               ; &3y   y = colour no.
     EQUW handle_special_fx,     0               ; &4y
     EQUW do_nothing,            0               ; &5y
@@ -211,7 +212,6 @@ ENDMACRO
 }
 
 .handle_ctrl_code
-.handle_anim
 .handle_special_fx
 .do_nothing
 {
@@ -221,8 +221,11 @@ ENDMACRO
 ; A = image no.
 .handle_image
 {
-; Need to think more about this.
-    CHECK_TASK_NOT_RUNNING
+    CHECK_TASK_NOT_RUNNING      ; Need to think more about this.
+    jsr set_per_frame_do_nothing
+    jsr set_mode_4
+    lda last_fg_colour:jsr set_mode4_fg_colour
+    lda #PAL_black:jsr set_mode4_bg_colour
     jmp display_next_buffer
 }
 
@@ -235,6 +238,16 @@ ENDMACRO
     tax
     lda next_buffer_HI
     jmp set_task_decrunch    
+}
+
+; A = anim no.
+.handle_anim
+{
+    CHECK_TASK_NOT_RUNNING      ; Need to think more about this.
+    jsr anims_set_anim
+    jsr set_mode_8
+    jsr set_mode8_default_palette
+    jmp display_next_buffer
 }
 
 .event_data

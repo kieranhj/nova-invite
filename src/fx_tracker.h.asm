@@ -12,3 +12,4 @@
 .events_delay       skip 2
 
 .preload_id         skip 1
+.last_fg_colour     skip 1

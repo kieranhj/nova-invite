@@ -29,7 +29,7 @@
 
 	ldx #15
 	.pal_loop
-	lda default_palette, X
+	lda mode4_default_palette, X
 	sta &fe21
 	dex
 	bpl pal_loop
@@ -65,9 +65,13 @@
 	rts
 }
 
-.set_fg_colour
+.set_mode4_fg_colour
 {
     ora #&80:sta &fe21
+}
+\\ fall through
+.set_mode4_colours
+{
     eor #&10:sta &fe21
     eor #&30:sta &fe21
     eor #&10:sta &fe21
@@ -75,5 +79,27 @@
     eor #&10:sta &fe21
     eor #&30:sta &fe21
     eor #&10:sta &fe21
+    rts
+}
+
+.set_mode4_bg_colour
+{
+    sta &fe21
+    jmp set_mode4_colours
+}
+
+.set_mode_4
+{
+    lda #ULA_Mode4
+    sta &248
+    sta &fe20
+    rts
+}
+
+.set_mode_8
+{
+    lda #ULA_Mode8
+    sta &248
+    sta &fe20
     rts
 }

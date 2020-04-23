@@ -14,5 +14,3 @@ asset_cross         = 7
 asset_galaxy        = 8
 asset_world         = 9
 asset_bs_teletext   = 10
-
-.asset_load_active  skip 1

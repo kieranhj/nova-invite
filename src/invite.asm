@@ -39,8 +39,8 @@ PAL_cyan	= (6 EOR 7)
 PAL_yellow	= (3 EOR 7)
 PAL_white	= (7 EOR 7)
 
-ULA_Mode1   = &D8
 ULA_Mode4   = &88
+ULA_Mode8   = &E0
 
 \ ******************************************************************
 \ *	MACROS
@@ -135,6 +135,9 @@ INCLUDE "lib/exo.h.asm"
 INCLUDE "src/fx_tracker.h.asm"
 INCLUDE "src/assets.h.asm"
 
+.local_vars         skip 8
+.local_top
+
 .zp_end
 
 \ ******************************************************************
@@ -216,8 +219,8 @@ GUARD screen3_addr
 	bcc crtc_loop
 
     \\ Set palette
-    ldx #LO(default_palette)
-    ldy #HI(default_palette)
+    ldx #LO(mode4_default_palette)
+    ldy #HI(mode4_default_palette)
 	jsr set_palette
 
 	\\ Set ULA register
@@ -348,6 +351,9 @@ GUARD screen3_addr
     \\ Handle events
     jsr events_update
 
+    \\ Then per-frame func.
+    jsr do_per_frame_fn
+
     \\ Then update music
 	lda &f4:pha
     lda MUSIC_SLOT_ZP
@@ -435,8 +441,23 @@ ENDMACRO
     rts
 }
 
+.do_per_frame_fn
+{
+    jmp do_nothing    
+}
+
+.set_per_frame_do_nothing
+{
+    lda #LO(do_nothing)
+    sta do_per_frame_fn+1
+    lda #HI(do_nothing)
+    sta do_per_frame_fn+2
+    rts
+}
+
 include "src/fx_tracker.asm"
 include "src/assets.asm"
+include "src/anims.asm"
 
 .main_end
 
@@ -462,7 +483,7 @@ EQUS "MUSIC", 13
 .bank0_filename
 EQUS "BANK0", 13
 
-.default_palette
+.mode4_default_palette
 {
 	EQUB &00 + PAL_black
 	EQUB &10 + PAL_black
@@ -479,6 +500,26 @@ EQUS "BANK0", 13
 	EQUB &C0 + PAL_white
 	EQUB &D0 + PAL_white
 	EQUB &E0 + PAL_white
+	EQUB &F0 + PAL_white
+}
+
+.mode8_default_palette
+{
+	EQUB &00 + PAL_black
+	EQUB &10 + PAL_red
+	EQUB &20 + PAL_green
+	EQUB &30 + PAL_yellow
+	EQUB &40 + PAL_blue
+	EQUB &50 + PAL_magenta
+	EQUB &60 + PAL_cyan
+	EQUB &70 + PAL_white
+	EQUB &80 + PAL_black
+	EQUB &90 + PAL_red
+	EQUB &A0 + PAL_green
+	EQUB &B0 + PAL_yellow
+	EQUB &C0 + PAL_blue
+	EQUB &D0 + PAL_magenta
+	EQUB &E0 + PAL_cyan
 	EQUB &F0 + PAL_white
 }
 

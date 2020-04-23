@@ -48,7 +48,7 @@ Effects:
 Organise as an FX Tracker
 - Pattern of FX that lasts the same length as a pattern of music
 - Can then have a sequence of FX patterns, so repeated, some matching specific music patterns
-- Might be simpler to have pattenr properties
+- Might be simpler to have pattern properties
     - E.g. MODE 4 pattern or MODE 5 pattern
 - Set FX on the beat
   Q. do we need to set FX on lines?
@@ -110,3 +110,71 @@ https://twitter.com/P_Malin/status/1252683291393773569?s=20
 2 FORR%=1TO31:F%=&3000+R%*640:T%=&3000+R%*256:FORI%=0TO255:T%?I%=F%?I%:NEXT:NEXT
 3 ?&248=&E0:?&FE00=0:?&FE01=63:?&FE00=1:?&FE01=32:?&FE00=2:?&FE01=49:?&FE00=3:?&FE01=&24
 4$@%="0426":F.I=0TO1E6:F.J=0TO3:V.19,(I+J)MOD15+1,@%?J-48;0;:N.,
+
+
+Sequencing
+~~~
+
+FX Pattern has same length as music pattern, updates at same rate.
+Could use a Python script to parse (or spreadsheet?) but for now use MACROs.
+Keep it simple, what do you actually need to support the known FX?
+Use asset identifiers, otherwise will go mad with 30x assets
+
+asset_pic2_n
+asset_pic2_nova
+asset_pic2_nova4
+asset_anim16_cross
+etc.
+
+Examples of things we want to be able to do:
+- on beat X show 2bpp picture 'nova4' on screen 0
+- set colour A to C
+- set colour 1 to be random every beat
+- show cycled animation 'green_cross'
+- show static noise
+- call this fn every line (for ?)
+- call this fn every beat (for palette change)
+- call this fn every frame (for colour cycling)
+- show screen N
+- load asset to screen M (bg fn)
+- create static noise on screen N (bg fn)
+
+Track speed = 3
+Pattern length = 128
+Beat every 8 lines = 24 vsyncs = 16 beats per pattern
+Pattern time = 384 vsyncs = 7.68s
+Most assets should be able to load within a beat.
+
+BEGIN_PATTERN 1
+
+LINE 1  ; EQUB 01
+
+BEAT 1  SHOW_PIC2   asset_pic2_n, 0
+        SET_COL     1, PAL_cyan
+
+BEAT 2  ;   (just expanded to LINE 2*8)
+        SHOW_ANIM16 asset_anim16_cross
+
+BEAT 3  SET_BEAT_FN cycle_fg_on_beat
+
+BEAT 4  
+
+LINE 21
+
+END_PATTERN     ; EQUB 128 (just > pattern length)
+
+
+SHOW_PIC2 asset_id, screen_no       ; is actually:
+    LOAD_ASSET      asset_id, screen_no  ; (8 lines prior)
+    SHOW_2SCREEN    screen_no            ; sets ULA to 2bpp
+
+Assets need to be preloaded ~24 frames ahead of use
+Options:
+    - manually specify this in script
+    - parse the script 24 frames ahead at runtime
+    - parse the script offline and insert the load commands
+    - compile the script twice, keeping a separate list of asset requests
+=> challenge in that you need to preload before parsing the next pattern if
+   you want to have a new FX on the first line...
+
+Do it manually first, then automate later.

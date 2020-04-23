@@ -3,6 +3,7 @@
 \ *	STNICC BEEB INTRO
 \ ******************************************************************
 
+_DEBUG = TRUE
 _DEBUG_RASTERS = TRUE
 
 INCLUDE "src/zp.h.asm"
@@ -121,19 +122,19 @@ GUARD zp_top
 INCLUDE "lib/exo.h.asm"
 
 .writeptr           skip 2
-.vsync_count        skip 2
+.vsync_count        skip 1
 .music_enabled      skip 1
 .music_lock         skip 1
 
+.screen_buffer_HI
 .display_buffer_HI  skip 1
 .next_buffer_HI     skip 1
 .prev_buffer_HI     skip 1
 
 .exo_no             skip 1
-.tracker_vsync      skip 1
-.tracker_line       skip 1
-.tracker_pattern    skip 1
-.is_beat_line       skip 1
+
+INCLUDE "src/fx_tracker.h.asm"
+INCLUDE "src/assets.h.asm"
 
 .zp_end
 
@@ -171,36 +172,6 @@ GUARD screen3_addr
 
     \\ Consts for now
     lda #4:sta MUSIC_SLOT_ZP
-
-	\\ Set interrupts and handler
-	SEI							; disable CPU interupts
-    lda &fe4e
-    sta previous_ifr+1
-
-    jsr wait_for_vsync:sta &fe4d
-
-	\\ Not stable but close enough for our purposes
-	; Write T1 low now (the timer will not be written until you write the high byte)
-    LDA #LO(TimerValue):STA &FE44
-    ; Get high byte ready so we can write it as quickly as possible at the right moment
-    LDX #HI(TimerValue):STX &FE45            ; start T1 counting		; 4c +1/2c 
-
-  	; Latch T1 to interupt exactly every 50Hz frame
-	LDA #LO(FramePeriod):STA &FE46
-	LDA #HI(FramePeriod):STA &FE47
-
-	LDA #&7F					; (disable all interrupts)
-	STA &FE4E					; R14=Interrupt Enable
-	STA &FE43					; R3=Data Direction Register "A" (set keyboard data direction)
-	LDA #&C0					; 
-	STA &FE4E					; R14=Interrupt Enable
-
-    LDA IRQ1V:STA old_irqv
-    LDA IRQ1V+1:STA old_irqv+1
-
-    LDA #LO(irq_handler):STA IRQ1V
-    LDA #HI(irq_handler):STA IRQ1V+1		; set interrupt handler
-    CLI
 
     \\ Load music into SWRAM (if available)
     {
@@ -262,6 +233,36 @@ GUARD screen3_addr
     lda #HI(screen3_addr)
     sta prev_buffer_HI
 
+	\\ Set interrupts and handler
+	SEI							; disable CPU interupts
+    lda &fe4e
+    sta previous_ifr+1
+
+    jsr wait_for_vsync:sta &fe4d
+
+	\\ Not stable but close enough for our purposes
+	; Write T1 low now (the timer will not be written until you write the high byte)
+    LDA #LO(TimerValue):STA &FE44
+    ; Get high byte ready so we can write it as quickly as possible at the right moment
+    LDX #HI(TimerValue):STX &FE45            ; start T1 counting		; 4c +1/2c 
+
+  	; Latch T1 to interupt exactly every 50Hz frame
+	LDA #LO(FramePeriod):STA &FE46
+	LDA #HI(FramePeriod):STA &FE47
+
+	LDA #&7F					; (disable all interrupts)
+	STA &FE4E					; R14=Interrupt Enable
+	STA &FE43					; R3=Data Direction Register "A" (set keyboard data direction)
+	LDA #&C0					; 
+	STA &FE4E					; R14=Interrupt Enable
+
+    LDA IRQ1V:STA old_irqv
+    LDA IRQ1V+1:STA old_irqv+1
+
+    LDA #LO(irq_handler):STA IRQ1V
+    LDA #HI(irq_handler):STA IRQ1V+1		; set interrupt handler
+    CLI
+
     \\ Go!
     \\ Start music player
     {
@@ -279,8 +280,8 @@ GUARD screen3_addr
     ;SWRAM_BANK 5
 
     ldx exo_no
-    ldy exo_screens_table_HI, X
-    lda exo_screens_table_LO, X
+    ldy assets_table_HI, X
+    lda assets_table_LO, X
     tax
     lda next_buffer_HI
     jsr decrunch_to_page_A
@@ -299,7 +300,7 @@ GUARD screen3_addr
     {
         ldx exo_no
         inx
-        cpx #10
+        cpx #11
         bne ok
         ldx #0
         .ok
@@ -357,52 +358,10 @@ GUARD screen3_addr
 
     SET_BGCOL PAL_red
 
-    \\ Update tracker counters
-    {
-        ldx tracker_vsync
-        inx
-        cpx #TRACK_SPEED
-        stx tracker_vsync
-        bcc is_mid_line
+    \\ Update FX Tracker first
+    jsr fx_tracker_update
 
-        ldx #0
-        stx tracker_vsync
-
-        \\ Moved to new line in the pattern
-
-        ldx tracker_line
-        inx
-        cpx #TRACK_PATTERN_LENGTH
-        bcc same_pattern
-
-        \\ Moved to new pattern
-        inc tracker_pattern
-
-        ldx #0
-        .same_pattern
-        stx tracker_line
-
-        \\ Beat signature
-        ldx #0
-        lda tracker_line
-        and #TRACK_PATTERN_SEGMENT-1
-        cmp #0
-        bne not_0
-        inx
-        .not_0
-        cmp #8
-        bne not_8
-        inx
-        .not_8
-        cmp #12
-        bne not_12
-        inx
-        .not_12
-        stx is_beat_line
-
-        .is_mid_line
-    }
-
+    \\ Then update music
 	lda &f4:pha
     lda MUSIC_SLOT_ZP
 	sta &f4:sta &fe30
@@ -410,12 +369,7 @@ GUARD screen3_addr
 	pla:sta &f4:sta &fe30
 
     \\ Update vsync counter
-    {
-        inc vsync_count
-        bne no_carry
-        inc vsync_count+1
-        .no_carry
-    }
+    inc vsync_count
 
     SET_BGCOL PAL_black
     pla:tay:pla:tax
@@ -447,6 +401,9 @@ GUARD screen3_addr
     sta display_buffer_HI
     rts
 }
+
+include "src/fx_tracker.asm"
+include "src/assets.asm"
 
 .main_end
 
@@ -509,8 +466,6 @@ EQUS "BANK0", 13
 	EQUB HI(screen1_addr/8)	; R12 screen start address, high
 	EQUB LO(screen1_addr/8)	; R13 screen start address, low
 }
-
-.dummy  equb 1,2,3,4
 
 .data_end
 

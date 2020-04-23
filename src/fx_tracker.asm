@@ -222,10 +222,10 @@ ENDMACRO
 .handle_image
 {
     CHECK_TASK_NOT_RUNNING      ; Need to think more about this.
-    jsr set_per_frame_do_nothing
     jsr set_mode_4
     lda last_fg_colour:jsr set_mode4_fg_colour
     lda #PAL_black:jsr set_mode4_bg_colour
+    jsr set_per_frame_do_nothing
     jmp display_next_buffer
 }
 
@@ -244,9 +244,11 @@ ENDMACRO
 .handle_anim
 {
     CHECK_TASK_NOT_RUNNING      ; Need to think more about this.
-    jsr anims_set_anim
+    pha
     jsr set_mode_8
     jsr set_mode8_default_palette
+    pla
+    jsr anims_set_anim
     jmp display_next_buffer
 }
 

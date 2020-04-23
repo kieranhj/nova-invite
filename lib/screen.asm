@@ -103,3 +103,10 @@
     sta &fe20
     rts
 }
+
+.set_mode8_default_palette
+{
+    ldx #LO(mode8_default_palette)
+    ldy #HI(mode8_default_palette)
+    jmp set_palette
+}

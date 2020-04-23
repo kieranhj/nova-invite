@@ -10,3 +10,5 @@
 
 .events_ptr         skip 2
 .events_delay       skip 2
+
+.preload_id         skip 1

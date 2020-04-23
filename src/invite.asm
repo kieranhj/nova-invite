@@ -133,6 +133,8 @@ INCLUDE "lib/exo.h.asm"
 
 .exo_no             skip 1
 
+.task_request       skip 1
+
 INCLUDE "src/fx_tracker.h.asm"
 INCLUDE "src/assets.h.asm"
 
@@ -279,34 +281,14 @@ GUARD screen3_addr
 
     \\ Main loop!
     .loop
-    ;SWRAM_BANK 5
-
-    ldx exo_no
-    ldy assets_table_HI, X
-    lda assets_table_LO, X
-    tax
-    lda next_buffer_HI
-    jsr decrunch_to_page_A
-
-    IF 1
-    {
-        .wait_for_beat
-        jsr wait_for_vsync
-        lda is_beat_line
-        beq wait_for_beat
-    }
-    ENDIF
-
-    jsr display_next_buffer
 
     {
-        ldx exo_no
-        inx
-        cpx #11
-        bne ok
-        ldx #0
-        .ok
-        stx exo_no
+        .wait_for_task
+        lda task_request
+        beq wait_for_task
+
+        jsr do_task
+        dec task_request
     }
 
     jmp loop
@@ -404,6 +386,52 @@ GUARD screen3_addr
     sta prev_buffer_HI
     pla
     sta display_buffer_HI
+    rts
+}
+
+.do_task
+{
+.^do_task_load_A
+    lda #0
+.^do_task_load_X
+    ldx #0
+.^do_task_load_Y
+    ldy #0
+.^do_task_jmp
+    jmp do_nothing
+}
+
+MACRO CHECK_TASK_NOT_RUNNING
+IF _DEBUG
+{
+    pha:txa:pha:tya:pha
+    lda task_request
+    beq ok
+    BRK
+    .ok
+    pla:tay:pla:tax:pla
+}
+ENDIF
+ENDMACRO
+
+.set_task_decrunch
+{
+; Need to think more about this.
+; Doesn't really matter as the JMP won't get called until the
+; previous task completes...
+    CHECK_TASK_NOT_RUNNING
+
+    sta do_task_load_A+1
+    stx do_task_load_X+1
+    sty do_task_load_Y+1
+
+    lda #LO(decrunch_to_page_A)
+    sta do_task_jmp+1
+
+    lda #HI(decrunch_to_page_A)
+    sta do_task_jmp+2
+
+    inc task_request
     rts
 }
 

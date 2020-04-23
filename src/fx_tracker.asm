@@ -75,20 +75,47 @@ ENDMACRO
     EVENTS_GET_BYTE
     sta events_delay+1
 
-    \\ Call preload fn for next event.
-    EVENTS_PEEK_BYTE
+    \\ Call preload fn for next event that has one.
+    lda events_load_byte+1
+    sta events_ptr
+    lda events_load_byte+2
+    sta events_ptr+1
+    ldy #1
 
-    tay
-    and #&f0:
+    .peek_loop
+    lda (events_ptr), Y     ; peek event value
+
+    cmp preload_id          ; check if we already did this one
+    beq end_of_events
+
+    and #&f0
     lsr a:lsr a:tax
     lda event_fn_table+2, X
+    beq no_preload
+
     sta jmp_to_preload+1
     lda event_fn_table+3, X
     sta jmp_to_preload+2
-    tya
+    
+    lda (events_ptr), Y
+    sta preload_id
+    
     and #&0f
     .jmp_to_preload
     jmp &FFFF
+
+    .no_preload
+    iny
+    lda (events_ptr), Y     ; next delay LO
+    iny
+    ora (events_ptr), Y     ; next delay HI
+    beq end_of_events
+
+    iny
+    bne peek_loop
+
+    .end_of_events
+    rts
 }
 
 .events_get_byte
@@ -158,31 +185,49 @@ ENDMACRO
 .event_fn_table
 {
 \\ Event handler and preload fn per event type &xy
-    EQUW handle_set_colour,     do_nothing  ; &0y
-    EQUW handle_image,          do_nothing  ; &1y
-    EQUW handle_anim,           do_nothing  ; &2y
-    EQUW handle_set_colour,     do_nothing  ; &3y
-    EQUW handle_special_fx,     do_nothing  ; &4y
-    EQUW do_nothing,            do_nothing  ; &5y
-    EQUW do_nothing,            do_nothing  ; &6y
-    EQUW do_nothing,            do_nothing  ; &7y
-    EQUW do_nothing,            do_nothing  ; &8y
-    EQUW do_nothing,            do_nothing  ; &9y
-    EQUW do_nothing,            do_nothing  ; &Ay
-    EQUW do_nothing,            do_nothing  ; &By
-    EQUW do_nothing,            do_nothing  ; &Cy
-    EQUW do_nothing,            do_nothing  ; &Dy
-    EQUW do_nothing,            do_nothing  ; &Ey
-    EQUW do_nothing,            do_nothing  ; &Fy
+    EQUW do_nothing,            0               ; &0y
+    EQUW handle_image,          preload_image   ; &1y   y = image no.
+    EQUW handle_anim,           0               ; &2y
+    EQUW handle_set_colour,     0               ; &3y   y = colour no.
+    EQUW handle_special_fx,     0               ; &4y
+    EQUW do_nothing,            0               ; &5y
+    EQUW do_nothing,            0               ; &6y
+    EQUW do_nothing,            0               ; &7y
+    EQUW do_nothing,            0               ; &8y
+    EQUW do_nothing,            0               ; &9y
+    EQUW do_nothing,            0               ; &Ay
+    EQUW do_nothing,            0               ; &By
+    EQUW do_nothing,            0               ; &Cy
+    EQUW do_nothing,            0               ; &Dy
+    EQUW do_nothing,            0               ; &Ey
+    EQUW do_nothing,            0               ; &Fy
 }
 
 .handle_ctrl_code
-.handle_image
 .handle_anim
 .handle_special_fx
 .do_nothing
 {
     rts
+}
+
+; A = image no.
+.handle_image
+{
+; Need to think more about this.
+    CHECK_TASK_NOT_RUNNING
+    jmp display_next_buffer
+}
+
+; A = image no.
+.preload_image
+{
+    tax
+    ldy assets_table_HI, X
+    lda assets_table_LO, X
+    tax
+    lda next_buffer_HI
+    jmp set_task_decrunch    
 }
 
 .event_data

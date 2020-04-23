@@ -1,6 +1,6 @@
 @echo off
 mkdir build
-echo Building ASSETS...
+echo Building PNGS...
 python bin/png2bbc.py --quiet -o build/n.bin ./data/N.png 4
 python bin/png2bbc.py --quiet -o build/o.bin ./data/O.png 4
 python bin/png2bbc.py --quiet -o build/v.bin ./data/V.png 4
@@ -22,6 +22,10 @@ bin\exomizer.exe level -M256 data/a.cross@0x0000 -o build/cross.exo
 bin\exomizer.exe level -M256 data/a.galaxy@0x0000 -o build/galaxy.exo
 bin\exomizer.exe level -M256 data/a.world@0x0000 -o build/world.exo
 
+echo Building MUSIC...
 rem python ..\vgm-packer\vgmpacker.py "data/intro_test.vgm" -o build/intro_theme.vgc
 rem python ..\vgm-packer\vgmpacker.py "data/main_test.vgm" -o build/main_theme.vgc
 python ..\vgm-packer\vgmpacker.py "data/acid_test.vgm" -o build/acid_test.vgc
+
+echo Building EVENTS...
+bin\SongToEvents -bin -adr 0x4000 data\event_test.aks build\events.bin

@@ -11,7 +11,7 @@ INCLUDE "src/music.h.asm"
 
 TRACK_SPEED = 3
 TRACK_PATTERN_LENGTH = 128
-TRACK_PATTERN_SEGMENT = 8
+TRACK_LINES_PER_BEAT = 8
 
 \ ******************************************************************
 \ *	OS defines
@@ -233,6 +233,8 @@ GUARD screen3_addr
     lda #HI(screen3_addr)
     sta prev_buffer_HI
 
+    jsr events_init
+
 	\\ Set interrupts and handler
 	SEI							; disable CPU interupts
     lda &fe4e
@@ -360,6 +362,9 @@ GUARD screen3_addr
 
     \\ Update FX Tracker first
     jsr fx_tracker_update
+
+    \\ Handle events
+    jsr events_update
 
     \\ Then update music
 	lda &f4:pha

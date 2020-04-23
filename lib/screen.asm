@@ -64,3 +64,16 @@
 
 	rts
 }
+
+.set_fg_colour
+{
+    ora #&80:sta &fe21
+    eor #&10:sta &fe21
+    eor #&30:sta &fe21
+    eor #&10:sta &fe21
+    eor #&70:sta &fe21
+    eor #&10:sta &fe21
+    eor #&30:sta &fe21
+    eor #&10:sta &fe21
+    rts
+}

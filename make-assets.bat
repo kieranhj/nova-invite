@@ -26,6 +26,3 @@ echo Building MUSIC...
 rem python ..\vgm-packer\vgmpacker.py "data/intro_test.vgm" -o build/intro_theme.vgc
 rem python ..\vgm-packer\vgmpacker.py "data/main_test.vgm" -o build/main_theme.vgc
 python ..\vgm-packer\vgmpacker.py "data/acid_test.vgm" -o build/acid_test.vgc
-
-echo Building EVENTS...
-bin\SongToEvents -bin -adr 0x4000 data\event_test.aks build\events.bin

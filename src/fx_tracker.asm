@@ -68,13 +68,20 @@ ENDMACRO
     sta events_load_byte+2
 }
 \\ drop through.
-.events_get_delay
+.events_set_delay
 {
     EVENTS_GET_BYTE
     sta events_delay
     EVENTS_GET_BYTE
     sta events_delay+1
 
+    ora events_delay
+    bne find_next_preload
+
+    sec
+    rts
+
+    .find_next_preload
     \\ Call preload fn for next event that has one.
     lda events_load_byte+1
     sta events_ptr
@@ -99,8 +106,9 @@ ENDMACRO
     
     lda (events_ptr), Y
     sta preload_id
-    
+
     and #&0f
+    clc
     .jmp_to_preload
     jmp &FFFF
 
@@ -115,6 +123,7 @@ ENDMACRO
     bne peek_loop
 
     .end_of_events
+    clc
     rts
 }
 
@@ -150,12 +159,10 @@ ENDMACRO
     .no_event
 
     \\ Get the delay to the next event.
-    jsr events_get_delay
+    jsr events_set_delay
 
     \\ If this is zero then loop.
-    lda events_delay
-    ora events_delay+1
-    bne return
+    bcc return
 
     jmp events_init
 }

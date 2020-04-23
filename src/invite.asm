@@ -108,7 +108,7 @@ FramePeriod = 312*64-2
 
 ; This is when we trigger the next frame draw during the frame
 ; Essentially how much time we give the main loop to stream the next track
-TimerValue = (40)*64 - 2*64
+TimerValue = (32+254)*64 - 2*64
 
 \ ******************************************************************
 \ *	ZERO PAGE
@@ -126,12 +126,9 @@ INCLUDE "lib/exo.h.asm"
 .music_enabled      skip 1
 .music_lock         skip 1
 
-.screen_buffer_HI
 .display_buffer_HI  skip 1
 .next_buffer_HI     skip 1
 .prev_buffer_HI     skip 1
-
-.exo_no             skip 1
 
 .task_request       skip 1
 
@@ -162,6 +159,13 @@ GUARD screen3_addr
 {
     \\ Init stack
     ldx #&ff:txs
+
+    SEI
+    lda &fe4e
+    sta previous_ifr+1
+	LDA #&7F					; (disable all interrupts)
+	STA &FE4E					; R14=Interrupt Enable
+    CLI
 
     \\ Init ZP
     lda #0
@@ -200,12 +204,6 @@ GUARD screen3_addr
     }
 
     \\ Set MODE w/out using OS.
-    jsr wait_for_vsync
-
-	\\ Set ULA register
-	lda #ULA_Mode4
-	sta &248			; OS copy
-	sta &fe20
 
 	\\ Set CRTC registers
 	ldx #0
@@ -221,6 +219,11 @@ GUARD screen3_addr
     ldx #LO(default_palette)
     ldy #HI(default_palette)
 	jsr set_palette
+
+	\\ Set ULA register
+	lda #ULA_Mode4
+	sta &248			; OS copy
+	sta &fe20
 
     \\ Clear screens
     ldy #HI(screen3_addr)
@@ -239,10 +242,7 @@ GUARD screen3_addr
 
 	\\ Set interrupts and handler
 	SEI							; disable CPU interupts
-    lda &fe4e
-    sta previous_ifr+1
-
-    jsr wait_for_vsync:sta &fe4d
+    ldx #2: jsr wait_frames
 
 	\\ Not stable but close enough for our purposes
 	; Write T1 low now (the timer will not be written until you write the high byte)

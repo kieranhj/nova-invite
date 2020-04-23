@@ -9,7 +9,7 @@
 	.vsync1
 	bit &FE4D
 	beq vsync1
-;   sta &FE4D       ; ack'd in IRQ
+    sta &FE4D       ; or could be ack'd in IRQ
 	rts
 }
 

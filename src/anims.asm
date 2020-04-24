@@ -12,7 +12,7 @@
     EQUW 0,                 do_nothing
     EQUW 0,                 do_nothing
     EQUW anim_galaxy_init,  anim_atom_cycle
-    EQUW anim_galaxy_init,  anim_cross_cycle
+    EQUW anim_galaxy_init,  anim_world_cycle
     EQUW anim_galaxy_init,  anim_galaxy_cycle
     EQUW anim_galaxy_init,  anim_world_cycle
     EQUW 0,                 do_nothing
@@ -47,13 +47,15 @@
     sta do_per_frame_fn+2
     sta advance_loop+2
 
-    ldy #15
+    lda #16
+    sta loop_count
     .advance_loop
     jsr &ffff
-    dey 
-    bpl advance_loop
-
+    dec loop_count
+    bne advance_loop
     rts
+
+    .loop_count equb 0
 }
 
 anim_galaxy_I = local_vars+0
@@ -97,10 +99,8 @@ anim_galaxy_I = local_vars+0
     txa
     clc
     adc anim_atom_I
-    cmp #15
-    bcc ok
-    sbc #15
-    .ok
+    tay
+    lda mod15_table, y
     clc
     adc #1
 
@@ -126,11 +126,8 @@ anim_galaxy_I = local_vars+0
     ora #PAL_black
     sta &fe21           ; set A to black
 
-    lda anim_cross_A
-    cmp #15
-    bcc ok
-    sbc #15
-    .ok
+    ldy anim_cross_A
+    lda mod15_table, y
     adc #1
     sta anim_cross_A
 
@@ -150,10 +147,8 @@ anim_galaxy_I = local_vars+0
     txa
     clc
     adc anim_world_I
-    cmp #15
-    bcc ok
-    sbc #15
-    .ok
+    tay
+    lda mod15_table, y
     clc
     adc #1
 
@@ -168,4 +163,11 @@ anim_galaxy_I = local_vars+0
 
     .anim_world_table
     EQUS PAL_black,PAL_blue,PAL_green,PAL_cyan
+}
+
+.mod15_table
+{
+    FOR n,0,255,1
+    EQUB n MOD 15
+    NEXT
 }

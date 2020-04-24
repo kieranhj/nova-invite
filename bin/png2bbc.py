@@ -30,7 +30,7 @@ def main(options):
         pack=bbc.pack_2bpp
     elif options.mode==2:
         # this palette is indeed only 8 entries...
-        palette=[0,1,2,3,4,5,6,7]
+        palette=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
         pixels_per_byte=2
         pack=bbc.pack_4bpp
     
@@ -57,7 +57,8 @@ def main(options):
                        options._160,
                        -1 if options.transparent_output else None,
                        options.transparent_rgb,
-                       not options.quiet)
+                       not options.quiet,
+                       options.use_fixed_16)
 
     if len(image[0])%pixels_per_byte!=0:
         print>>sys.stderr,'FATAL: Mode %d image width must be a multiple of %d'%(options.mode,pixels_per_byte)
@@ -142,6 +143,8 @@ if __name__=='__main__':
                         type=int,
                         nargs=3,
                         help='specify opaque RGB to be interpreted as transparent')
+    parser.add_argument('--fixed-16',action='store_true',dest='use_fixed_16',
+                        help='use fixed palette when converting 16 colours')
     parser.add_argument('-q','--quiet',action='store_true',help='don\'t print warnings')
     parser.add_argument('input_path',metavar='FILE',help='load PNG data fro %(metavar)s')
     parser.add_argument('mode',type=int,help='screen mode')

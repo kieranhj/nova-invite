@@ -72,6 +72,7 @@ MACRO SET_BGCOL c
 IF _DEBUG_RASTERS
 {
     LDA #&00+c:STA &FE21
+    lda &248:cmp #ULA_Mode8:beq done
     LDA #&10+c:STA &FE21
     LDA #&20+c:STA &FE21
     LDA #&30+c:STA &FE21
@@ -79,6 +80,7 @@ IF _DEBUG_RASTERS
     LDA #&50+c:STA &FE21
     LDA #&60+c:STA &FE21
     LDA #&70+c:STA &FE21
+    .done
 }
 ENDIF
 ENDMACRO

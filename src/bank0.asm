@@ -20,7 +20,7 @@ INCBIN "build/nova4.exo"
 .exo_asset_atom
 INCBIN "build/atom.exo"
 .exo_asset_cross
-INCBIN "build/cross.exo"
+INCBIN "build/shift.exo"
 .exo_asset_galaxy
 INCBIN "build/galaxy.exo"
 .exo_asset_world

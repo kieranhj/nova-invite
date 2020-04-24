@@ -21,6 +21,7 @@ bin\exomizer.exe level -M256 data/a.atom@0x0000 -o build/atom.exo
 bin\exomizer.exe level -M256 data/a.cross@0x0000 -o build/cross.exo
 bin\exomizer.exe level -M256 data/a.galaxy@0x0000 -o build/galaxy.exo
 bin\exomizer.exe level -M256 data/a.world@0x0000 -o build/world.exo
+bin\exomizer.exe level -M256 data/palette_shift_test.bin@0x0000 -o build/shift.exo
 
 echo Building MUSIC...
 rem python ..\vgm-packer\vgmpacker.py "data/intro_test.vgm" -o build/intro_theme.vgc

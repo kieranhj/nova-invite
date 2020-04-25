@@ -228,9 +228,13 @@ TODO
 - Alternate display & next and keep third buffer for special?
 - Static noise task - & time
 - Quarter screen task - & time
-- Debug info!
+- Debug info! - DONE
 - Workflow for iteration - hostfs / TubeLink on b2?
   => b2 will do direct disk access, so update the ssd and can reload the file
 - Sort out SWRAM use
 - Use Makefile?
 - Make colour cycling fns. generic & add speed plus colour, and ping-pong / loop
+- Debug controls
+    - Pause / play
+    - Step frame, step line, step to end of pattern
+    - (Eventually, reload events)

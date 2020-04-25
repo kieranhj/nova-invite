@@ -134,6 +134,22 @@ IF _DEBUG
     rts
 }
 
+.debug_check_key
+{
+    sta ldx_addr+1
+    lda #$81
+    ldy #$ff
+    jsr osbyte
+    cpx #$ff						; C=1 if pressed
+    .ldx_addr:ldx #$ff
+    lda 0,x
+    ror a
+    sta 0,x
+    and #%11000000
+    cmp #%10000000
+    rts
+}
+
 MACRO MODE8_PIXELS a,b,c,d
 EQUB a * 14 + b * 7, c * 14 + d * 7
 ENDMACRO

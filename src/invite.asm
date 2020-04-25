@@ -5,6 +5,7 @@
 
 _DEBUG = TRUE
 _DEBUG_RASTERS = TRUE
+_DEBUG_BEGIN_PAUSED = _DEBUG AND FALSE
 
 INCLUDE "src/zp.h.asm"
 INCLUDE "src/music.h.asm"
@@ -112,6 +113,11 @@ FramePeriod = 312*64-2
 ; Essentially how much time we give the main loop to stream the next track
 TimerValue = (32+254)*64 - 2*64
 
+KEY_PAUSE_INKEY = -56           ; 'P'
+KEY_STEP_FRAME_INKEY = -68      ; 'F'
+KEY_STEP_LINE_INKEY = -87       ; 'L'
+KEY_NEXT_PATTERN_INKEY = -86    ; 'N'
+
 \ ******************************************************************
 \ *	ZERO PAGE
 \ ******************************************************************
@@ -143,6 +149,16 @@ INCLUDE "src/assets.h.asm"
 
 IF _DEBUG
 .debug_writeptr     skip 2
+.debug_paused       skip 1
+.debug_step         skip 1
+.debug_step_mode    skip 1
+.pause_pattern      skip 1
+.pause_line         skip 1
+
+.pause_key_debounce     skip 1
+.step_frame_debounce    skip 1
+.step_line_debounce     skip 1
+.next_pattern_debounce  skip 1
 ENDIF
 
 .zp_end
@@ -251,6 +267,8 @@ GUARD screen3_addr
     lda #HI(screen3_addr)
     sta prev_buffer_HI
 
+    \\ This sets the first preload fn.
+    \\ Should we wait for it to complete?
     jsr events_init
 
 	\\ Set interrupts and handler
@@ -279,6 +297,10 @@ GUARD screen3_addr
     LDA #LO(irq_handler):STA IRQ1V
     LDA #HI(irq_handler):STA IRQ1V+1		; set interrupt handler
     CLI
+
+    IF _DEBUG_BEGIN_PAUSED
+    lda #1:sta debug_paused
+    ENDIF
 
     \\ Go!
     \\ Start music player
@@ -355,8 +377,18 @@ GUARD screen3_addr
 
     SET_BGCOL PAL_red
 
-    \\ Update FX Tracker first
-    jsr fx_tracker_update
+    IF _DEBUG
+    {
+        lda debug_paused
+        beq do_update
+
+        lda debug_step
+        beq skip_update
+
+        dec debug_step
+        .do_update
+    }
+    ENDIF
 
     \\ Handle events
     jsr events_update
@@ -374,9 +406,20 @@ GUARD screen3_addr
     \\ Update vsync counter
     inc vsync_count
 
-    \\ Show debug
+    \\ Update FX Tracker first
+    jsr fx_tracker_update
+
     IF _DEBUG
-    jsr fx_tracker_show_debug
+    .skip_update
+    {
+        jsr do_pause_controls       ; C set = paused
+        bcs show_debug
+
+        lda #1:sta debug_step
+
+        .show_debug
+        jsr fx_tracker_show_debug
+    }
     ENDIF
 
     SET_BGCOL PAL_black
@@ -469,6 +512,98 @@ ENDMACRO
     sta do_per_frame_fn+2
     rts
 }
+
+IF _DEBUG
+.do_pause_controls
+{
+    lda debug_step_mode
+    beq not_stepping
+
+    cmp #1:bne step_to_pattern
+
+    \\ Step to line
+    lda pause_line
+    cmp tracker_line
+    bcs exit_and_update
+    bcc done_stepping
+
+    .step_to_pattern
+    lda pause_pattern
+    cmp tracker_pattern
+    bcs exit_and_update
+
+    \\ Done stepping
+    .done_stepping
+    lda #0:sta debug_step_mode
+
+    .not_stepping
+    lda #pause_key_debounce
+    ldx #KEY_PAUSE_INKEY AND 255
+    jsr debug_check_key
+    bne not_pressed_pause
+
+    \\ Pause key pressed
+    lda debug_paused
+    bne exiting_pause
+
+    \\ Entering pause
+    lda tracker_pattern
+    sta pause_pattern
+
+    \\ TODO: Sort this out (refactor music module).
+    lda &f4:pha
+    lda MUSIC_SLOT_ZP
+    sta &f4:sta &fe30
+    jsr MUSIC_JUMP_SN_RESET
+    pla:sta &f4:sta &fe30
+    .exiting_pause
+
+    \\ Toggle pause
+    lda debug_paused:eor #1:sta debug_paused
+
+    .not_pressed_pause
+    lda debug_paused
+    beq exit_and_update
+
+    \\ Check for step frame
+    lda #step_frame_debounce
+    ldx #KEY_STEP_FRAME_INKEY AND 255
+    jsr debug_check_key
+    bne not_pressed_step_frame
+
+    .exit_and_update
+    clc
+    rts
+
+    .not_pressed_step_frame
+    \\ Check for step line
+    lda #step_line_debounce
+    ldx #KEY_STEP_LINE_INKEY AND 255
+    jsr debug_check_key
+    bne not_pressed_step_line
+
+    lda tracker_line
+    sta pause_line
+    lda #1:sta debug_step_mode
+    bne exit_and_update
+
+    .not_pressed_step_line
+    \\ Check for step pattern
+    lda #next_pattern_debounce
+    ldx #KEY_NEXT_PATTERN_INKEY AND 255
+    jsr debug_check_key
+    bne not_pressed_next_pattern
+
+    lda tracker_pattern
+    sta pause_pattern
+    lda #2:sta debug_step_mode
+    bne exit_and_update
+
+    .not_pressed_next_pattern
+    sec
+    rts
+}
+ENDIF
 
 include "src/fx_tracker.asm"
 include "src/assets.asm"

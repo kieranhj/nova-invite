@@ -99,7 +99,7 @@ ENDMACRO
 SCREEN_WIDTH_PIXELS = 256
 SCREEN_HEIGHT_PIXELS = 256
 SCREEN_ROW_BYTES = SCREEN_WIDTH_PIXELS * 8 / 8
-SCREEN_SIZE_BYTES = (SCREEN_WIDTH_PIXELS * SCREEN_HEIGHT_PIXELS) / 4
+SCREEN_SIZE_BYTES = (SCREEN_WIDTH_PIXELS * SCREEN_HEIGHT_PIXELS) / 8
 
 screen1_addr = &6000
 screen2_addr = &4000
@@ -133,6 +133,7 @@ INCLUDE "lib/exo.h.asm"
 .prev_buffer_HI     skip 1
 
 .task_request       skip 1
+.seed               skip 2
 
 INCLUDE "src/fx_tracker.h.asm"
 INCLUDE "src/assets.h.asm"
@@ -183,6 +184,9 @@ GUARD screen3_addr
 
     \\ Consts for now
     lda #4:sta MUSIC_SLOT_ZP
+
+    lda &fe44:sta seed
+    lda &fe45:sta seed+1
 
     \\ Load music into SWRAM (if available)
     {

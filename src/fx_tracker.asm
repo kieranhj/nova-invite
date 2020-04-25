@@ -197,7 +197,7 @@ ENDMACRO
     EQUW handle_image,          preload_image   ; &1y   y = image no.
     EQUW handle_anim,           preload_image   ; &2y
     EQUW handle_set_colour,     0               ; &3y   y = colour no.
-    EQUW handle_special_fx,     0               ; &4y
+    EQUW handle_special_fx,     preload_special_fx  ; &4y
     EQUW do_nothing,            0               ; &5y
     EQUW do_nothing,            0               ; &6y
     EQUW do_nothing,            0               ; &7y
@@ -212,7 +212,6 @@ ENDMACRO
 }
 
 .handle_ctrl_code
-.handle_special_fx
 .do_nothing
 {
     rts
@@ -250,6 +249,79 @@ ENDMACRO
     pla
     jsr anims_set_anim
     jmp display_next_buffer
+}
+
+; A = fx no.
+.preload_special_fx
+{
+    CHECK_TASK_NOT_RUNNING
+    ; just static for now.
+    lda next_buffer_HI
+    sta do_task_load_A+1
+
+    lda #LO(plot_static)
+    sta do_task_jmp+1
+
+    lda #HI(plot_static)
+    sta do_task_jmp+2
+
+    inc task_request
+    rts
+}
+
+.handle_special_fx
+{
+    jsr set_mode_4
+    lda #PAL_white:jsr set_mode4_fg_colour
+    lda #PAL_black:jsr set_mode4_bg_colour
+    jsr set_per_frame_do_nothing
+    jmp display_next_buffer
+}
+
+MACRO RND
+{
+    LDA seed
+    ASL A
+    ASL A
+    CLC
+    ADC seed
+    CLC
+    ADC #&45
+    STA seed
+}
+ENDMACRO
+
+MACRO RND16
+{
+    lda seed+1
+    lsr a
+    rol seed
+    bcc no_eor
+    eor #&b4
+    .no_eor
+    sta seed+1
+    eor seed
+}
+ENDMACRO
+
+.plot_static
+{
+    sta writeptr+1
+    lda #0
+    sta writeptr
+
+    ldx #HI(SCREEN_SIZE_BYTES)
+    ldy #0
+    .loop
+    RND16
+    sta (writeptr), Y
+    iny
+    bne loop
+
+    inc writeptr+1
+    dex
+    bne loop
+    rts
 }
 
 .event_data

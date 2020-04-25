@@ -224,7 +224,7 @@ passing in the event data.
 
 TODO
 ~~~
-- Wrap to 8K
+- Wrap to 8K?
 - Alternate display & next and keep third buffer for special?
 - Static noise task - & time
 - Quarter screen task - & time
@@ -233,4 +233,4 @@ TODO
   => b2 will do direct disk access, so update the ssd and can reload the file
 - Sort out SWRAM use
 - Use Makefile?
-- Make colour cycling fns. generic & add speed plus colour
+- Make colour cycling fns. generic & add speed plus colour, and ping-pong / loop

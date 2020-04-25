@@ -232,9 +232,10 @@ TODO
 - Workflow for iteration - hostfs / TubeLink on b2?
   => b2 will do direct disk access, so update the ssd and can reload the file
 - Sort out SWRAM use
+- Refactor music module.
 - Use Makefile?
 - Make colour cycling fns. generic & add speed plus colour, and ping-pong / loop
 - Debug controls
-    - Pause / play
-    - Step frame, step line, step to end of pattern
+    - Pause / play - DONE
+    - Step frame, step line, step to end of pattern - DONE
     - (Eventually, reload events)

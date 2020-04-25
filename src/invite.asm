@@ -142,7 +142,6 @@ INCLUDE "lib/exo.h.asm"
 .seed               skip 2
 
 INCLUDE "src/fx_tracker.h.asm"
-INCLUDE "src/assets.h.asm"
 
 .local_vars         skip 8
 .local_top
@@ -223,11 +222,23 @@ GUARD screen3_addr
         .no_music
     }
 
-    \\ Load Bank0
+    \\ Load Banks
     {
         SWRAM_BANK 5
         ldx #LO(bank0_filename)
         ldy #HI(bank0_filename)
+        lda #HI(&8000)
+        jsr disksys_load_file
+
+        SWRAM_BANK 6
+        ldx #LO(bank1_filename)
+        ldy #HI(bank1_filename)
+        lda #HI(&8000)
+        jsr disksys_load_file
+
+        SWRAM_BANK 7
+        ldx #LO(bank2_filename)
+        ldy #HI(bank2_filename)
         lda #HI(&8000)
         jsr disksys_load_file
     }
@@ -606,7 +617,6 @@ IF _DEBUG
 ENDIF
 
 include "src/fx_tracker.asm"
-include "src/assets.asm"
 include "src/anims.asm"
 
 .main_end
@@ -628,11 +638,10 @@ include "lib/debug4.asm"
 
 .data_start
 
-.music_filename
-EQUS "MUSIC", 13
-
-.bank0_filename
-EQUS "BANK0", 13
+.music_filename     EQUS "MUSIC", 13
+.bank0_filename     EQUS "BANK0", 13
+.bank1_filename     EQUS "BANK1", 13
+.bank2_filename     EQUS "BANK2", 13
 
 .mode4_default_palette
 {
@@ -692,6 +701,8 @@ EQUS "BANK0", 13
 	EQUB LO(screen1_addr/8)	; R13 screen start address, low
 }
 
+include "src/asset_tables.asm"
+
 .data_end
 
 \ ******************************************************************
@@ -735,31 +746,70 @@ PRINT "FREE =", ~screen3_addr-P%
 PRINT "------"
 
 \ ******************************************************************
-\ *	BANK 0
+\ *	BANK 0: IMAGES
 \ ******************************************************************
 
 CLEAR &8000, &C000
 ORG &8000
 GUARD &C000
 .bank0_start
-include "src/bank0.asm"
+include "src/image_data.asm"
 .bank0_end
 
 SAVE "build/BANK0", bank0_start, bank0_end, bank0_start
 
-\ ******************************************************************
-\ *	Memory Info
-\ ******************************************************************
-
 PRINT "------"
 PRINT "BANK 0"
 PRINT "------"
-;PRINT "ZP size =", ~zp_end-zp_start, "(",~&A0-zp_end,"free)"
-;PRINT "MAIN size =", ~main_end-main_start
-;PRINT "DATA size =",~data_end-data_start
-;PRINT "BSS size =",~bss_end-bss_start
 PRINT "------"
 PRINT "SIZE =", ~bank0_end-bank0_start
+PRINT "HIGH WATERMARK =", ~P%
+PRINT "FREE =", ~&C000-P%
+PRINT "------"
+
+\ ******************************************************************
+\ *	BANK 1: ANIMS
+\ ******************************************************************
+
+CLEAR &8000, &C000
+ORG &8000
+GUARD &C000
+.bank1_start
+include "src/anims_data.asm"
+.bank1_end
+
+SAVE "build/BANK1", bank1_start, bank1_end, bank1_start
+
+PRINT "------"
+PRINT "BANK 1"
+PRINT "------"
+PRINT "------"
+PRINT "SIZE =", ~bank1_end-bank1_start
+PRINT "HIGH WATERMARK =", ~P%
+PRINT "FREE =", ~&C000-P%
+PRINT "------"
+
+\ ******************************************************************
+\ *	BANK 2: ANIMS #2
+\ ******************************************************************
+
+CLEAR &8000, &C000
+ORG &8000
+GUARD &C000
+.bank2_start
+.exo_anims_triangle
+INCBIN "build/triangle.exo"
+.exo_anims_claw
+INCBIN "build/claw.exo"
+.bank2_end
+
+SAVE "build/BANK2", bank2_start, bank2_end, bank2_start
+
+PRINT "------"
+PRINT "BANK 2"
+PRINT "------"
+PRINT "------"
+PRINT "SIZE =", ~bank2_end-bank2_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%
 PRINT "------"

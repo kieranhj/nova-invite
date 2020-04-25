@@ -8,6 +8,9 @@ python bin/png2bbc.py --quiet -o build/a.bin ./data/A.png 4
 python bin/png2bbc.py --quiet -o build/nova.bin ./data/nova.png 4
 python bin/png2bbc.py --quiet -o build/nova4.bin ./data/nova4.png 4
 python bin/png2bbc.py --quiet -o build/bs_logo.bin ./data/bslogo_square.png -p 03 4 
+python bin/png2bbc.py --quiet --fixed-16 -o build/turbulent.bin "./data/palette_shift_01_64x256 (turbulent circle).png" 2 
+python bin/png2bbc.py --quiet --fixed-16 -o build/triangle.bin "./data/palette_shift_02_64x256 (triangle rounded).png" 2 
+python bin/png2bbc.py --quiet --fixed-16 -o build/claw.bin "./data/palette_shift_03_64x256 (claw and ball).png" 2 
 
 bin\exomizer.exe level -M256 build/n.bin@0x0000 -o build/n.exo
 bin\exomizer.exe level -M256 build/o.bin@0x0000 -o build/o.exo
@@ -22,6 +25,9 @@ bin\exomizer.exe level -M256 data/a.cross@0x0000 -o build/cross.exo
 bin\exomizer.exe level -M256 data/a.galaxy@0x0000 -o build/galaxy.exo
 bin\exomizer.exe level -M256 data/a.world@0x0000 -o build/world.exo
 bin\exomizer.exe level -M256 data/palette_shift_test.bin@0x0000 -o build/shift.exo
+bin\exomizer.exe level -M256 build/turbulent.bin@0x0000 -o build/turbulent.exo
+bin\exomizer.exe level -M256 build/triangle.bin@0x0000 -o build/triangle.exo
+bin\exomizer.exe level -M256 build/claw.bin@0x0000 -o build/claw.exo
 
 echo Building MUSIC...
 rem python ..\vgm-packer\vgmpacker.py "data/intro_test.vgm" -o build/intro_theme.vgc

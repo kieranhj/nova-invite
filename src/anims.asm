@@ -5,16 +5,16 @@
 
 .anim_fn_table
 {
-    EQUW 0,                 do_nothing
-    EQUW 0,                 do_nothing
-    EQUW 0,                 do_nothing
-    EQUW 0,                 do_nothing
-    EQUW 0,                 do_nothing
-    EQUW 0,                 do_nothing
     EQUW anim_galaxy_init,  anim_atom_cycle
-    EQUW anim_galaxy_init,  anim_world_cycle
+    EQUW anim_galaxy_init,  anim_cross_cycle        ; cross
     EQUW anim_galaxy_init,  anim_galaxy_cycle
     EQUW anim_galaxy_init,  anim_world_cycle
+    EQUW anim_galaxy_init,  anim_cross_cycle        ; shift
+    EQUW anim_galaxy_init,  anim_atom_cycle         ; turbulent
+    EQUW anim_galaxy_init,  anim_world_cycle        ; triangle
+    EQUW anim_galaxy_init,  anim_cross_cycle        ; claw
+    EQUW 0,                 do_nothing
+    EQUW 0,                 do_nothing
     EQUW 0,                 do_nothing
     EQUW 0,                 do_nothing
     EQUW 0,                 do_nothing

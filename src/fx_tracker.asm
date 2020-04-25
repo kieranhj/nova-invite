@@ -196,7 +196,7 @@ ENDMACRO
 \\ Event handler and preload fn per event type &xy
     EQUW do_nothing,            0               ; &0y
     EQUW handle_image,          preload_image   ; &1y   y = image no.
-    EQUW handle_anim,           preload_image   ; &2y
+    EQUW handle_anim,           preload_anim    ; &2y
     EQUW handle_set_colour,     0               ; &3y   y = colour no.
     EQUW handle_special_fx,     preload_special_fx  ; &4y
     EQUW do_nothing,            0               ; &5y
@@ -229,15 +229,65 @@ ENDMACRO
     jmp display_next_buffer
 }
 
+MACRO SET_TASK_FN func
+{
+    lda #LO(func)
+    sta do_task_jmp+1
+    lda #HI(func)
+    sta do_task_jmp+2
+    inc task_request
+}
+ENDMACRO
+
 ; A = image no.
 .preload_image
 {
-    tax
-    ldy assets_table_HI, X
-    lda assets_table_LO, X
-    tax
+    sta do_task_load_X+1
     lda next_buffer_HI
-    jmp set_task_decrunch    
+    sta do_task_load_A+1
+    SET_TASK_FN decrunch_image
+    rts
+}
+
+; A = to_addr
+; X = image no.
+.decrunch_image
+{
+    pha
+    txa:asl a:tax 
+    ldy image_table+1, X
+    lda image_table+0, X
+    tax
+    lda #5
+    sta &f4:sta &fe30
+    pla
+    jmp decrunch_to_page_A
+}
+
+; A = anim no.
+.preload_anim
+{
+    sta do_task_load_X+1
+    lda next_buffer_HI
+    sta do_task_load_A+1
+    SET_TASK_FN decrunch_anim
+    rts
+}
+
+; A = to_addr
+; X = anim no.
+.decrunch_anim
+{
+    pha
+    txa:asl a:asl a:tax 
+    lda anims_table+2, X
+    sta &f4:sta &fe30
+
+    ldy anims_table+1, X
+    lda anims_table+0, X
+    tax
+    pla
+    jmp decrunch_to_page_A
 }
 
 ; A = anim no.

@@ -141,6 +141,10 @@ INCLUDE "src/assets.h.asm"
 .local_vars         skip 8
 .local_top
 
+IF _DEBUG
+.debug_writeptr     skip 2
+ENDIF
+
 .zp_end
 
 \ ******************************************************************
@@ -370,6 +374,11 @@ GUARD screen3_addr
     \\ Update vsync counter
     inc vsync_count
 
+    \\ Show debug
+    IF _DEBUG
+    jsr fx_tracker_show_debug
+    ENDIF
+
     SET_BGCOL PAL_black
     pla:tay:pla:tax
     dec music_lock
@@ -475,6 +484,7 @@ include "src/anims.asm"
 include "lib/screen.asm"
 include "lib/exo.asm"
 include "lib/disksys.asm"
+include "lib/debug4.asm"
 .additional_end
 
 \ ******************************************************************

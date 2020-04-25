@@ -10,6 +10,7 @@
 
 .events_ptr         skip 2
 .events_delay       skip 2
+.events_data        skip 1
 
 .preload_id         skip 1
 .last_fg_colour     skip 1

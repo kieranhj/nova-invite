@@ -155,6 +155,7 @@ ENDMACRO
     \\ Don't process events with zero value.
     EVENTS_GET_BYTE
     beq no_event
+    sta events_data
     jsr events_handler
     .no_event
 
@@ -323,6 +324,22 @@ ENDMACRO
     bne loop
     rts
 }
+
+IF _DEBUG
+.fx_tracker_show_debug
+{
+    jsr debug_reset_writeptr
+    lda tracker_pattern
+    jsr debug_write_hex_spc
+    lda tracker_line
+    jsr debug_write_hex_spc
+    lda events_data
+    jsr debug_write_hex_spc
+    lda preload_id
+    jsr debug_write_hex_spc
+    rts
+}
+ENDIF
 
 .event_data
 incbin "build/events.bin"

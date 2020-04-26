@@ -1,3 +1,3 @@
 @echo off
-copy build\nova-invite.ssd ..\jsbeeb-kieranhj\discs
+copy disc\nova-invite.ssd ..\jsbeeb-kieranhj\discs
 runme.url

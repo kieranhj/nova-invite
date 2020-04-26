@@ -110,3 +110,14 @@
     ldy #HI(mode8_default_palette)
     jmp set_palette
 }
+
+.set_all_black_palette
+{
+    lda #PAL_black
+    .loop
+    sta &fe21
+    clc
+    adc #&10
+    bcc loop
+    rts
+}

@@ -208,7 +208,7 @@ Perhaps encode &xy; where x:
     2y = animation #
     3y = set fg colour #
     4y = special Fx #
-    5y = set animation colour / ramp #
+    5y = set animation colour / ramp 
     6y = set animation speed
     7y = set animation mode loop fwd, loop back, ping-pong, one-shot fwd, one-shot back
 

@@ -3,28 +3,30 @@
 \ *	ANIMS MODULE
 \ ******************************************************************
 
-.anims_default_ramp_for_anim    ; default mode, default speed
+.anims_defaults_for_anim 
 {
-    EQUB 8                          ; atom
-    EQUB 2                          ; cross
-    EQUB 9                          ; galaxy
-    EQUB 10                         ; world
-    EQUB 4                          ; shift
-    EQUB 8                          ; turbulent
-    EQUB 10                         ; triangle
-    EQUB 5                          ; claw
-    EQUB 0                          ; &28
-    EQUB 0                          ; &29
-    EQUB 0                          ; &2A
-    EQUB 0                          ; &2B
-    EQUB 0                          ; &2C
-    EQUB 0                          ; &2D
-    EQUB 0                          ; &2E
-    EQUB 0                          ; &2F
+; default ramp number, default speed - (default mode)
+    EQUB 8, 2                          ; atom
+    EQUB 2, 1                          ; cross
+    EQUB 9, 4                          ; galaxy
+    EQUB 10, 1                         ; world
+    EQUB 4, 3                          ; shift
+    EQUB 8, 3                          ; turbulent
+    EQUB 10, 5                         ; triangle
+    EQUB 5, 8                          ; claw
+    EQUB 0, 0                          ; &28
+    EQUB 0, 0                          ; &29
+    EQUB 0, 0                          ; &2A
+    EQUB 0, 0                          ; &2B
+    EQUB 0, 0                          ; &2C
+    EQUB 0, 0                          ; &2D
+    EQUB 0, 0                          ; &2E
+    EQUB 0, 0                          ; &2F
 }
 
 .anims_ramp_table
 {
+; address of ramp, length of ramp.
     EQUW 0, 0                       ; &50 - use default for anim no.
     EQUW anims_ramp_red, 2          ; &51
     EQUW anims_ramp_green, 2        ; &52
@@ -70,24 +72,36 @@
 ; A = delay
 .anims_set_speed
 {
+    sta anims_speed_load
+    beq return
     sta anims_frame_speed
+    .return
     rts
 }
 
 ; A = anim no.
 .anims_set_anim
 {
-    tax
+    asl a:tax
+
+    lda anims_speed_load
+    bne speed_already_set
+    lda anims_defaults_for_anim+1, X
+    .speed_already_set
+    jsr anims_set_speed   ; preserves X
 
     lda anims_ramp_load
     bne ramp_already_set
-    lda anims_default_ramp_for_anim, X
+
+    lda anims_defaults_for_anim+0, X
     .ramp_already_set
-    jsr anims_set_ramp
+    jsr anims_set_ramp      ; trashes X
 
     lda #0
     sta anims_ramp_load
+    sta anims_speed_load
 
+IF 0
     lda #LO(anim_loop_ramp_15)
     sta do_per_frame_fn+1
     sta advance_loop+1
@@ -104,9 +118,37 @@
     jsr &ffff
     dec loop_count
     bne advance_loop
+ELSE
+
+    jsr set_all_black_palette
+    jsr anim_loop_ramp_15
+    
+    lda anims_frame_speed
+    sta anims_frame_delay
+
+    lda #LO(anims_frame_update)
+    sta do_per_frame_fn+1
+    lda #HI(anims_frame_update)
+    sta do_per_frame_fn+2
+
+ENDIF
     rts
 
     .loop_count equb 0
+}
+
+.anims_frame_update
+{
+    dec anims_frame_delay
+    bne return
+
+    jsr anim_loop_ramp_15
+    
+    lda anims_frame_speed
+    sta anims_frame_delay
+
+    .return
+    rts
 }
 
 IF 0

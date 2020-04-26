@@ -20,5 +20,6 @@
 .anims_colour_index skip 1
 .anims_ramp_length  skip 1
 
+.anims_speed_load   skip 1
 .anims_frame_speed  skip 1
-.anims_frame_count  skip 1
+.anims_frame_delay  skip 1

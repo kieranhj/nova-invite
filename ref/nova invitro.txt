@@ -208,6 +208,9 @@ Perhaps encode &xy; where x:
     2y = animation #
     3y = set fg colour #
     4y = special Fx #
+    5y = set animation colour / ramp #
+    6y = set animation speed
+    7y = set animation mode loop fwd, loop back, ping-pong, one-shot fwd, one-shot back
 
 Let's just say y is the asset number for now.
 Can worry about randomisation or lists later.
@@ -231,11 +234,12 @@ TODO
 - Debug info! - DONE
 - Workflow for iteration - hostfs / TubeLink on b2?
   => b2 will do direct disk access, so update the ssd and can reload the file
-- Sort out SWRAM use
-- Refactor music module.
+- Sort out SWRAM use - DONE.
+- Refactor music module - DONE.
 - Use Makefile?
 - Make colour cycling fns. generic & add speed plus colour, and ping-pong / loop
 - Debug controls
     - Pause / play - DONE
     - Step frame, step line, step to end of pattern - DONE
     - (Eventually, reload events)
+- Make Google sheet of all control codes.

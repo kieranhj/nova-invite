@@ -198,7 +198,7 @@ ENDMACRO
     EQUW handle_image,          preload_image   ; &1y   y = image no.
     EQUW handle_anim,           preload_anim    ; &2y
     EQUW handle_set_colour,     0               ; &3y   y = colour no.
-    EQUW handle_special_fx,     preload_special_fx  ; &4y
+    EQUW handle_special_fx, preload_special_fx  ; &4y
     EQUW do_nothing,            0               ; &5y
     EQUW do_nothing,            0               ; &6y
     EQUW do_nothing,            0               ; &7y
@@ -390,6 +390,3 @@ IF _DEBUG
     rts
 }
 ENDIF
-
-.event_data
-incbin "build/events.bin"

@@ -454,6 +454,24 @@ GUARD screen3_addr
     rts
 }
 
+.display_prev_buffer
+{
+    ; display->prev
+    ; prev->display
+    ; next<>next
+    ; set CRTC R12 (display HI)
+    ldx #12:stx &fe00
+    lda prev_buffer_HI
+    pha
+    lsr a:lsr a:lsr a
+    sta &fe01
+    lda display_buffer_HI
+    sta prev_buffer_HI
+    pla
+    sta display_buffer_HI
+    rts
+}
+
 .do_task
 {
 .^do_task_load_A
@@ -685,6 +703,16 @@ include "lib/debug4.asm"
 }
 
 include "src/asset_tables.asm"
+
+.mod15_table                ; could be PAGE_ALIGN'd
+{
+    FOR n,0,255,1
+    EQUB n MOD 15
+    NEXT
+}
+
+.event_data
+incbin "build/events.bin"
 
 .data_end
 

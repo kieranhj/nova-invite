@@ -201,7 +201,7 @@ ENDMACRO
     EQUW handle_special_fx, preload_special_fx  ; &4y special Fx 
     EQUW anims_set_ramp,        0               ; &5y set anim ramp y = ramp no.
     EQUW anims_set_speed,       0               ; &6y set anim speed
-    EQUW do_nothing,            0               ; &7y set anim mode
+    EQUW anims_set_mode,        0               ; &7y set anim mode
     EQUW do_nothing,            0               ; &8y
     EQUW do_nothing,            0               ; &9y
     EQUW do_nothing,            0               ; &Ay

@@ -6,27 +6,27 @@
 .anims_defaults_for_anim 
 {
 ; default ramp number, default speed - (default mode)
-    EQUB 8, 2                          ; atom
-    EQUB 2, 1                          ; cross
-    EQUB 9, 4                          ; galaxy
-    EQUB 10, 1                         ; world
-    EQUB 4, 3                          ; shift
-    EQUB 8, 3                          ; turbulent
-    EQUB 10, 5                         ; triangle
-    EQUB 5, 8                          ; claw
-    EQUB 0, 0                          ; &28
-    EQUB 0, 0                          ; &29
-    EQUB 0, 0                          ; &2A
-    EQUB 0, 0                          ; &2B
-    EQUB 0, 0                          ; &2C
-    EQUB 0, 0                          ; &2D
-    EQUB 0, 0                          ; &2E
-    EQUB 0, 0                          ; &2F
+    EQUB 8, 2, 1, 0                    ; atom
+    EQUB 2, 1, 2, 0                    ; cross
+    EQUB 9, 4, 1, 0                    ; galaxy
+    EQUB 10, 1, 1, 0                   ; world
+    EQUB 4, 3, 2, 0                    ; shift
+    EQUB 8, 3, 1, 0                    ; turbulent
+    EQUB 10, 5, 1, 0                   ; triangle
+    EQUB 5, 8, 1, 0                    ; claw
+    EQUB 0, 0, 0, 0                    ; &28
+    EQUB 0, 0, 0, 0                    ; &29
+    EQUB 0, 0, 0, 0                    ; &2A
+    EQUB 0, 0, 0, 0                    ; &2B
+    EQUB 0, 0, 0, 0                    ; &2C
+    EQUB 0, 0, 0, 0                    ; &2D
+    EQUB 0, 0, 0, 0                    ; &2E
+    EQUB 0, 0, 0, 0                    ; &2F
 }
 
 .anims_ramp_table
 {
-; address of ramp, length of ramp.
+    ; address of ramp, length of ramp.
     EQUW 0, 0                       ; &50 - use default for anim no.
     EQUW anims_ramp_red, 2          ; &51
     EQUW anims_ramp_green, 2        ; &52
@@ -45,6 +45,27 @@
     EQUW 0, 0                       ; &5F
 }
 
+.anims_mode_table
+{
+    ; mode func
+    EQUW 0                          ; &70 - use default for anim no.
+    EQUW anim_loop_forwards         ; &71
+    EQUW anim_loop_backwards        ; &72
+    EQUW 0                          ; &73
+    EQUW 0                          ; &74
+    EQUW 0                          ; &75
+    EQUW 0                          ; &76
+    EQUW 0                          ; &77
+    EQUW 0                          ; &78
+    EQUW 0                          ; &79
+    EQUW 0                          ; &7A
+    EQUW 0                          ; &7B
+    EQUW 0                          ; &7C
+    EQUW 0                          ; &7D
+    EQUW 0                          ; &7E
+    EQUW 0                          ; &7F
+}
+
 ; A = ramp no.
 .anims_set_ramp
 {
@@ -55,9 +76,11 @@
     tax
 
     lda anims_ramp_table+1, X
+    IF _DEBUG
     bne ok
     brk
     .ok
+    ENDIF
     sta anims_ramp_ptr+1
     lda anims_ramp_table+0, X
     sta anims_ramp_ptr
@@ -79,16 +102,37 @@
     rts
 }
 
+; A = anim mode
+.anims_set_mode
+{
+    sta anims_mode_load
+    beq return
+
+    asl a:tax
+    lda anims_mode_table+1, X
+    IF _DEBUG
+    bne ok
+    brk
+    .ok
+    ENDIF
+    sta do_per_frame_fn+2
+    lda anims_mode_table+0, X
+    sta do_per_frame_fn+1
+
+    .return
+    rts
+}
+
 ; A = anim no.
 .anims_set_anim
 {
-    asl a:tax
+    asl a:asl a:pha:tax
 
     lda anims_speed_load
     bne speed_already_set
     lda anims_defaults_for_anim+1, X
     .speed_already_set
-    jsr anims_set_speed   ; preserves X
+    jsr anims_set_speed     ; preserves X
 
     lda anims_ramp_load
     bne ramp_already_set
@@ -97,41 +141,25 @@
     .ramp_already_set
     jsr anims_set_ramp      ; trashes X
 
+    pla:tax
+    lda anims_mode_load
+    bne mode_already_set
+    lda anims_defaults_for_anim+2, X
+    .mode_already_set
+    jsr anims_set_mode      ; trashes X
+
     lda #0
     sta anims_ramp_load
     sta anims_speed_load
+    sta anims_mode_load
 
-IF 0
-    lda #LO(anim_loop_ramp_15)
-    sta do_per_frame_fn+1
-    sta advance_loop+1
-    lda #HI(anim_loop_ramp_15)
-    sta do_per_frame_fn+2
-    sta advance_loop+2
-
-    lda #0      ; should be RND
-    sta anims_colour_index
-
-    lda #16
-    sta loop_count
-    .advance_loop
-    jsr &ffff
-    dec loop_count
-    bne advance_loop
-ELSE
-
+    \\ Clear palette to all black then update once to start
     jsr set_all_black_palette
-    jsr anim_loop_ramp_15
+    jsr do_per_frame_fn
     
     lda anims_frame_speed
     sta anims_frame_delay
 
-    lda #LO(anims_frame_update)
-    sta do_per_frame_fn+1
-    lda #HI(anims_frame_update)
-    sta do_per_frame_fn+2
-
-ENDIF
     rts
 
     .loop_count equb 0
@@ -142,7 +170,7 @@ ENDIF
     dec anims_frame_delay
     bne return
 
-    jsr anim_loop_ramp_15
+    jsr anim_loop_forwards
     
     lda anims_frame_speed
     sta anims_frame_delay
@@ -253,7 +281,7 @@ IF 0
 }
 ENDIF
 
-.anim_loop_ramp_15
+.anim_loop_forwards
 {
     ldy #0
     .loop
@@ -261,11 +289,8 @@ ENDIF
     clc
     adc anims_colour_index
     tax
-    lda mod15_table, X
-    clc
-    adc #1
 
-    asl a:asl a:asl a:asl a
+    lda mod15_plus1_asl4_table, X
     ora (anims_ramp_ptr), Y
     sta &fe21
 
@@ -275,6 +300,30 @@ ENDIF
 
     inc anims_colour_index
     rts
+    ; 1=black, 2=blue, 3=green, 4=cyan
+    ; 2=black, 3=blue, 4=green, 5=cyan etc.
+}
+
+.anim_loop_backwards
+{
+    ldy anims_ramp_length
+    .loop
+    tya
+    clc
+    adc anims_colour_index
+    tax
+
+    lda mod15_plus1_asl4_table, X
+    ora (anims_ramp_ptr), Y
+    sta &fe21
+
+    dey
+    bne loop
+
+    dec anims_colour_index
+    rts
+
+    ; 1=black, 
 }
 
 .anim_loop_ramp_hi8
@@ -298,31 +347,31 @@ ENDIF
 }
 
 .anims_ramp_red
-EQUB PAL_black, PAL_red
+EQUB PAL_black, PAL_red, PAL_black
 
 .anims_ramp_green
-EQUB PAL_black, PAL_green
+EQUB PAL_black, PAL_green, PAL_black
 
 .anims_ramp_yellow
-EQUB PAL_black, PAL_yellow
+EQUB PAL_black, PAL_yellow, PAL_black
 
 .anims_ramp_blue
-EQUB PAL_black, PAL_blue
+EQUB PAL_black, PAL_blue, PAL_black
 
 .anims_ramp_magenta
-EQUB PAL_black, PAL_magenta
+EQUB PAL_black, PAL_magenta, PAL_black
 
 .anims_ramp_cyan
-EQUB PAL_black, PAL_cyan
+EQUB PAL_black, PAL_cyan, PAL_black
 
 .anims_ramp_white
-EQUB PAL_black, PAL_white
+EQUB PAL_black, PAL_white, PAL_black
 
 .anims_ramp_galaxy
-EQUB PAL_black,PAL_blue,PAL_red,PAL_yellow,PAL_white
+EQUB PAL_black,PAL_blue,PAL_red,PAL_yellow,PAL_white, PAL_black
 
 .anims_ramp_atom
-EQUB PAL_black,PAL_blue,PAL_blue,PAL_cyan,PAL_white
+EQUB PAL_black,PAL_blue,PAL_blue,PAL_cyan,PAL_white, PAL_black
 
 .anims_ramp_world
-EQUB PAL_black,PAL_blue,PAL_green,PAL_cyan
+EQUB PAL_black,PAL_blue,PAL_green,PAL_cyan, PAL_black

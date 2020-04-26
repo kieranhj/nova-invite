@@ -211,6 +211,12 @@ Perhaps encode &xy; where x:
     5y = set animation colour / ramp 
     6y = set animation speed
     7y = set animation mode loop fwd, loop back, ping-pong, one-shot fwd, one-shot back
+        70 = default for anim
+        71 = loop forward
+        72 = loop backwards
+        73 = one shot forwards
+        74 = one shot backwards
+        75 = ping-pong
 
 Let's just say y is the asset number for now.
 Can worry about randomisation or lists later.
@@ -236,10 +242,10 @@ TODO
 - Refactor music module - DONE.
 - Use Makefile?
 - Make colour cycling fns. generic with ramp - DONE
-    - Add set speed
-    - Add set ramp
+    - Add set speed - DONE
+    - Add set ramp - DONE
     - Add set mode
-    - Handle defaults and overriding them
+    - Handle defaults and overriding them - DONE
 - Debug controls
     - Pause / play - DONE
     - Step frame, step line, step to end of pattern - DONE

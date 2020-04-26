@@ -704,10 +704,10 @@ include "lib/debug4.asm"
 
 include "src/asset_tables.asm"
 
-.mod15_table                ; could be PAGE_ALIGN'd
+.mod15_plus1_asl4_table                ; could be PAGE_ALIGN'd
 {
     FOR n,0,255,1
-    EQUB n MOD 15
+    EQUB ((n MOD 15)+1) << 4
     NEXT
 }
 

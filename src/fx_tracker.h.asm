@@ -23,3 +23,5 @@
 .anims_speed_load   skip 1
 .anims_frame_speed  skip 1
 .anims_frame_delay  skip 1
+
+.anims_mode_load    skip 1

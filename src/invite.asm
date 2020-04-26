@@ -8,7 +8,6 @@ _DEBUG_RASTERS = TRUE
 _DEBUG_BEGIN_PAUSED = _DEBUG AND FALSE
 
 INCLUDE "src/zp.h.asm"
-INCLUDE "src/music.h.asm"
 
 TRACK_SPEED = 3
 TRACK_PATTERN_LENGTH = 128
@@ -159,6 +158,8 @@ IF _DEBUG
 .step_line_debounce     skip 1
 .next_pattern_debounce  skip 1
 ENDIF
+
+INCLUDE "lib/vgcplayer.h.asm"
 
 .zp_end
 
@@ -348,14 +349,7 @@ GUARD screen3_addr
     LDA old_irqv+1:STA IRQ1V+1	; set interrupt handler
     CLI
 
-    {
-        lda MUSIC_SLOT_ZP
-        bmi no_music
-        jsr MUSIC_JUMP_SN_RESET
-        .no_music
-    }
-
-    rts
+    jmp MUSIC_JUMP_SN_RESET
 }
 
 .irq_handler
@@ -408,11 +402,7 @@ GUARD screen3_addr
     jsr do_per_frame_fn
 
     \\ Then update music
-	lda &f4:pha
-    lda MUSIC_SLOT_ZP
-	sta &f4:sta &fe30
     jsr MUSIC_JUMP_VGM_UPDATE
-	pla:sta &f4:sta &fe30
 
     \\ Update vsync counter
     inc vsync_count
@@ -558,15 +548,7 @@ IF _DEBUG
     bne exiting_pause
 
     \\ Entering pause
-    lda tracker_pattern
-    sta pause_pattern
-
-    \\ TODO: Sort this out (refactor music module).
-    lda &f4:pha
-    lda MUSIC_SLOT_ZP
-    sta &f4:sta &fe30
     jsr MUSIC_JUMP_SN_RESET
-    pla:sta &f4:sta &fe30
     .exiting_pause
 
     \\ Toggle pause
@@ -618,6 +600,7 @@ ENDIF
 
 include "src/fx_tracker.asm"
 include "src/anims.asm"
+include "src/music_jump.asm"
 
 .main_end
 
@@ -807,6 +790,28 @@ SAVE "build/BANK2", bank2_start, bank2_end, bank2_start
 
 PRINT "------"
 PRINT "BANK 2"
+PRINT "------"
+PRINT "------"
+PRINT "SIZE =", ~bank2_end-bank2_start
+PRINT "HIGH WATERMARK =", ~P%
+PRINT "FREE =", ~&C000-P%
+PRINT "------"
+
+\ ******************************************************************
+\ *	BANK 3: MUSIC
+\ ******************************************************************
+
+CLEAR &8000, &C000
+ORG &8000
+GUARD &C000
+.bank3_start
+include "src/music.asm"
+.bank3_end
+
+SAVE "build/MUSIC", bank3_start, bank3_end, bank3_start
+
+PRINT "------"
+PRINT "BANK 3"
 PRINT "------"
 PRINT "------"
 PRINT "SIZE =", ~bank2_end-bank2_start

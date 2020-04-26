@@ -195,13 +195,13 @@ ENDMACRO
 {
 \\ Event handler and preload fn per event type &xy
     EQUW do_nothing,            0               ; &0y
-    EQUW handle_image,          preload_image   ; &1y   y = image no.
-    EQUW handle_anim,           preload_anim    ; &2y
-    EQUW handle_set_colour,     0               ; &3y   y = colour no.
-    EQUW handle_special_fx, preload_special_fx  ; &4y
-    EQUW do_nothing,            0               ; &5y
-    EQUW do_nothing,            0               ; &6y
-    EQUW do_nothing,            0               ; &7y
+    EQUW handle_image,          preload_image   ; &1y set image y = image no.
+    EQUW handle_anim,           preload_anim    ; &2y set anim y = anim no.
+    EQUW handle_set_colour,     0               ; &3y set fg colour y = colour no.
+    EQUW handle_special_fx, preload_special_fx  ; &4y special Fx 
+    EQUW anims_set_ramp,        0               ; &5y set anim ramp y = ramp no.
+    EQUW do_nothing,            0               ; &6y set anim speed
+    EQUW do_nothing,            0               ; &7y set anim mode
     EQUW do_nothing,            0               ; &8y
     EQUW do_nothing,            0               ; &9y
     EQUW do_nothing,            0               ; &Ay

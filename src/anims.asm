@@ -3,7 +3,7 @@
 \ *	ANIMS MODULE
 \ ******************************************************************
 
-.anims_default_ramp_for_anim
+.anims_default_ramp_for_anim    ; default mode, default speed
 {
     EQUB 8                          ; atom
     EQUB 2                          ; cross
@@ -25,7 +25,7 @@
 
 .anims_ramp_table
 {
-    EQUW 0, 0                       ; &50
+    EQUW 0, 0                       ; &50 - use default for anim no.
     EQUW anims_ramp_red, 2          ; &51
     EQUW anims_ramp_green, 2        ; &52
     EQUW anims_ramp_yellow, 2       ; &53
@@ -46,6 +46,9 @@
 ; A = ramp no.
 .anims_set_ramp
 {
+    sta anims_ramp_load
+    beq return
+
     asl a:asl a
     tax
 
@@ -59,6 +62,15 @@
 
     lda anims_ramp_table+2, X
     sta anims_ramp_length
+
+    .return
+    rts
+}
+
+; A = delay
+.anims_set_speed
+{
+    sta anims_frame_speed
     rts
 }
 
@@ -66,8 +78,15 @@
 .anims_set_anim
 {
     tax
+
+    lda anims_ramp_load
+    bne ramp_already_set
     lda anims_default_ramp_for_anim, X
+    .ramp_already_set
     jsr anims_set_ramp
+
+    lda #0
+    sta anims_ramp_load
 
     lda #LO(anim_loop_ramp_15)
     sta do_per_frame_fn+1

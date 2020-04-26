@@ -229,17 +229,23 @@ TODO
 ~~~
 - Wrap to 8K?
 - Alternate display & next and keep third buffer for special?
-- Static noise task - & time
-- Quarter screen task - & time
 - Debug info! - DONE
 - Workflow for iteration - hostfs / TubeLink on b2?
   => b2 will do direct disk access, so update the ssd and can reload the file
 - Sort out SWRAM use - DONE.
 - Refactor music module - DONE.
 - Use Makefile?
-- Make colour cycling fns. generic & add speed plus colour, and ping-pong / loop
+- Make colour cycling fns. generic with ramp - DONE
+    - Add set speed
+    - Add set ramp
+    - Add set mode
+    - Handle defaults and overriding them
 - Debug controls
     - Pause / play - DONE
     - Step frame, step line, step to end of pattern - DONE
     - (Eventually, reload events)
 - Make Google sheet of all control codes.
+- Special FX:
+    - Proper static noise
+    - Quarter screen
+    - Bounce screen with VADJ?

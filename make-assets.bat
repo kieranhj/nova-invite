@@ -29,8 +29,3 @@ bin\exomizer.exe level -M256 data/anims/palette_shift_test.bin@0x0000 -o build/s
 bin\exomizer.exe level -M256 build/turbulent.bin@0x0000 -o build/turbulent.exo
 bin\exomizer.exe level -M256 build/triangle.bin@0x0000 -o build/triangle.exo
 bin\exomizer.exe level -M256 build/claw.bin@0x0000 -o build/claw.exo
-
-echo Building MUSIC...
-rem python ..\vgm-packer\vgmpacker.py "data/intro_test.vgm" -o build/intro_theme.vgc
-rem python ..\vgm-packer\vgmpacker.py "data/main_test.vgm" -o build/main_theme.vgc
-python ..\vgm-packer\vgmpacker.py "data/music/acid_test.vgm" -o build/acid_test.vgc

@@ -259,3 +259,11 @@ TODO
     - Quarter screen
     - Bounce screen with VADJ?
 - Structure data folder same as Google Drive
+
+New event system!
+Export channel 4 from a second PSG.
+Use four note arp effect 'c' (effect 10) with 12-bits of data.
+Can have 4x of these per line. :)
+Remove animation default nonsense, just use last one set.
+This means we can say 'play anim X' 'set anim colour Y' 'set anim speed Z' 'set anim mode ping-pong' on one line.
+Also means we can mix colour changes and Fx etc.

@@ -204,6 +204,7 @@ From the users POV only commands are:
 
 Perhaps encode &xy; where x:
     0y = control codes
+        00 = no event
     1y = image #
     2y = animation #
     3y = set fg colour #
@@ -212,11 +213,12 @@ Perhaps encode &xy; where x:
     6y = set animation speed
     7y = set animation mode loop fwd, loop back, ping-pong, one-shot fwd, one-shot back
         70 = default for anim
-        71 = loop forward
-        72 = loop backwards
+        71 = loop forward - DONE
+        72 = loop backwards - DONE
         73 = one shot forwards
         74 = one shot backwards
         75 = ping-pong
+        76 = random
 
 Let's just say y is the asset number for now.
 Can worry about randomisation or lists later.
@@ -251,7 +253,9 @@ TODO
     - Step frame, step line, step to end of pattern - DONE
     - (Eventually, reload events)
 - Make Google sheet of all control codes.
+    - https://drive.google.com/open?id=1nPhbag9fAhDcQTmo_VQmBMRLQR4kX4u2HnAkiunwvUI
 - Special FX:
     - Proper static noise
     - Quarter screen
     - Bounce screen with VADJ?
+- Structure data folder same as Google Drive

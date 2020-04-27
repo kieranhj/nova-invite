@@ -167,6 +167,11 @@ INCLUDE "lib/vgcplayer.h.asm"
 \ *	BSS DATA IN LOWER RAM
 \ ******************************************************************
 
+ORG &400
+GUARD &800
+.event_data
+incbin "build/events.bin"
+
 \ ******************************************************************
 \ *	CODE START
 \ ******************************************************************
@@ -241,6 +246,14 @@ GUARD screen3_addr
         ldx #LO(bank2_filename)
         ldy #HI(bank2_filename)
         lda #HI(&8000)
+        jsr disksys_load_file
+    }
+
+    \\ Load events
+    {
+        ldx #LO(events_filename)
+        ldy #HI(events_filename)
+        lda #HI(event_data)
         jsr disksys_load_file
     }
 
@@ -643,6 +656,7 @@ include "lib/debug4.asm"
 .bank0_filename     EQUS "BANK0", 13
 .bank1_filename     EQUS "BANK1", 13
 .bank2_filename     EQUS "BANK2", 13
+.events_filename    EQUS "EVENTS", 13
 
 .mode4_default_palette
 {
@@ -710,9 +724,6 @@ include "src/asset_tables.asm"
     EQUB ((n MOD 15)+1) << 4
     NEXT
 }
-
-.event_data
-incbin "build/events.bin"
 
 .data_end
 

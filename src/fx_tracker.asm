@@ -49,6 +49,26 @@ MACRO EVENTS_GET_BYTE
 }
 ENDMACRO
 
+MACRO EVENTS_SET_ADDRESS_XY
+{
+    stx events_load_byte+1
+    sty events_load_byte+2
+}
+ENDMACRO
+
+MACRO PRELOAD_GET_BYTE
+{
+    jsr preload_get_byte
+}
+ENDMACRO
+
+MACRO PRELOAD_SET_ADDRESS_XY
+{
+    stx preload_load_byte+1
+    sty preload_load_byte+2
+}
+ENDMACRO
+
 MACRO EVENTS_PEEK_BYTE
 {
     lda events_load_byte+1
@@ -60,13 +80,37 @@ MACRO EVENTS_PEEK_BYTE
 }
 ENDMACRO
 
+; A = pattern no.
+.events_get_pattern_address
+{
+    asl a
+    tay
+    lda event_data+2, Y         ; skip first two flag bytes
+    sec
+    sbc #1
+    tax
+    lda event_data+3, Y
+    sbc #0
+    tay
+    rts
+}
+
 .events_init
 {
-    lda #LO(event_data-1)
-    sta events_load_byte+1
-    lda #HI(event_data-1)
-    sta events_load_byte+2
+    lda #0
+    sta events_pattern
+    sta preload_pattern
+
+    jsr events_get_pattern_address
+
+    EVENTS_SET_ADDRESS_XY
+    PRELOAD_SET_ADDRESS_XY
+
+    lda #1:sta events_delay
+    jmp preload_update
 }
+
+IF 0
 \\ drop through.
 .events_set_delay
 {
@@ -126,7 +170,9 @@ ENDMACRO
     clc
     rts
 }
+ENDIF
 
+\\ Can move these to ZP if we need the cycles...
 .events_get_byte
 {
     inc events_load_byte+1
@@ -138,50 +184,211 @@ ENDMACRO
     lda &FFFF
     rts
 
-.events_update
+.preload_get_byte
 {
-    \\ Process an event as soon as the delay reaches 0.
-    dec events_delay
-    bne return
-    
-    lda events_delay+1
-    beq process_event
-    dec events_delay+1
-
-    .return
+    inc preload_load_byte+1
+    bne ok
+    inc preload_load_byte+2
+    .ok
+}
+.preload_load_byte
+    lda &FFFF
     rts
 
-    .process_event
-    \\ Don't process events with zero value.
-    EVENTS_GET_BYTE
-    beq no_event
-    sta events_data
-    jsr events_handler
-    .no_event
-
-    \\ Get the delay to the next event.
-    jsr events_set_delay
-
-    \\ If this is zero then loop.
-    bcc return
-
-    jmp events_init
-}
-
-; A = event number
-.events_handler
+.events_update
 {
-    tay
-    and #&f0:
-    lsr a:lsr a:tax
+    \\ Process an event as soon as the line delay reaches 0.
+    dec events_delay
+    bne return
+
+    .process_event
+    lda events_line
+    cmp #TRACK_PATTERN_LENGTH
+    bcc not_finished_pattern
+
+    lda #0:sta events_line
+
+    \\ We finished the pattern so load the next one!
+    inc events_pattern
+
+    .get_next_pattern
+    lda events_pattern
+    jsr events_get_pattern_address
+    cpy #&ff
+    bne set_new_pattern
+
+    \\ Patterns looped!
+    lda #0:sta events_pattern
+    beq get_next_pattern
+
+    .set_new_pattern
+    EVENTS_SET_ADDRESS_XY
+
+    .not_finished_pattern
+    EVENTS_GET_BYTE
+    bpl process_line
+
+    \\ Value >= 128 => Value-127 empty cells
+    sec
+    sbc #127
+    sta events_delay
+    bne return          ; always taken
+
+    .process_line
+    IF _DEBUG
+    {
+        cmp #120        ; No note.
+        beq ok
+        BRK
+        .ok
+    }
+    ENDIF
+    EVENTS_GET_BYTE     ; No instrument
+    IF _DEBUG
+    {
+        beq ok
+        BRK
+        .ok
+    }
+    ENDIF
+
+    .events_loop
+    EVENTS_GET_BYTE
+    cmp #10             ; Effect number: 10
+    bne done_events
+
+    EVENTS_GET_BYTE     ; Effect value: low byte = data
+    sta events_data
+
+    EVENTS_GET_BYTE     ; Effect value: high byte = code
+    sta events_code
+
+    \\ Events handler
+    asl a:asl a:tax
     lda event_fn_table+0, X
     sta jmp_to_handler+1
     lda event_fn_table+1, X
     sta jmp_to_handler+2
-    tya
-    and #&0f
+    lda events_data
     .jmp_to_handler
-    jmp &FFFF
+    jsr &FFFF
+
+    jmp events_loop
+
+    .done_events
+    \\ Process next line next update
+    lda #1:sta events_delay
+
+    \\ Poll the preload system
+    jsr preload_update
+
+    .return
+    inc events_line
+    rts
+}
+
+.preload_update
+{
+    \\ We only need to process the next preload when the event
+    \\ update has caught up with the current preload position.
+    lda preload_load_byte+1
+    cmp events_load_byte+1
+    bne return
+    lda preload_load_byte+2
+    cmp events_load_byte+2
+    bne return
+
+    lda #0:sta preload_id
+
+    .line_loop
+    lda preload_line
+    cmp #TRACK_PATTERN_LENGTH
+    bcc not_finished_pattern
+
+    lda #0:sta preload_line
+
+    \\ We finished the pattern so load the next one!
+    inc preload_pattern
+
+    .get_next_pattern
+    lda preload_pattern
+    jsr events_get_pattern_address
+    cpy #&ff
+    bne set_new_pattern
+
+    \\ Patterns looped!
+    lda #0:sta preload_pattern
+    beq get_next_pattern
+
+    .set_new_pattern
+    PRELOAD_SET_ADDRESS_XY
+
+    .not_finished_pattern
+    PRELOAD_GET_BYTE
+    bpl process_line
+
+    \\ Skip empty cells.
+    sec
+    sbc #128
+    clc
+    adc preload_line
+    sta preload_line
+    bne line_processed
+
+    .process_line
+    IF _DEBUG
+    {
+        cmp #120        ; No note.
+        beq ok
+        BRK
+        .ok
+    }
+    ENDIF
+    PRELOAD_GET_BYTE     ; No instrument
+    IF _DEBUG
+    {
+        beq ok
+        BRK
+        .ok
+    }
+    ENDIF
+
+    .preload_loop
+    PRELOAD_GET_BYTE
+    cmp #10             ; Effect number: 10
+    bne line_processed
+
+    PRELOAD_GET_BYTE    ; Effect value: low byte = data
+    sta preload_data
+
+    PRELOAD_GET_BYTE    ; Effect value: high byte = code
+    sta preload_code
+    asl a:asl a:tax
+    lda event_fn_table+3, X
+    beq no_preload
+
+    sta jmp_to_preload+2
+    lda event_fn_table+2, X
+    sta jmp_to_preload+1
+
+    lda preload_data
+    .jmp_to_preload
+    jsr &FFFF
+
+    inc preload_id
+
+    .no_preload
+    jmp preload_loop
+
+    .line_processed
+    inc preload_line
+
+    \\ Continue until we preloaded something.
+    lda preload_id
+    beq line_loop
+
+    .return
+    rts
 }
 
 .handle_set_colour
@@ -379,13 +586,22 @@ IF _DEBUG
 .fx_tracker_show_debug
 {
     jsr debug_reset_writeptr
-    lda tracker_pattern
+    lda events_pattern
+    jsr debug_write_hex
+    lda events_line
     jsr debug_write_hex_spc
-    lda tracker_line
-    jsr debug_write_hex_spc
+    lda events_code
+    jsr debug_write_hex
     lda events_data
     jsr debug_write_hex_spc
-    lda preload_id
+
+    lda preload_pattern
+    jsr debug_write_hex
+    lda preload_line
+    jsr debug_write_hex_spc
+    lda preload_code
+    jsr debug_write_hex
+    lda preload_data
     jsr debug_write_hex_spc
     rts
 }

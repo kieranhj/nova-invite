@@ -5,7 +5,7 @@
 
 _DEBUG = TRUE
 _DEBUG_RASTERS = TRUE
-_DEBUG_BEGIN_PAUSED = _DEBUG AND FALSE
+_DEBUG_BEGIN_PAUSED = _DEBUG AND TRUE
 
 INCLUDE "src/zp.h.asm"
 
@@ -409,7 +409,10 @@ GUARD screen3_addr
     ENDIF
 
     \\ Handle events
+    lda tracker_vsync
+    bne between_tracker_lines
     jsr events_update
+    .between_tracker_lines
 
     \\ Then per-frame func.
     jsr do_per_frame_fn
@@ -420,7 +423,7 @@ GUARD screen3_addr
     \\ Update vsync counter
     inc vsync_count
 
-    \\ Update FX Tracker first
+    \\ Update FX Tracker
     jsr fx_tracker_update
 
     IF _DEBUG

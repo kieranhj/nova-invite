@@ -319,7 +319,7 @@ ENDMACRO
 ; A = image no.
 .handle_image
 {
-    CHECK_TASK_NOT_RUNNING      ; Need to think more about this.
+    CHECK_TASK_NOT_RUNNING
     jsr set_mode_4
     lda last_fg_colour:jsr set_mode4_fg_colour
     lda #PAL_black:jsr set_mode4_bg_colour
@@ -391,7 +391,7 @@ ENDMACRO
 ; A = anim no.
 .handle_anim
 {
-    CHECK_TASK_NOT_RUNNING      ; Need to think more about this.
+    CHECK_TASK_NOT_RUNNING
     jsr set_mode_8
     jsr set_all_black_palette
     lda #LO(anims_frame_update)

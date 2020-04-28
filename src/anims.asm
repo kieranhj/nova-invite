@@ -26,23 +26,23 @@
 
 .anims_mode_table
 {
-    ; mode func
-    EQUW do_nothing                 ; c700
-    EQUW anim_loop_forwards         ; c701
-    EQUW anim_loop_backwards        ; c702
-    EQUW 0                          ; c703
-    EQUW 0                          ; c704
-    EQUW 0                          ; c705
-    EQUW 0                          ; c706
-    EQUW 0                          ; c707
-    EQUW 0                          ; c708
-    EQUW 0                          ; c709
-    EQUW 0                          ; c70A
-    EQUW 0                          ; c70B
-    EQUW 0                          ; c70C
-    EQUW 0                          ; c70D
-    EQUW 0                          ; c70E
-    EQUW 0                          ; c70F
+    ; mode func, optional start value for index
+    EQUW do_nothing, &FF            ; c700
+    EQUW anim_loop_forwards, &FF    ; c701
+    EQUW anim_loop_backwards, &FF   ; c702
+    EQUW anim_oneshot_forwards, 0   ; c703
+    EQUW anim_oneshot_backwards, 0  ; c704
+    EQUW 0, 0                       ; c705
+    EQUW 0, 0                       ; c706
+    EQUW 0, 0                       ; c707
+    EQUW 0, 0                       ; c708
+    EQUW 0, 0                       ; c709
+    EQUW 0, 0                       ; c70A
+    EQUW 0, 0                       ; c70B
+    EQUW 0, 0                       ; c70C
+    EQUW 0, 0                       ; c70D
+    EQUW 0, 0                       ; c70E
+    EQUW 0, 0                       ; c70F
 }
 
 ; A = ramp no.
@@ -72,14 +72,13 @@
 .anims_set_speed
 {
     sta anims_frame_speed
-    .return
     rts
 }
 
 ; A = anim mode
 .anims_set_mode
 {
-    asl a:tax
+    asl a:asl a:tax
     lda anims_mode_table+1, X
     IF _DEBUG
     bne ok
@@ -89,6 +88,11 @@
     sta anim_frame_update_fn+2
     lda anims_mode_table+0, X
     sta anim_frame_update_fn+1
+
+    ; optional start value for index
+    lda anims_mode_table+2, X
+    bmi return
+    sta anims_colour_index
 
     .return
     rts
@@ -237,12 +241,18 @@ ENDIF
     stx anims_colour_index
     
     rts
-    ; 1=black, 2=blue, 3=green, 4=cyan
-    ; 2=black, 3=blue, 4=green, 5=cyan etc.
 }
 
 .anim_loop_backwards
 {
+    ldx anims_colour_index
+    dex
+    cpx #255
+    bne ok
+    ldx #MOD15_MAX-1
+    .ok
+    stx anims_colour_index
+
     ldy anims_ramp_length
     .loop
     tya
@@ -257,18 +267,91 @@ ENDIF
     dey
     bne loop
 
-    ldx anims_colour_index
-    dex
-    cpx #MOD15_MAX
-    bne ok
-    dex
-    .ok
-    stx anims_colour_index
     rts
-
-    ; 1=black, 
 }
 
+.anim_oneshot_forwards
+{
+    lda anims_colour_index
+    bmi return
+
+    ldy anims_ramp_length
+    dey
+
+    ldx anims_colour_index  ; go from 0->14 + ramp_length 
+    .loop
+    cpx #15
+    bcs off_end
+
+    lda mod15_plus1_asl4_table, X
+    ora (anims_ramp_ptr), Y
+    sta &fe21
+    .off_end
+
+    dey
+    bmi done_loop
+    dex
+    bpl loop
+    .done_loop
+    inc anims_colour_index
+
+    ; stop when last ramp reaches last colour.
+    cpx #15
+    bne return
+
+    lda #128:sta anims_colour_index
+   
+    .return
+    rts
+}
+
+.anim_oneshot_backwards
+{
+    lda anims_colour_index
+    bmi return
+
+    ldy anims_ramp_length
+    dey
+
+    ldx anims_colour_index
+    .loop
+    cpx #15
+    bcs off_end
+
+    \\ Flip the colour index to 14-x
+    stx temp_x+1
+    sec
+    lda #14
+    sbc temp_x+1
+    tax
+
+    lda mod15_plus1_asl4_table, X
+    ora (anims_ramp_ptr), Y
+    sta &fe21
+
+    .temp_x
+    ldx #0
+
+    .off_end
+
+    dey
+    bmi done_loop
+    dex
+    bpl loop
+    .done_loop
+    inc anims_colour_index
+
+    ; stop when last ramp reaches last colour.
+    cpx #15
+    bne return
+
+    lda #128:sta anims_colour_index
+   
+    .return
+    rts
+}
+
+IF 0
 .anim_loop_ramp_hi8
 {
     ldy #0
@@ -288,6 +371,7 @@ ENDIF
     inc anims_colour_index
     rts
 }
+ENDIF
 
 .anims_ramp_black
 EQUB PAL_black, PAL_black

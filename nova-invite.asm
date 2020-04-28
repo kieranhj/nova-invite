@@ -142,9 +142,6 @@ INCLUDE "lib/exo.h.asm"
 INCLUDE "lib/vgcplayer.h.asm"
 INCLUDE "src/fx_tracker.h.asm"
 
-.local_vars         skip 8
-.local_top
-
 IF _DEBUG
 .debug_writeptr     skip 2
 .debug_paused       skip 1
@@ -711,10 +708,20 @@ include "lib/debug4.asm"
 include "src/asset_tables.asm"
 
 MOD15_MAX = 240
-.mod15_plus1_asl4_table                ; could be PAGE_ALIGN'd
+.mod15_plus1_asl4_table         ; could be PAGE_ALIGN'd
 {
     FOR n,0,255,1
     EQUB ((n MOD 15)+1) << 4
+    NEXT
+}
+
+PING_PONG_MAX = 224
+.ping_pong_table                ; could be PAGE_ALIGN'd
+{
+    FOR n,0,255,1
+    a = n MOD 28
+    b = 14 - ABS(a-14)
+    EQUB (b+1) << 4
     NEXT
 }
 

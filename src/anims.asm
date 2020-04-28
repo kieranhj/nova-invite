@@ -32,7 +32,7 @@
     EQUW anim_loop_backwards, &FF   ; c702
     EQUW anim_oneshot_forwards, 0   ; c703
     EQUW anim_oneshot_backwards, 0  ; c704
-    EQUW 0, 0                       ; c705
+    EQUW anim_ping_pong, &FF        ; c705
     EQUW 0, 0                       ; c706
     EQUW 0, 0                       ; c707
     EQUW 0, 0                       ; c708
@@ -113,108 +113,6 @@
     rts
 }
 
-IF 0
-.anim_galaxy_cycle
-{
-    anim_galaxy_I = local_vars+0
-
-    ldx #0
-    .loop
-    txa
-    clc
-    adc anim_galaxy_I
-    and #7
-    clc
-    adc #8
-    asl a:asl a:asl a:asl a
-    ora anim_galaxy_table, X
-    sta &fe21
-    inx
-    cpx #5
-    bcc loop
-    inc anim_galaxy_I
-    rts
-
-    .anim_galaxy_table
-    EQUS PAL_black,PAL_blue,PAL_red,PAL_yellow,PAL_white
-}
-
-.anim_atom_cycle
-{
-    anim_atom_I = local_vars+0
-
-    ldx #0
-    .loop
-    txa
-    clc
-    adc anim_atom_I
-    tay
-    lda mod15_table, y
-    clc
-    adc #1
-
-    asl a:asl a:asl a:asl a
-    ora anim_atom_table, X
-    sta &fe21
-    inx
-    cpx #5
-    bcc loop
-    inc anim_atom_I
-    rts
-
-    .anim_atom_table
-    EQUS PAL_black,PAL_blue,PAL_blue,PAL_cyan,PAL_white
-}
-
-.anim_cross_cycle
-{
-    anim_cross_A = local_vars+0
-
-    lda anim_cross_A
-    asl a:asl a:asl a:asl a
-    ora #PAL_black
-    sta &fe21           ; set A to black
-
-    ldy anim_cross_A
-    lda mod15_table, y
-    adc #1
-    sta anim_cross_A
-
-    asl a:asl a:asl a:asl a
-    ora #PAL_green
-    sta &fe21
-
-    rts
-}
-
-.anim_world_cycle
-{
-    anim_world_I = local_vars+0
-
-    ldx #0
-    .loop
-    txa
-    clc
-    adc anim_world_I
-    tay
-    lda mod15_table, y
-    clc
-    adc #1
-
-    asl a:asl a:asl a:asl a
-    ora anim_world_table, X
-    sta &fe21
-    inx
-    cpx #4
-    bcc loop
-    inc anim_world_I
-    rts
-
-    .anim_world_table
-    EQUS PAL_black,PAL_blue,PAL_green,PAL_cyan
-}
-ENDIF
-
 .anim_loop_forwards
 {
     ldy #0
@@ -235,6 +133,34 @@ ENDIF
     ldx anims_colour_index
     inx
     cpx #MOD15_MAX
+    bcc ok
+    ldx #0
+    .ok
+    stx anims_colour_index
+    
+    rts
+}
+
+.anim_ping_pong
+{
+    ldy #0
+    .loop
+    tya
+    clc
+    adc anims_colour_index
+    tax
+
+    lda ping_pong_table, X
+    ora (anims_ramp_ptr), Y
+    sta &fe21
+
+    iny
+    cpy anims_ramp_length
+    bcc loop
+
+    ldx anims_colour_index
+    inx
+    cpx #PING_PONG_MAX
     bcc ok
     ldx #0
     .ok

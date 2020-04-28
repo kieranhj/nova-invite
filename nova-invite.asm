@@ -522,27 +522,6 @@ IF _DEBUG
 ENDIF
 ENDMACRO
 
-.set_task_decrunch
-{
-; Need to think more about this.
-; Doesn't really matter as the JMP won't get called until the
-; previous task completes...
-    CHECK_TASK_NOT_RUNNING
-
-    sta do_task_load_A+1
-    stx do_task_load_X+1
-    sty do_task_load_Y+1
-
-    lda #LO(decrunch_to_page_A)
-    sta do_task_jmp+1
-
-    lda #HI(decrunch_to_page_A)
-    sta do_task_jmp+2
-
-    inc task_request
-    rts
-}
-
 .do_per_frame_fn
 {
     jmp do_nothing    

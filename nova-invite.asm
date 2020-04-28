@@ -169,6 +169,7 @@ ORG &400
 GUARD &800
 .event_data
 incbin "build/events.bin"
+.event_data_end
 
 \ ******************************************************************
 \ *	CODE START
@@ -775,7 +776,6 @@ SAVE "build/BANK0", bank0_start, bank0_end, bank0_start
 PRINT "------"
 PRINT "BANK 0"
 PRINT "------"
-PRINT "------"
 PRINT "SIZE =", ~bank0_end-bank0_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%
@@ -796,7 +796,6 @@ SAVE "build/BANK1", bank1_start, bank1_end, bank1_start
 
 PRINT "------"
 PRINT "BANK 1"
-PRINT "------"
 PRINT "------"
 PRINT "SIZE =", ~bank1_end-bank1_start
 PRINT "HIGH WATERMARK =", ~P%
@@ -822,7 +821,6 @@ SAVE "build/BANK2", bank2_start, bank2_end, bank2_start
 PRINT "------"
 PRINT "BANK 2"
 PRINT "------"
-PRINT "------"
 PRINT "SIZE =", ~bank2_end-bank2_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%
@@ -844,8 +842,18 @@ SAVE "build/MUSIC", bank3_start, bank3_end, bank3_start
 PRINT "------"
 PRINT "BANK 3"
 PRINT "------"
-PRINT "------"
 PRINT "SIZE =", ~bank2_end-bank2_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%
+PRINT "------"
+
+\ ******************************************************************
+\ *	EVENTS DATA
+\ ******************************************************************
+
+PRINT "------"
+PRINT "EVENTS"
+PRINT "------"
+PRINT "SIZE =", ~event_data_end-event_data
+PRINT "FREE =", ~&800-event_data_end
 PRINT "------"

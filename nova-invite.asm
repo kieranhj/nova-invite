@@ -168,6 +168,15 @@ GUARD &800
 incbin "build/events.bin"
 .event_data_end
 
+ORG &E00
+GUARD &10FF
+.reloc_to_start
+.mod15_plus1_asl4_table
+skip &100
+.ping_pong_table
+skip &100
+.reloc_to_end
+
 \ ******************************************************************
 \ *	CODE START
 \ ******************************************************************
@@ -208,6 +217,12 @@ GUARD screen3_addr
 
     lda &fe44:sta seed
     lda &fe45:sta seed+1
+
+	\\ Relocate data to lower RAM
+	lda #HI(reloc_from_start)
+	ldx #HI(reloc_to_start)
+	ldy #HI(reloc_to_end - reloc_to_start + &ff)
+	jsr disksys_copy_block
 
     \\ Load music into SWRAM (if available)
     {
@@ -618,14 +633,20 @@ IF _DEBUG
 }
 ENDIF
 
-include "src/fx_tracker.asm"
-include "src/anims.asm"
 include "src/music_jump.asm"
-
 .main_end
 
 \ ******************************************************************
-\ *	Additional code modules
+\ *	FX MODULES
+\ ******************************************************************
+
+.fx_start
+include "src/fx_tracker.asm"
+include "src/anims.asm"
+.fx_end
+
+\ ******************************************************************
+\ *	LIBRARY MODULES
 \ ******************************************************************
 
 .additional_start
@@ -708,8 +729,16 @@ include "lib/debug4.asm"
 include "src/asset_tables.asm"
 include "src/anims_tables.asm"
 
+.data_end
+
+\ ******************************************************************
+\ *	Relocatable data
+\ ******************************************************************
+
+PAGE_ALIGN
+.reloc_from_start
 MOD15_MAX = 240
-.mod15_plus1_asl4_table         ; could be PAGE_ALIGN'd
+.reloc_mod15_plus1_asl4_table         ; could be PAGE_ALIGN'd
 {
     FOR n,0,255,1
     EQUB ((n MOD 15)+1) << 4
@@ -717,7 +746,7 @@ MOD15_MAX = 240
 }
 
 PING_PONG_MAX = 224
-.ping_pong_table                ; could be PAGE_ALIGN'd
+.reloc_ping_pong_table                ; could be PAGE_ALIGN'd
 {
     FOR n,0,255,1
     a = n MOD 28
@@ -725,8 +754,7 @@ PING_PONG_MAX = 224
     EQUB (b+1) << 4
     NEXT
 }
-
-.data_end
+.reloc_from_end
 
 \ ******************************************************************
 \ *	End address to be saved
@@ -735,19 +763,21 @@ PING_PONG_MAX = 224
 .end
 
 \ ******************************************************************
-\ *	Space reserved for runtime buffers not preinitialised
-\ ******************************************************************
-
-PAGE_ALIGN
-.bss_start
-
-.bss_end
-
-\ ******************************************************************
 \ *	Save the executable
 \ ******************************************************************
 
 SAVE "build/INVITE", start, end, main
+
+\ ******************************************************************
+\ *	Space reserved for runtime buffers not preinitialised
+\ ******************************************************************
+
+CLEAR reloc_from_start, screen3_addr
+ORG reloc_from_start
+GUARD screen3_addr
+
+.bss_start
+.bss_end
 
 \ ******************************************************************
 \ *	Memory Info
@@ -758,10 +788,10 @@ PRINT "NOVA-INVITE"
 PRINT "------"
 PRINT "ZP size =", ~zp_end-zp_start, "(",~&80-zp_end,"free)"
 PRINT "MAIN size =", ~main_end-main_start
+PRINT "FX size = ", ~fx_end-fx_start
 PRINT "LIBRARY size =",~additional_end-additional_start
-;PRINT "FX size = ", ~fx_end-fx_start
 PRINT "DATA size =",~data_end-data_start
-;PRINT "RELOC size =",~reloc_from_end-reloc_from_start
+PRINT "RELOC size =",~reloc_from_end-reloc_from_start
 PRINT "BSS size =",~bss_end-bss_start
 PRINT "------"
 PRINT "HIGH WATERMARK =", ~P%

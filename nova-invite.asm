@@ -131,7 +131,6 @@ INCLUDE "lib/exo.h.asm"
 
 .writeptr           skip 2
 .music_enabled      skip 1
-.music_lock         skip 1
 
 .display_buffer_HI  skip 1
 .next_buffer_HI     skip 1
@@ -140,6 +139,7 @@ INCLUDE "lib/exo.h.asm"
 .task_request       skip 1
 .seed               skip 2
 
+INCLUDE "lib/vgcplayer.h.asm"
 INCLUDE "src/fx_tracker.h.asm"
 
 .local_vars         skip 8
@@ -158,8 +158,6 @@ IF _DEBUG
 .step_line_debounce     skip 1
 .next_pattern_debounce  skip 1
 ENDIF
-
-INCLUDE "lib/vgcplayer.h.asm"
 
 .zp_end
 
@@ -396,12 +394,7 @@ GUARD screen3_addr
     lda music_enabled
     beq return
 
-    lda music_lock
-    bne return
-
-    inc music_lock
     txa:pha:tya:pha
-
     SET_BGCOL PAL_red
 
     IF _DEBUG
@@ -458,7 +451,6 @@ GUARD screen3_addr
 
     SET_BGCOL PAL_black
     pla:tay:pla:tax
-    dec music_lock
 
 	pla
 	sta &FC

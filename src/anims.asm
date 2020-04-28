@@ -3,75 +3,51 @@
 \ *	ANIMS MODULE
 \ ******************************************************************
 
-.anims_defaults_for_anim 
-{
-; default ramp number, default speed - (default mode)
-    EQUB 8, 2, 1, 0                    ; atom
-    EQUB 2, 1, 2, 0                    ; cross
-    EQUB 9, 4, 1, 0                    ; galaxy
-    EQUB 10, 1, 1, 0                   ; world
-    EQUB 4, 3, 2, 0                    ; shift
-    EQUB 8, 3, 1, 0                    ; turbulent
-    EQUB 10, 5, 1, 0                   ; triangle
-    EQUB 5, 8, 1, 0                    ; claw
-    EQUB 0, 0, 0, 0                    ; &28
-    EQUB 0, 0, 0, 0                    ; &29
-    EQUB 0, 0, 0, 0                    ; &2A
-    EQUB 0, 0, 0, 0                    ; &2B
-    EQUB 0, 0, 0, 0                    ; &2C
-    EQUB 0, 0, 0, 0                    ; &2D
-    EQUB 0, 0, 0, 0                    ; &2E
-    EQUB 0, 0, 0, 0                    ; &2F
-}
-
 .anims_ramp_table
 {
-    ; address of ramp, length of ramp.
-    EQUW 0, 0                       ; &50 - use default for anim no.
-    EQUW anims_ramp_red, 2          ; &51
-    EQUW anims_ramp_green, 2        ; &52
-    EQUW anims_ramp_yellow, 2       ; &53
-    EQUW anims_ramp_blue, 2         ; &54
-    EQUW anims_ramp_magenta, 2      ; &55
-    EQUW anims_ramp_cyan, 2         ; &56
-    EQUW anims_ramp_white, 2        ; &57
-    EQUW anims_ramp_atom, 5         ; &58
-    EQUW anims_ramp_galaxy, 5       ; &59
-    EQUW anims_ramp_world, 4        ; &5A
-    EQUW 0, 0                       ; &5B
-    EQUW 0, 0                       ; &5C
-    EQUW 0, 0                       ; &5D
-    EQUW 0, 0                       ; &5E
-    EQUW 0, 0                       ; &5F
+    ; address of ramp, length of ramp
+    EQUW anims_ramp_black, 1        ; c500
+    EQUW anims_ramp_red, 2          ; c501
+    EQUW anims_ramp_green, 2        ; c502
+    EQUW anims_ramp_yellow, 2       ; c503
+    EQUW anims_ramp_blue, 2         ; c504
+    EQUW anims_ramp_magenta, 2      ; c505
+    EQUW anims_ramp_cyan, 2         ; c506
+    EQUW anims_ramp_white, 2        ; c507
+    EQUW anims_ramp_atom, 5         ; c508
+    EQUW anims_ramp_galaxy, 5       ; c509
+    EQUW anims_ramp_world, 4        ; c50A
+    EQUW 0, 0                       ; c50B
+    EQUW 0, 0                       ; c50C
+    EQUW 0, 0                       ; c50D
+    EQUW 0, 0                       ; c50E
+    EQUW 0, 0                       ; c50F
 }
 
 .anims_mode_table
 {
     ; mode func
-    EQUW 0                          ; &70 - use default for anim no.
-    EQUW anim_loop_forwards         ; &71
-    EQUW anim_loop_backwards        ; &72
-    EQUW 0                          ; &73
-    EQUW 0                          ; &74
-    EQUW 0                          ; &75
-    EQUW 0                          ; &76
-    EQUW 0                          ; &77
-    EQUW 0                          ; &78
-    EQUW 0                          ; &79
-    EQUW 0                          ; &7A
-    EQUW 0                          ; &7B
-    EQUW 0                          ; &7C
-    EQUW 0                          ; &7D
-    EQUW 0                          ; &7E
-    EQUW 0                          ; &7F
+    EQUW do_nothing                 ; c700
+    EQUW anim_loop_forwards         ; c701
+    EQUW anim_loop_backwards        ; c702
+    EQUW 0                          ; c703
+    EQUW 0                          ; c704
+    EQUW 0                          ; c705
+    EQUW 0                          ; c706
+    EQUW 0                          ; c707
+    EQUW 0                          ; c708
+    EQUW 0                          ; c709
+    EQUW 0                          ; c70A
+    EQUW 0                          ; c70B
+    EQUW 0                          ; c70C
+    EQUW 0                          ; c70D
+    EQUW 0                          ; c70E
+    EQUW 0                          ; c70F
 }
 
 ; A = ramp no.
 .anims_set_ramp
 {
-    sta anims_ramp_load
-    beq return
-
     asl a:asl a
     tax
 
@@ -95,8 +71,6 @@
 ; A = delay
 .anims_set_speed
 {
-    sta anims_speed_load
-    beq return
     sta anims_frame_speed
     .return
     rts
@@ -105,9 +79,6 @@
 ; A = anim mode
 .anims_set_mode
 {
-    sta anims_mode_load
-    beq return
-
     asl a:tax
     lda anims_mode_table+1, X
     IF _DEBUG
@@ -115,54 +86,12 @@
     brk
     .ok
     ENDIF
-    sta do_per_frame_fn+2
+    sta anim_frame_update_fn+2
     lda anims_mode_table+0, X
-    sta do_per_frame_fn+1
+    sta anim_frame_update_fn+1
 
     .return
     rts
-}
-
-; A = anim no.
-.anims_set_anim
-{
-    asl a:asl a:pha:tax
-
-    lda anims_speed_load
-    bne speed_already_set
-    lda anims_defaults_for_anim+1, X
-    .speed_already_set
-    jsr anims_set_speed     ; preserves X
-
-    lda anims_ramp_load
-    bne ramp_already_set
-
-    lda anims_defaults_for_anim+0, X
-    .ramp_already_set
-    jsr anims_set_ramp      ; trashes X
-
-    pla:tax
-    lda anims_mode_load
-    bne mode_already_set
-    lda anims_defaults_for_anim+2, X
-    .mode_already_set
-    jsr anims_set_mode      ; trashes X
-
-    lda #0
-    sta anims_ramp_load
-    sta anims_speed_load
-    sta anims_mode_load
-
-    \\ Clear palette to all black then update once to start
-    jsr set_all_black_palette
-    jsr do_per_frame_fn
-    
-    lda anims_frame_speed
-    sta anims_frame_delay
-
-    rts
-
-    .loop_count equb 0
 }
 
 .anims_frame_update
@@ -170,6 +99,7 @@
     dec anims_frame_delay
     bne return
 
+    .^anim_frame_update_fn
     jsr anim_loop_forwards
     
     lda anims_frame_speed
@@ -298,7 +228,14 @@ ENDIF
     cpy anims_ramp_length
     bcc loop
 
-    inc anims_colour_index
+    ldx anims_colour_index
+    inx
+    cpx #MOD15_MAX
+    bcc ok
+    ldx #0
+    .ok
+    stx anims_colour_index
+    
     rts
     ; 1=black, 2=blue, 3=green, 4=cyan
     ; 2=black, 3=blue, 4=green, 5=cyan etc.
@@ -320,7 +257,13 @@ ENDIF
     dey
     bne loop
 
-    dec anims_colour_index
+    ldx anims_colour_index
+    dex
+    cpx #MOD15_MAX
+    bne ok
+    dex
+    .ok
+    stx anims_colour_index
     rts
 
     ; 1=black, 
@@ -345,6 +288,9 @@ ENDIF
     inc anims_colour_index
     rts
 }
+
+.anims_ramp_black
+EQUB PAL_black, PAL_black
 
 .anims_ramp_red
 EQUB PAL_black, PAL_red, PAL_black

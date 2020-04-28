@@ -6,6 +6,7 @@
 _DEBUG = TRUE
 _DEBUG_RASTERS = TRUE
 _DEBUG_BEGIN_PAUSED = _DEBUG AND FALSE
+_DEBUG_SHOW_PRELOAD = _DEBUG AND FALSE
 
 INCLUDE "src/zp.h.asm"
 
@@ -129,9 +130,7 @@ GUARD zp_top
 INCLUDE "lib/exo.h.asm"
 
 .writeptr           skip 2
-.vsync_count        skip 1
 .music_enabled      skip 1
-.music_lock         skip 1
 
 .display_buffer_HI  skip 1
 .next_buffer_HI     skip 1
@@ -140,6 +139,7 @@ INCLUDE "lib/exo.h.asm"
 .task_request       skip 1
 .seed               skip 2
 
+INCLUDE "lib/vgcplayer.h.asm"
 INCLUDE "src/fx_tracker.h.asm"
 
 .local_vars         skip 8
@@ -159,8 +159,6 @@ IF _DEBUG
 .next_pattern_debounce  skip 1
 ENDIF
 
-INCLUDE "lib/vgcplayer.h.asm"
-
 .zp_end
 
 \ ******************************************************************
@@ -171,6 +169,7 @@ ORG &400
 GUARD &800
 .event_data
 incbin "build/events.bin"
+.event_data_end
 
 \ ******************************************************************
 \ *	CODE START
@@ -325,6 +324,7 @@ GUARD screen3_addr
 
     IF _DEBUG_BEGIN_PAUSED
     lda #1:sta debug_paused
+    lda events_line:sta pause_line
     ENDIF
 
     \\ Go!
@@ -344,9 +344,17 @@ GUARD screen3_addr
 
     {
         .wait_for_task
+        ldx events_frame
+        bne skip_preload
+
+        \\ Poll the preload system.
+        jsr preload_update
+
+        .skip_preload
         lda task_request
         beq wait_for_task
 
+        \\ Do our background task.
         jsr do_task
         dec task_request
     }
@@ -387,12 +395,7 @@ GUARD screen3_addr
     lda music_enabled
     beq return
 
-    lda music_lock
-    bne return
-
-    inc music_lock
     txa:pha:tya:pha
-
     SET_BGCOL PAL_red
 
     IF _DEBUG
@@ -408,20 +411,31 @@ GUARD screen3_addr
     }
     ENDIF
 
-    \\ Handle events
-    jsr events_update
+    \\ Update frame counter.
+    {
+        ldx events_frame
+        inx
+        cpx #TRACK_SPEED
+        bcc ok
+        ldx #0
+        .ok
+        stx events_frame
+
+        \\ Events only take play at the track speed.
+        cpx #0
+        bne skip_line_updates
+
+        \\ Handle events
+        jsr events_update
+        \\ Preload system now polled in main loop.
+        .skip_line_updates
+    }
 
     \\ Then per-frame func.
     jsr do_per_frame_fn
 
-    \\ Then update music
+    \\ Then update music - could be on a mid-frame timer.
     jsr MUSIC_JUMP_VGM_UPDATE
-
-    \\ Update vsync counter
-    inc vsync_count
-
-    \\ Update FX Tracker first
-    jsr fx_tracker_update
 
     IF _DEBUG
     .skip_update
@@ -438,7 +452,6 @@ GUARD screen3_addr
 
     SET_BGCOL PAL_black
     pla:tay:pla:tax
-    dec music_lock
 
 	pla
 	sta &FC
@@ -510,27 +523,6 @@ IF _DEBUG
 ENDIF
 ENDMACRO
 
-.set_task_decrunch
-{
-; Need to think more about this.
-; Doesn't really matter as the JMP won't get called until the
-; previous task completes...
-    CHECK_TASK_NOT_RUNNING
-
-    sta do_task_load_A+1
-    stx do_task_load_X+1
-    sty do_task_load_Y+1
-
-    lda #LO(decrunch_to_page_A)
-    sta do_task_jmp+1
-
-    lda #HI(decrunch_to_page_A)
-    sta do_task_jmp+2
-
-    inc task_request
-    rts
-}
-
 .do_per_frame_fn
 {
     jmp do_nothing    
@@ -555,14 +547,14 @@ IF _DEBUG
 
     \\ Step to line
     lda pause_line
-    cmp tracker_line
-    bcs exit_and_update
-    bcc done_stepping
+    cmp events_line
+    beq exit_and_update
+    bne done_stepping
 
     .step_to_pattern
     lda pause_pattern
-    cmp tracker_pattern
-    bcs exit_and_update
+    cmp events_pattern
+    beq exit_and_update
 
     \\ Done stepping
     .done_stepping
@@ -606,7 +598,7 @@ IF _DEBUG
     jsr debug_check_key
     bne not_pressed_step_line
 
-    lda tracker_line
+    lda events_line
     sta pause_line
     lda #1:sta debug_step_mode
     bne exit_and_update
@@ -618,7 +610,7 @@ IF _DEBUG
     jsr debug_check_key
     bne not_pressed_next_pattern
 
-    lda tracker_pattern
+    lda events_pattern
     sta pause_pattern
     lda #2:sta debug_step_mode
     bne exit_and_update
@@ -718,6 +710,7 @@ include "lib/debug4.asm"
 
 include "src/asset_tables.asm"
 
+MOD15_MAX = 255
 .mod15_plus1_asl4_table                ; could be PAGE_ALIGN'd
 {
     FOR n,0,255,1
@@ -783,7 +776,6 @@ SAVE "build/BANK0", bank0_start, bank0_end, bank0_start
 PRINT "------"
 PRINT "BANK 0"
 PRINT "------"
-PRINT "------"
 PRINT "SIZE =", ~bank0_end-bank0_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%
@@ -804,7 +796,6 @@ SAVE "build/BANK1", bank1_start, bank1_end, bank1_start
 
 PRINT "------"
 PRINT "BANK 1"
-PRINT "------"
 PRINT "------"
 PRINT "SIZE =", ~bank1_end-bank1_start
 PRINT "HIGH WATERMARK =", ~P%
@@ -830,7 +821,6 @@ SAVE "build/BANK2", bank2_start, bank2_end, bank2_start
 PRINT "------"
 PRINT "BANK 2"
 PRINT "------"
-PRINT "------"
 PRINT "SIZE =", ~bank2_end-bank2_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%
@@ -852,8 +842,18 @@ SAVE "build/MUSIC", bank3_start, bank3_end, bank3_start
 PRINT "------"
 PRINT "BANK 3"
 PRINT "------"
-PRINT "------"
 PRINT "SIZE =", ~bank2_end-bank2_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%
+PRINT "------"
+
+\ ******************************************************************
+\ *	EVENTS DATA
+\ ******************************************************************
+
+PRINT "------"
+PRINT "EVENTS"
+PRINT "------"
+PRINT "SIZE =", ~event_data_end-event_data
+PRINT "FREE =", ~&800-event_data_end
 PRINT "------"

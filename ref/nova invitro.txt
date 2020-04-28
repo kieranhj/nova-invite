@@ -246,8 +246,9 @@ TODO
 - Make colour cycling fns. generic with ramp - DONE
     - Add set speed - DONE
     - Add set ramp - DONE
-    - Add set mode
+    - Add set mode - DONE
     - Handle defaults and overriding them - DONE
+    - Need ping-pong and one-shot
 - Debug controls
     - Pause / play - DONE
     - Step frame, step line, step to end of pattern - DONE
@@ -258,7 +259,8 @@ TODO
     - Proper static noise
     - Quarter screen
     - Bounce screen with VADJ?
-- Structure data folder same as Google Drive
+    - Can do a line-draw effect as a preload...
+- Structure data folder same as Google Drive - DONE
 
 New event system!
 Export channel 4 from a second PSG.
@@ -267,3 +269,10 @@ Can have 4x of these per line. :)
 Remove animation default nonsense, just use last one set.
 This means we can say 'play anim X' 'set anim colour Y' 'set anim speed Z' 'set anim mode ping-pong' on one line.
 Also means we can mix colour changes and Fx etc.
+    - Optimise parsing anyway - DONE
+    - Can move preload update to main loop - DONE
+    - Can move music player to mid-frame on a different timer - DO WHEN ADDING NEW IRQ
+    - Separate events and preload into modules
+    - Change event line to start at &FF - DONE
+    - Need better error messages & pause, not crash on invalid data!
+    - Set anim / set image commands have to be last on line currently - FIXED

@@ -3,185 +3,283 @@
 \ *	FX TRACKER MODULE
 \ ******************************************************************
 
-\\ Update tracker counters
-.fx_tracker_update
+MACRO EVENTS_SET_ADDRESS_XY
 {
-    ldx tracker_vsync
-    inx
-    cpx #TRACK_SPEED
-    stx tracker_vsync
-    bcc is_mid_line
+    stx events_ptr
+    sty events_ptr+1
+}
+ENDMACRO
 
-    ldx #0
-    stx tracker_vsync
+MACRO PRELOAD_SET_ADDRESS_XY
+{
+    stx preload_ptr
+    sty preload_ptr+1
+}
+ENDMACRO
 
-    \\ Moved to new line in the pattern
-
-    ldx tracker_line
-    inx
-    cpx #TRACK_PATTERN_LENGTH
-    bcc same_pattern
-
-    \\ Moved to new pattern
-    inc tracker_pattern
-
-    ldx #0
-    .same_pattern
-    stx tracker_line
-
-    \\ Beat signature
-    ldx #0
-    lda tracker_line
-    and #TRACK_LINES_PER_BEAT-1
-    cmp #0
-    bne not_0
-    inx
-    .not_0
-    stx is_beat_line
-
-    .is_mid_line
+; A = pattern no.
+.events_get_pattern_address
+{
+    asl a
+    tay
+    ldx event_data+2, Y         ; skip first two flag bytes
+    lda event_data+3, Y
+    tay
     rts
 }
-
-MACRO EVENTS_GET_BYTE
-{
-    jsr events_get_byte
-}
-ENDMACRO
-
-MACRO EVENTS_PEEK_BYTE
-{
-    lda events_load_byte+1
-    sta events_ptr
-    lda events_load_byte+2
-    sta events_ptr+1
-    ldy #1
-    lda (events_ptr), Y
-}
-ENDMACRO
 
 .events_init
 {
-    lda #LO(event_data-1)
-    sta events_load_byte+1
-    lda #HI(event_data-1)
-    sta events_load_byte+2
+    lda #&ff
+    sta events_frame
+    sta events_line
+    sta preload_line
+
+    lda #0
+    sta events_pattern
+    sta preload_pattern
+
+    jsr events_get_pattern_address
+    EVENTS_SET_ADDRESS_XY
+    PRELOAD_SET_ADDRESS_XY
+
+    lda #1:sta events_delay
+    jmp preload_update
 }
-\\ drop through.
-.events_set_delay
+
+.events_update
 {
-    EVENTS_GET_BYTE
-    sta events_delay
-    EVENTS_GET_BYTE
-    sta events_delay+1
+    \\ Update line number.
+    inc events_line
 
-    ora events_delay
-    bne find_next_preload
+    \\ Process an event as soon as the line delay reaches 0.
+    dec events_delay
+    bne return
 
+    .process_event
+    lda events_line
+    cmp #TRACK_PATTERN_LENGTH
+    bcc not_finished_pattern
+
+    \\ We finished the pattern so load the next one!
+    lda #0:sta events_line
+    inc events_pattern
+
+    .get_next_pattern
+    lda events_pattern
+    jsr events_get_pattern_address
+    cpy #0                      ; 0 address
+    bne set_new_pattern
+
+    \\ Patterns looped!
+    sty events_pattern
+    beq get_next_pattern        ; always taken
+
+    .set_new_pattern
+    EVENTS_SET_ADDRESS_XY
+
+    .not_finished_pattern
+    ldy #0
+    ; EVENTS_GET_BYTE
+    lda (events_ptr), Y
+    bpl process_line
+    iny
+
+    \\ Value >= 128 => Value-127 empty cells
     sec
+    sbc #127
+    sta events_delay
+    bne return_update_ptr       ; always taken
+
+    .process_line
+    iny
+    IF _DEBUG
+    {
+        cmp #120        ; No note.
+        beq ok
+        BRK
+        .ok
+    }
+    ENDIF
+    ; EVENTS_GET_BYTE
+    IF _DEBUG
+    lda (events_ptr), Y
+    {
+        beq ok          ; No instrument
+        BRK
+        .ok
+    }
+    ENDIF
+    iny
+
+    .events_loop
+    lda (events_ptr), Y:iny     ; EVENTS_GET_BYTE
+    cmp #10                     ; Effect number: 10
+    bne done_events
+
+    lda (events_ptr), Y:iny     ; EVENTS_GET_BYTE
+    sta events_data             ; Effect value: low byte = data
+
+    lda (events_ptr), Y:iny     ; EVENTS_GET_BYTE
+    sta events_code             ; Effect value: high byte = code
+
+    \\ Events handler
+    asl a:asl a:tax
+    lda event_fn_table+0, X
+    sta jmp_to_handler+1
+    lda event_fn_table+1, X
+    sta jmp_to_handler+2
+
+    sty temp_y+1
+    lda events_data
+    .jmp_to_handler
+    jsr &FFFF
+    .temp_y
+    ldy #0
+    bne events_loop
+
+    .done_events
+    \\ Process next line next update
+    lda #1:sta events_delay
+
+    .return_update_ptr
+    \\ Update events_ptr
+    {
+        clc
+        tya
+        adc events_ptr
+        sta events_ptr
+        bcc no_carry
+        inc events_ptr+1
+        .no_carry
+    }
+
+    .return
+}
+.preload_return
     rts
 
-    .find_next_preload
-    \\ Call preload fn for next event that has one.
-    lda events_load_byte+1
-    sta events_ptr
-    lda events_load_byte+2
-    sta events_ptr+1
-    ldy #1
+.preload_update
+{
+    \\ We only need to process the next preload when the event
+    \\ update has caught up with the current preload position.
+    lda preload_pattern
+    cmp events_pattern
+    bne preload_return
+    lda preload_line
+    cmp events_line
+    bne preload_return
 
-    .peek_loop
-    lda (events_ptr), Y     ; peek event value
+    lda #0:sta preload_id
 
-    cmp preload_id          ; check if we already did this one
-    beq end_of_events
+    .line_loop
+    ldx preload_line
+    inx
+    cpx #TRACK_PATTERN_LENGTH
+    stx preload_line
+    bcc not_finished_pattern
 
-    and #&f0
-    lsr a:lsr a:tax
+    lda #0:sta preload_line
+
+    \\ We finished the pattern so load the next one!
+    inc preload_pattern
+
+    .get_next_pattern
+    lda preload_pattern
+    jsr events_get_pattern_address
+    cpy #0
+    bne set_new_pattern
+
+    \\ Patterns looped!
+    sty preload_pattern
+    beq get_next_pattern        ; always taken
+
+    .set_new_pattern
+    PRELOAD_SET_ADDRESS_XY
+
+    .not_finished_pattern
+    ldy #0
+    lda (preload_ptr), Y        ; PRELOAD_GET_BYTE
+    bpl process_line
+    iny
+
+    \\ Skip empty cells.
+    sec
+    sbc #128
+    clc
+    adc preload_line
+    sta preload_line
+    bne line_processed
+
+    .process_line
+    iny
+    IF _DEBUG
+    {
+        cmp #120        ; No note.
+        beq ok
+        BRK
+        .ok
+    }
+    ENDIF
+    ; PRELOAD_GET_BYTE
+    IF _DEBUG
+    lda (preload_ptr), Y
+    {
+        beq ok          ; No instrument
+        BRK
+        .ok
+    }
+    ENDIF
+    iny
+
+    .preload_loop
+    lda (preload_ptr), Y:iny    ; PRELOAD_GET_BYTE
+    cmp #10             ; Effect number: 10
+    bne line_processed
+
+    lda (preload_ptr), Y:iny    ; PRELOAD_GET_BYTE
+    sta preload_data    ; Effect value: low byte = data
+
+    lda (preload_ptr), Y:iny    ; PRELOAD_GET_BYTE
+    sta preload_code    ; Effect value: high byte = code
+
+    asl a:asl a:tax
     lda event_fn_table+3, X
     beq no_preload
 
     sta jmp_to_preload+2
     lda event_fn_table+2, X
     sta jmp_to_preload+1
-    
-    lda (events_ptr), Y
-    sta preload_id
 
-    and #&0f
-    clc
+    sty temp_y+1
+    lda preload_data
     .jmp_to_preload
-    jmp &FFFF
+    jsr &FFFF
+    .temp_y
+    ldy #0
+    inc preload_id
 
     .no_preload
-    iny
-    lda (events_ptr), Y     ; next delay LO
-    iny
-    ora (events_ptr), Y     ; next delay HI
-    beq end_of_events
+    jmp preload_loop
 
-    iny
-    bne peek_loop
+    .line_processed
+    \\ Update preload_ptr
+    {
+        clc
+        tya
+        adc preload_ptr
+        sta preload_ptr
+        bcc no_carry
+        inc preload_ptr+1
+        .no_carry
+    }
 
-    .end_of_events
-    clc
-    rts
-}
-
-.events_get_byte
-{
-    inc events_load_byte+1
-    bne ok
-    inc events_load_byte+2
-    .ok
-}
-.events_load_byte
-    lda &FFFF
-    rts
-
-.events_update
-{
-    \\ Process an event as soon as the delay reaches 0.
-    dec events_delay
-    bne return
-    
-    lda events_delay+1
-    beq process_event
-    dec events_delay+1
+    \\ Continue until we preloaded something.
+    lda preload_id
+    beq line_loop
 
     .return
     rts
-
-    .process_event
-    \\ Don't process events with zero value.
-    EVENTS_GET_BYTE
-    beq no_event
-    sta events_data
-    jsr events_handler
-    .no_event
-
-    \\ Get the delay to the next event.
-    jsr events_set_delay
-
-    \\ If this is zero then loop.
-    bcc return
-
-    jmp events_init
-}
-
-; A = event number
-.events_handler
-{
-    tay
-    and #&f0:
-    lsr a:lsr a:tax
-    lda event_fn_table+0, X
-    sta jmp_to_handler+1
-    lda event_fn_table+1, X
-    sta jmp_to_handler+2
-    tya
-    and #&0f
-    .jmp_to_handler
-    jmp &FFFF
 }
 
 .handle_set_colour
@@ -294,11 +392,13 @@ ENDMACRO
 .handle_anim
 {
     CHECK_TASK_NOT_RUNNING      ; Need to think more about this.
-    pha
     jsr set_mode_8
-    jsr set_mode8_default_palette
-    pla
-    jsr anims_set_anim
+    jsr set_all_black_palette
+    lda #LO(anims_frame_update)
+    sta do_per_frame_fn+1
+    lda #HI(anims_frame_update)
+    sta do_per_frame_fn+2
+    lda #1:sta anims_frame_delay    ; do per frame update immediately
     jmp display_next_buffer
 }
 
@@ -379,14 +479,26 @@ IF _DEBUG
 .fx_tracker_show_debug
 {
     jsr debug_reset_writeptr
-    lda tracker_pattern
+    lda events_pattern
+    jsr debug_write_hex
+    lda events_line
     jsr debug_write_hex_spc
-    lda tracker_line
-    jsr debug_write_hex_spc
+    lda events_code
+    jsr debug_write_hex
     lda events_data
     jsr debug_write_hex_spc
-    lda preload_id
+
+    IF _DEBUG_SHOW_PRELOAD    
+    lda preload_pattern
+    jsr debug_write_hex
+    lda preload_line
     jsr debug_write_hex_spc
+    lda preload_code
+    jsr debug_write_hex
+    lda preload_data
+    jsr debug_write_hex_spc
+    ENDIF
+
     rts
 }
 ENDIF

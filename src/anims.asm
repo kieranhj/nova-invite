@@ -3,27 +3,6 @@
 \ *	ANIMS MODULE
 \ ******************************************************************
 
-.anims_defaults_for_anim 
-{
-; default ramp number, default speed - (default mode)
-    EQUB 8, 2, 1, 0                    ; atom
-    EQUB 2, 1, 2, 0                    ; cross
-    EQUB 9, 4, 1, 0                    ; galaxy
-    EQUB 10, 1, 1, 0                   ; world
-    EQUB 4, 3, 2, 0                    ; shift
-    EQUB 8, 3, 1, 0                    ; turbulent
-    EQUB 10, 5, 1, 0                   ; triangle
-    EQUB 5, 8, 1, 0                    ; claw
-    EQUB 0, 0, 0, 0                    ; &28
-    EQUB 0, 0, 0, 0                    ; &29
-    EQUB 0, 0, 0, 0                    ; &2A
-    EQUB 0, 0, 0, 0                    ; &2B
-    EQUB 0, 0, 0, 0                    ; &2C
-    EQUB 0, 0, 0, 0                    ; &2D
-    EQUB 0, 0, 0, 0                    ; &2E
-    EQUB 0, 0, 0, 0                    ; &2F
-}
-
 .anims_ramp_table
 {
     ; address of ramp, length of ramp.
@@ -69,9 +48,6 @@
 ; A = ramp no.
 .anims_set_ramp
 {
-    sta anims_ramp_load
-    beq return
-
     asl a:asl a
     tax
 
@@ -95,8 +71,6 @@
 ; A = delay
 .anims_set_speed
 {
-    sta anims_speed_load
-    beq return
     sta anims_frame_speed
     .return
     rts
@@ -105,9 +79,6 @@
 ; A = anim mode
 .anims_set_mode
 {
-    sta anims_mode_load
-    beq return
-
     asl a:tax
     lda anims_mode_table+1, X
     IF _DEBUG
@@ -126,43 +97,13 @@
 ; A = anim no.
 .anims_set_anim
 {
-    asl a:asl a:pha:tax
-
-    lda anims_speed_load
-    bne speed_already_set
-    lda anims_defaults_for_anim+1, X
-    .speed_already_set
-    jsr anims_set_speed     ; preserves X
-
-    lda anims_ramp_load
-    bne ramp_already_set
-
-    lda anims_defaults_for_anim+0, X
-    .ramp_already_set
-    jsr anims_set_ramp      ; trashes X
-
-    pla:tax
-    lda anims_mode_load
-    bne mode_already_set
-    lda anims_defaults_for_anim+2, X
-    .mode_already_set
-    jsr anims_set_mode      ; trashes X
-
-    lda #0
-    sta anims_ramp_load
-    sta anims_speed_load
-    sta anims_mode_load
-
     \\ Clear palette to all black then update once to start
     jsr set_all_black_palette
     jsr do_per_frame_fn
     
     lda anims_frame_speed
     sta anims_frame_delay
-
     rts
-
-    .loop_count equb 0
 }
 
 .anims_frame_update

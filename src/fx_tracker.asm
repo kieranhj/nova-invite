@@ -495,6 +495,7 @@ IF _DEBUG
     lda events_data
     jsr debug_write_hex_spc
 
+    IF _DEBUG_SHOW_PRELOAD    
     lda preload_pattern
     jsr debug_write_hex
     lda preload_line
@@ -503,6 +504,8 @@ IF _DEBUG
     jsr debug_write_hex
     lda preload_data
     jsr debug_write_hex_spc
+    ENDIF
+    
     rts
 }
 ENDIF

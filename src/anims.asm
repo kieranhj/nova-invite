@@ -228,7 +228,14 @@ ENDIF
     cpy anims_ramp_length
     bcc loop
 
-    inc anims_colour_index
+    ldx anims_colour_index
+    inx
+    cpx #MOD15_MAX
+    bcc ok
+    ldx #0
+    .ok
+    stx anims_colour_index
+    
     rts
     ; 1=black, 2=blue, 3=green, 4=cyan
     ; 2=black, 3=blue, 4=green, 5=cyan etc.
@@ -250,7 +257,13 @@ ENDIF
     dey
     bne loop
 
-    dec anims_colour_index
+    ldx anims_colour_index
+    dex
+    cpx #MOD15_MAX
+    bne ok
+    dex
+    .ok
+    stx anims_colour_index
     rts
 
     ; 1=black, 

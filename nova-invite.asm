@@ -732,6 +732,7 @@ include "lib/debug4.asm"
 
 include "src/asset_tables.asm"
 
+MOD15_MAX = 255
 .mod15_plus1_asl4_table                ; could be PAGE_ALIGN'd
 {
     FOR n,0,255,1

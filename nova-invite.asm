@@ -412,6 +412,8 @@ GUARD screen3_addr
     lda tracker_vsync
     bne between_tracker_lines
     jsr events_update
+    \\ Poll the preload system - could move to main loop.
+    jsr preload_update
     .between_tracker_lines
 
     \\ Then per-frame func.
@@ -558,13 +560,13 @@ IF _DEBUG
 
     \\ Step to line
     lda pause_line
-    cmp tracker_line
+    cmp events_line
     bcs exit_and_update
     bcc done_stepping
 
     .step_to_pattern
     lda pause_pattern
-    cmp tracker_pattern
+    cmp events_pattern
     bcs exit_and_update
 
     \\ Done stepping
@@ -609,7 +611,7 @@ IF _DEBUG
     jsr debug_check_key
     bne not_pressed_step_line
 
-    lda tracker_line
+    lda events_line
     sta pause_line
     lda #1:sta debug_step_mode
     bne exit_and_update
@@ -621,7 +623,7 @@ IF _DEBUG
     jsr debug_check_key
     bne not_pressed_next_pattern
 
-    lda tracker_pattern
+    lda events_pattern
     sta pause_pattern
     lda #2:sta debug_step_mode
     bne exit_and_update

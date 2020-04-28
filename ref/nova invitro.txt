@@ -267,3 +267,9 @@ Can have 4x of these per line. :)
 Remove animation default nonsense, just use last one set.
 This means we can say 'play anim X' 'set anim colour Y' 'set anim speed Z' 'set anim mode ping-pong' on one line.
 Also means we can mix colour changes and Fx etc.
+    - Optimise parsing anyway - DONE
+    - Can move preload update to main loop
+    - Can move music player to mid-frame on a different timer
+    - Can do a line-draw effect as a preload...
+    - Separate events and preload into modules
+    - Change event line to start at &FF

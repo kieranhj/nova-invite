@@ -345,9 +345,17 @@ GUARD screen3_addr
 
     {
         .wait_for_task
+        ldx events_frame
+        bne skip_preload
+
+        \\ Poll the preload system.
+        jsr preload_update
+
+        .skip_preload
         lda task_request
         beq wait_for_task
 
+        \\ Do our background task.
         jsr do_task
         dec task_request
     }
@@ -425,9 +433,7 @@ GUARD screen3_addr
 
         \\ Handle events
         jsr events_update
-        \\ Poll the preload system - could move to main loop.
-        jsr preload_update
-
+        \\ Preload system now polled in main loop.
         .skip_line_updates
     }
 

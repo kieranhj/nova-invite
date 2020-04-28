@@ -33,7 +33,7 @@
     EQUW anim_oneshot_forwards, 0   ; c703
     EQUW anim_oneshot_backwards, 0  ; c704
     EQUW anim_ping_pong, &FF        ; c705
-    EQUW 0, 0                       ; c706
+    EQUW anim_random, &FF           ; c706
     EQUW 0, 0                       ; c707
     EQUW 0, 0                       ; c708
     EQUW 0, 0                       ; c709
@@ -277,27 +277,21 @@
     rts
 }
 
-IF 0
-.anim_loop_ramp_hi8
+.anim_random
 {
-    ldy #0
+    jsr set_all_black_palette
+    ldy #1
     .loop
-    txa
-    clc
-    adc anims_colour_index
-    and #7
-    clc
-    adc #8
-    asl a:asl a:asl a:asl a
+    RND16
+    tax
+    lda mod15_plus1_asl4_table, X
     ora (anims_ramp_ptr), Y
     sta &fe21
     iny
     cpy anims_ramp_length
     bcc loop
-    inc anims_colour_index
     rts
 }
-ENDIF
 
 .anims_ramp_black
 EQUB PAL_black, PAL_black

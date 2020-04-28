@@ -117,6 +117,7 @@ KEY_PAUSE_INKEY = -56           ; 'P'
 KEY_STEP_FRAME_INKEY = -68      ; 'F'
 KEY_STEP_LINE_INKEY = -87       ; 'L'
 KEY_NEXT_PATTERN_INKEY = -86    ; 'N'
+KEY_RESTART_INKEY = -52         ; 'R'
 
 \ ******************************************************************
 \ *	ZERO PAGE
@@ -154,6 +155,7 @@ IF _DEBUG
 .step_frame_debounce    skip 1
 .step_line_debounce     skip 1
 .next_pattern_debounce  skip 1
+.restart_debounce       skip 1
 ENDIF
 
 .zp_end
@@ -193,30 +195,18 @@ GUARD screen3_addr
 
 .main
 {
-    \\ Init stack
-    ldx #&ff:txs
-
     SEI
     lda &fe4e
     sta previous_ifr+1
 	LDA #&7F					; (disable all interrupts)
 	STA &FE4E					; R14=Interrupt Enable
-    CLI
 
-    \\ Init ZP
-    lda #0
-    ldx #0
-    .zp_loop
-    sta &00, x
-    inx
-    cpx #zp_top
-    bne zp_loop
+    LDA IRQ1V:STA old_irqv
+    LDA IRQ1V+1:STA old_irqv+1
+    CLI
 
     \\ Consts for now
     lda #4:sta MUSIC_SLOT_ZP
-
-    lda &fe44:sta seed
-    lda &fe45:sta seed+1
 
 	\\ Relocate data to lower RAM
 	lda #HI(reloc_from_start)
@@ -259,6 +249,29 @@ GUARD screen3_addr
         lda #HI(&8000)
         jsr disksys_load_file
     }
+
+    IF _DEBUG
+    IF _DEBUG_BEGIN_PAUSED
+    lda #1
+    ELSE
+    lda #0
+    ENDIF
+
+    .*restart
+    sta debug_begin_paused+1
+    ENDIF
+
+    \\ Init stack
+    ldx #&ff:txs
+
+    \\ Init ZP
+    lda #0
+    ldx #0
+    .zp_loop
+    sta &00, x
+    inx
+    cpx #zp_top
+    bne zp_loop
 
     \\ Load events
     {
@@ -303,8 +316,10 @@ GUARD screen3_addr
     lda #HI(screen3_addr)
     sta prev_buffer_HI
 
-    \\ This sets the first preload fn.
-    \\ Should we wait for it to complete?
+    lda &fe44:sta seed
+    lda &fe45:sta seed+1
+
+    \\ This also initiates a preload update.
     jsr events_init
 
 	\\ Set interrupts and handler
@@ -327,15 +342,13 @@ GUARD screen3_addr
 	LDA #&C0					; 
 	STA &FE4E					; R14=Interrupt Enable
 
-    LDA IRQ1V:STA old_irqv
-    LDA IRQ1V+1:STA old_irqv+1
-
     LDA #LO(irq_handler):STA IRQ1V
     LDA #HI(irq_handler):STA IRQ1V+1		; set interrupt handler
     CLI
 
-    IF _DEBUG_BEGIN_PAUSED
-    lda #1:sta debug_paused
+    IF _DEBUG
+    .debug_begin_paused
+    lda #0:sta debug_paused
     lda events_line:sta pause_line
     ENDIF
 
@@ -578,13 +591,8 @@ IF _DEBUG
     jsr debug_check_key
     bne not_pressed_pause
 
-    \\ Pause key pressed
-    lda debug_paused
-    bne exiting_pause
-
     \\ Entering pause
     jsr MUSIC_JUMP_SN_RESET
-    .exiting_pause
 
     \\ Toggle pause
     lda debug_paused:eor #1:sta debug_paused
@@ -628,6 +636,23 @@ IF _DEBUG
     bne exit_and_update
 
     .not_pressed_next_pattern
+    \\ Check for restart
+    lda #restart_debounce
+    ldx #KEY_RESTART_INKEY AND 255
+    jsr debug_check_key
+    bne not_pressed_restart
+
+    \\ Nuke!
+    lda #LO(restart)
+    sta do_task_jmp+1
+    lda #HI(restart)
+    sta do_task_jmp+2
+    lda #1
+    sta do_task_load_A+1
+    inc task_request
+
+    .not_pressed_restart
+    lda #0:sta debug_step
     sec
     rts
 }

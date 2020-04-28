@@ -44,6 +44,7 @@ ENDMACRO
     PRELOAD_SET_ADDRESS_XY
 
     lda #1:sta events_delay
+    jsr anims_set_mode
     jmp preload_update
 }
 

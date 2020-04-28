@@ -270,8 +270,8 @@ Remove animation default nonsense, just use last one set.
 This means we can say 'play anim X' 'set anim colour Y' 'set anim speed Z' 'set anim mode ping-pong' on one line.
 Also means we can mix colour changes and Fx etc.
     - Optimise parsing anyway - DONE
-    - Can move preload update to main loop
-    - Can move music player to mid-frame on a different timer
+    - Can move preload update to main loop - DONE
+    - Can move music player to mid-frame on a different timer - DO WHEN ADDING NEW IRQ
     - Separate events and preload into modules
     - Change event line to start at &FF - DONE
     - Need better error messages & pause, not crash on invalid data!

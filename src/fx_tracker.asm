@@ -3,21 +3,6 @@
 \ *	FX TRACKER MODULE
 \ ******************************************************************
 
-\\ Update tracker counters
-.fx_tracker_update
-{
-    ldx tracker_vsync
-    inx
-    cpx #TRACK_SPEED
-    stx tracker_vsync
-    bcc is_mid_line
-
-    ldx #0
-    .is_mid_line
-    stx tracker_vsync
-    rts
-}
-
 MACRO EVENTS_SET_ADDRESS_XY
 {
     stx events_ptr
@@ -45,6 +30,11 @@ ENDMACRO
 
 .events_init
 {
+    lda #&ff
+    sta events_frame
+    sta events_line
+    sta preload_line
+
     lda #0
     sta events_pattern
     sta preload_pattern
@@ -59,6 +49,9 @@ ENDMACRO
 
 .events_update
 {
+    \\ Update line number.
+    inc events_line
+
     \\ Process an event as soon as the line delay reaches 0.
     dec events_delay
     bne return
@@ -68,15 +61,14 @@ ENDMACRO
     cmp #TRACK_PATTERN_LENGTH
     bcc not_finished_pattern
 
-    lda #0:sta events_line
-
     \\ We finished the pattern so load the next one!
+    lda #0:sta events_line
     inc events_pattern
 
     .get_next_pattern
     lda events_pattern
     jsr events_get_pattern_address
-    cpy #0
+    cpy #0                      ; 0 address
     bne set_new_pattern
 
     \\ Patterns looped!
@@ -163,7 +155,6 @@ ENDMACRO
     }
 
     .return
-    inc events_line
 }
 .preload_return
     rts
@@ -182,8 +173,10 @@ ENDMACRO
     lda #0:sta preload_id
 
     .line_loop
-    lda preload_line
-    cmp #TRACK_PATTERN_LENGTH
+    ldx preload_line
+    inx
+    cpx #TRACK_PATTERN_LENGTH
+    stx preload_line
     bcc not_finished_pattern
 
     lda #0:sta preload_line
@@ -270,8 +263,6 @@ ENDMACRO
     jmp preload_loop
 
     .line_processed
-    inc preload_line
-
     \\ Update preload_ptr
     {
         clc

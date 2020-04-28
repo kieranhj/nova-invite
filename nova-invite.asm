@@ -130,7 +130,6 @@ GUARD zp_top
 INCLUDE "lib/exo.h.asm"
 
 .writeptr           skip 2
-.vsync_count        skip 1
 .music_enabled      skip 1
 .music_lock         skip 1
 
@@ -326,6 +325,7 @@ GUARD screen3_addr
 
     IF _DEBUG_BEGIN_PAUSED
     lda #1:sta debug_paused
+    lda events_line:sta pause_line
     ENDIF
 
     \\ Go!
@@ -409,25 +409,33 @@ GUARD screen3_addr
     }
     ENDIF
 
-    \\ Handle events
-    lda tracker_vsync
-    bne between_tracker_lines
-    jsr events_update
-    \\ Poll the preload system - could move to main loop.
-    jsr preload_update
-    .between_tracker_lines
+    \\ Update frame counter.
+    {
+        ldx events_frame
+        inx
+        cpx #TRACK_SPEED
+        bcc ok
+        ldx #0
+        .ok
+        stx events_frame
+
+        \\ Events only take play at the track speed.
+        cpx #0
+        bne skip_line_updates
+
+        \\ Handle events
+        jsr events_update
+        \\ Poll the preload system - could move to main loop.
+        jsr preload_update
+
+        .skip_line_updates
+    }
 
     \\ Then per-frame func.
     jsr do_per_frame_fn
 
-    \\ Then update music
+    \\ Then update music - could be on a mid-frame timer.
     jsr MUSIC_JUMP_VGM_UPDATE
-
-    \\ Update vsync counter
-    inc vsync_count
-
-    \\ Update FX Tracker
-    jsr fx_tracker_update
 
     IF _DEBUG
     .skip_update
@@ -562,13 +570,13 @@ IF _DEBUG
     \\ Step to line
     lda pause_line
     cmp events_line
-    bcs exit_and_update
-    bcc done_stepping
+    beq exit_and_update
+    bne done_stepping
 
     .step_to_pattern
     lda pause_pattern
     cmp events_pattern
-    bcs exit_and_update
+    beq exit_and_update
 
     \\ Done stepping
     .done_stepping

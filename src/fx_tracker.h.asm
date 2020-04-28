@@ -3,11 +3,10 @@
 \ *	FX TRACKER
 \ ******************************************************************
 
-.tracker_vsync      skip 1
-
-.events_ptr         skip 2
+.events_frame       skip 1
 .events_pattern     skip 1
 .events_line        skip 1
+.events_ptr         skip 2
 .events_delay       skip 2
 .events_code        skip 1
 .events_data        skip 1

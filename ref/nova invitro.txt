@@ -248,7 +248,7 @@ TODO
     - Add set ramp - DONE
     - Add set mode - DONE
     - Handle defaults and overriding them - DONE
-    - Need ping-pong and one-shot
+    - Need ping-pong and one-shot - DONE
 - Debug controls
     - Pause / play - DONE
     - Step frame, step line, step to end of pattern - DONE

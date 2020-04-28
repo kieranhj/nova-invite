@@ -706,6 +706,7 @@ include "lib/debug4.asm"
 }
 
 include "src/asset_tables.asm"
+include "src/anims_tables.asm"
 
 MOD15_MAX = 240
 .mod15_plus1_asl4_table         ; could be PAGE_ALIGN'd

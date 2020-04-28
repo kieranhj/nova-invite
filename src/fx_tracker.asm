@@ -401,11 +401,13 @@ ENDMACRO
 .handle_anim
 {
     CHECK_TASK_NOT_RUNNING      ; Need to think more about this.
-    pha
     jsr set_mode_8
-    jsr set_mode8_default_palette
-    pla
-    jsr anims_set_anim
+    jsr set_all_black_palette
+    lda #LO(anims_frame_update)
+    sta do_per_frame_fn+1
+    lda #HI(anims_frame_update)
+    sta do_per_frame_fn+2
+    lda #1:sta anims_frame_delay    ; do per frame update immediately
     jmp display_next_buffer
 }
 
@@ -505,7 +507,7 @@ IF _DEBUG
     lda preload_data
     jsr debug_write_hex_spc
     ENDIF
-    
+
     rts
 }
 ENDIF

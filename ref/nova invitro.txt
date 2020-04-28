@@ -273,3 +273,5 @@ Also means we can mix colour changes and Fx etc.
     - Can do a line-draw effect as a preload...
     - Separate events and preload into modules
     - Change event line to start at &FF
+    - Need better error messages & pause, not crash on invalid data!
+    - Set anim / set image commands have to be last on line currently - FIXED.

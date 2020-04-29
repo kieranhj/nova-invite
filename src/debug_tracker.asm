@@ -3,7 +3,29 @@
 \ *	DEBUG FOR 
 \ ******************************************************************
 
+debug_msg_play = 0
+debug_msg_paused = 1
+debug_msg_step_frame = 2
+debug_msg_step_line = 3
+debug_msg_run_to_next = 4
+debug_msg_error = 5
+
 IF _DEBUG
+.debug_message_table
+{
+    EQUW debug_message_0
+    EQUW debug_message_1
+    EQUW debug_message_2
+    EQUW debug_message_3
+    EQUW debug_message_4
+}
+
+.debug_message_0 EQUS "Play", 0
+.debug_message_1 EQUS "Paused", 0
+.debug_message_2 EQUS "Step frame", 0
+.debug_message_3 EQUS "Step line ", 0
+.debug_message_4 EQUS "Run to next", 0
+
 .do_pause_controls
 {
     lda debug_step_mode
@@ -37,6 +59,7 @@ IF _DEBUG
 
     \\ Toggle pause
     lda debug_paused:eor #1:sta debug_paused
+    sta debug_msg_no
 
     .not_pressed_pause
     lda debug_paused
@@ -47,6 +70,7 @@ IF _DEBUG
     ldx #KEY_STEP_FRAME_INKEY AND 255
     jsr debug_check_key
     bne not_pressed_step_frame
+    lda #debug_msg_step_frame:sta debug_msg_no
 
     .exit_and_update
     clc
@@ -62,6 +86,7 @@ IF _DEBUG
     lda events_line
     sta pause_line
     lda #1:sta debug_step_mode
+    lda #debug_msg_step_line:sta debug_msg_no
     bne exit_and_update
 
     .not_pressed_step_line
@@ -74,6 +99,7 @@ IF _DEBUG
     lda events_pattern
     sta pause_pattern
     lda #2:sta debug_step_mode
+    lda #debug_msg_run_to_next:sta debug_msg_no
     bne exit_and_update
 
     .not_pressed_next_pattern
@@ -99,7 +125,9 @@ IF _DEBUG
 }
 
 .debug_show_tracker_info
+IF NOT(_DEBUG_STATUS_BAR)
 {
+    \\ XXyy CCdd
     jsr debug_reset_writeptr
     lda events_pattern
     jsr debug_write_hex
@@ -110,6 +138,7 @@ IF _DEBUG
     lda events_data
     jsr debug_write_hex_spc
 
+    \\ XXyy CCdd
     IF _DEBUG_SHOW_PRELOAD    
     lda preload_pattern
     jsr debug_write_hex
@@ -123,6 +152,46 @@ IF _DEBUG
 
     rts
 }
+ELSE
+{
+    jsr debug_reset_writeptr
+
+    \\ PP:LL cCdd p> Status message
+    lda events_pattern
+    jsr debug_write_hex
+    lda #':':jsr debug_write_char
+    lda events_line
+    jsr debug_write_hex_spc
+    lda #'c':jsr debug_write_char
+    lda events_code
+    jsr debug_write_hex1
+    lda events_data
+    jsr debug_write_hex_spc
+
+    lda task_request
+    clc:adc #'0'
+    jsr debug_write_char
+    lda #'>'
+    jsr debug_write_char
+
+    lda debug_msg_no
+    asl a:tax
+    ldy debug_message_table+1, X
+    lda debug_message_table+0, X
+    tax
+    jsr debug_write_string
+
+    ldy #0
+    ldx debug_writeptr
+    lda #0
+    .loop
+    sta (debug_writeptr), Y
+    iny
+    inx
+    bne loop
+    rts
+}
+ENDIF
 
 IF _DEBUG_STATUS_BAR
 .debug_highlight_status_bar
@@ -141,8 +210,8 @@ IF _DEBUG_STATUS_BAR
     clc:adc #&10
     bcc fg_loop
 
-    \\ Wait ~7 scanlines = ~900 cycles
-    ldx #100
+    \\ Wait ~8 scanlines
+    ldx #114
     .wait_loop
     bit &1234       ; 4c
     dex             ; 2c

@@ -28,12 +28,12 @@ IF _DEBUG
     lsr a:lsr a:lsr a:lsr a
     tax
     
-    lda hex, X
-    jsr debug_plot_char
+    lda debug_hex, X
+    jsr debug_write_char
     pla
     and #&f
-    tax:lda hex, X
-    jsr debug_plot_char
+    tax:lda debug_hex, X
+    jsr debug_write_char
 
     plp
     bcc return
@@ -46,12 +46,19 @@ IF _DEBUG
     inc debug_writeptr+1
 	.return
     rts
-
-    .hex
-    EQUS "0123456789ABCDEF"
 }
 
-.debug_plot_char
+.debug_write_hex1
+{
+    and #&f
+    tax:lda debug_hex, X
+    jmp debug_write_char
+}
+
+.debug_hex
+EQUS "0123456789ABCDEF"
+
+.debug_write_char
 {
     sta char_def
 
@@ -122,7 +129,7 @@ IF _DEBUG
     ENDIF
 }
 
-.debug_plot_string
+.debug_write_string
 {
     stx loop+1
     sty loop+2
@@ -132,7 +139,7 @@ IF _DEBUG
     lda &ffff, X
     beq done
     stx temp_x+1
-    jsr debug_plot_char
+    jsr debug_write_char
     .temp_x
     ldx #0
     inx

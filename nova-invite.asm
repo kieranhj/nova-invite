@@ -179,6 +179,8 @@ IF _DEBUG
 .step_line_debounce     skip 1
 .next_pattern_debounce  skip 1
 .restart_debounce       skip 1
+
+.debug_msg_no       skip 1
 ENDIF
 
 .zp_end
@@ -372,6 +374,7 @@ GUARD screen3_addr
     IF _DEBUG
     .debug_begin_paused
     lda #0:sta debug_paused
+    sta debug_msg_no
     lda events_line:sta pause_line
     ENDIF
 
@@ -501,6 +504,7 @@ GUARD screen3_addr
         lda #1:sta debug_step
 
         .show_debug
+        SET_BGCOL PAL_green
         jsr debug_show_tracker_info
     }
     ENDIF

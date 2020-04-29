@@ -11,9 +11,12 @@
 
     lda anims_ramp_table+1, X
     IF _DEBUG
-    bne ok
-    brk
-    .ok
+    {
+        bne ok
+        DEBUG_ERROR debug_msg_error_ramp
+        rts
+        .ok
+    }
     ENDIF
     sta anims_ramp_ptr+1
     lda anims_ramp_table+0, X
@@ -36,9 +39,12 @@
     txa:and #&f0:lsr a:lsr a:tax
     lda anims_mode_table+1, X
     IF _DEBUG
-    bne ok
-    brk
-    .ok
+    {
+        bne ok
+        DEBUG_ERROR debug_msg_error_mode
+        rts
+        .ok
+    }
     ENDIF
     sta anim_frame_update_fn+2
     lda anims_mode_table+0, X

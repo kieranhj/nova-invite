@@ -122,7 +122,7 @@ ENDMACRO
     {
         cmp #120        ; No note.
         beq ok
-        BRK
+        DEBUG_ERROR debug_msg_error_parse
         .ok
     }
     ENDIF
@@ -131,7 +131,7 @@ ENDMACRO
     lda (events_ptr), Y
     {
         beq ok          ; No instrument
-        BRK
+        DEBUG_ERROR debug_msg_error_parse
         .ok
     }
     ENDIF
@@ -241,8 +241,7 @@ ENDMACRO
     IF _DEBUG
     {
         cmp #120        ; No note.
-        beq ok
-        BRK
+        ;BRK            ; doesn't really matter if we have a note!
         .ok
     }
     ENDIF
@@ -251,7 +250,7 @@ ENDMACRO
     lda (preload_ptr), Y
     {
         beq ok          ; No instrument
-        BRK
+        ;BRK            ; doesn't really matter if we have an instrument!
         .ok
     }
     ENDIF
@@ -358,6 +357,14 @@ ENDMACRO
     pha
     txa:asl a:tax 
     ldy image_table+1, X
+    IF _DEBUG
+    {
+        bmi ok
+        DEBUG_ERROR debug_msg_error_image
+        pla:rts
+        .ok
+    }
+    ENDIF
     lda image_table+0, X
     tax
     lda #5
@@ -386,6 +393,14 @@ ENDMACRO
     sta &f4:sta &fe30
 
     ldy anims_table+1, X
+    IF _DEBUG
+    {
+        bmi ok
+        DEBUG_ERROR debug_msg_error_anim
+        pla:rts
+        .ok
+    }
+    ENDIF
     lda anims_table+0, X
     tax
     pla

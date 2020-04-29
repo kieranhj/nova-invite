@@ -165,23 +165,7 @@ INCLUDE "lib/exo.h.asm"
 
 INCLUDE "lib/vgcplayer.h.asm"
 INCLUDE "src/fx_tracker.h.asm"
-
-IF _DEBUG
-.debug_writeptr     skip 2
-.debug_paused       skip 1
-.debug_step         skip 1
-.debug_step_mode    skip 1
-.pause_pattern      skip 1
-.pause_line         skip 1
-
-.pause_key_debounce     skip 1
-.step_frame_debounce    skip 1
-.step_line_debounce     skip 1
-.next_pattern_debounce  skip 1
-.restart_debounce       skip 1
-
-.debug_msg_no       skip 1
-ENDIF
+INCLUDE "src/debug_tracker.h.asm"
 
 .zp_end
 
@@ -572,12 +556,12 @@ GUARD screen3_addr
 MACRO CHECK_TASK_NOT_RUNNING
 IF _DEBUG
 {
-    pha:txa:pha:tya:pha
+    pha
     lda task_request
     beq ok
-    BRK
+    DEBUG_ERROR debug_msg_error_task
     .ok
-    pla:tay:pla:tax:pla
+    pla
 }
 ENDIF
 ENDMACRO

@@ -3,14 +3,16 @@
 \ *	DEBUG FOR 
 \ ******************************************************************
 
-debug_msg_play = 0
-debug_msg_paused = 1
-debug_msg_step_frame = 2
-debug_msg_step_line = 3
-debug_msg_run_to_next = 4
-debug_msg_error = 5
+MACRO DEBUG_MESSAGE m
+IF _DEBUG_STATUS_BAR
+{
+    LDA #m: STA debug_msg_no
+}
+ELSE
+ENDIF
+ENDMACRO
 
-IF _DEBUG
+IF _DEBUG_STATUS_BAR
 .debug_message_table
 {
     EQUW debug_message_0
@@ -18,6 +20,12 @@ IF _DEBUG
     EQUW debug_message_2
     EQUW debug_message_3
     EQUW debug_message_4
+    EQUW debug_message_5
+    EQUW debug_message_6
+    EQUW debug_message_7
+    EQUW debug_message_8
+    EQUW debug_message_9
+    EQUW debug_message_10
 }
 
 .debug_message_0 EQUS "Play", 0
@@ -25,7 +33,15 @@ IF _DEBUG
 .debug_message_2 EQUS "Step frame", 0
 .debug_message_3 EQUS "Step line ", 0
 .debug_message_4 EQUS "Run to next", 0
+.debug_message_5 EQUS "ERROR:Task running", 0
+.debug_message_6 EQUS "ERROR:Unknown ramp", 0
+.debug_message_7 EQUS "ERROR:Unknown mode", 0
+.debug_message_8 EQUS "ERROR:Parse failed", 0
+.debug_message_9 EQUS "ERROR:Unknown image", 0
+.debug_message_10 EQUS "ERROR:Unknown anim", 0
+ENDIF
 
+IF _DEBUG
 .do_pause_controls
 {
     lda debug_step_mode
@@ -70,7 +86,7 @@ IF _DEBUG
     ldx #KEY_STEP_FRAME_INKEY AND 255
     jsr debug_check_key
     bne not_pressed_step_frame
-    lda #debug_msg_step_frame:sta debug_msg_no
+    DEBUG_MESSAGE debug_msg_step_frame
 
     .exit_and_update
     clc
@@ -86,7 +102,7 @@ IF _DEBUG
     lda events_line
     sta pause_line
     lda #1:sta debug_step_mode
-    lda #debug_msg_step_line:sta debug_msg_no
+    DEBUG_MESSAGE debug_msg_step_line
     bne exit_and_update
 
     .not_pressed_step_line
@@ -99,7 +115,7 @@ IF _DEBUG
     lda events_pattern
     sta pause_pattern
     lda #2:sta debug_step_mode
-    lda #debug_msg_run_to_next:sta debug_msg_no
+    DEBUG_MESSAGE debug_msg_run_to_next
     bne exit_and_update
 
     .not_pressed_next_pattern
@@ -156,7 +172,30 @@ ELSE
 {
     jsr debug_reset_writeptr
 
-    \\ PP:LL cCdd p> Status message
+    \\ PP:LL cCdd t>Status message
+    lda debug_msg_no
+    cmp #debug_msg_error_image
+    bne not_image_error
+
+    .is_preload_error
+    \\ Show preload vars.
+    lda preload_pattern
+    jsr debug_write_hex
+    lda #':':jsr debug_write_char
+    lda preload_line
+    jsr debug_write_hex_spc
+    lda #'p':jsr debug_write_char
+    lda preload_code
+    jsr debug_write_hex1
+    lda preload_data
+    jsr debug_write_hex_spc
+    jmp continue
+
+    .not_image_error
+    cmp #debug_msg_error_anim
+    beq is_preload_error
+
+    \\ Show events vars.
     lda events_pattern
     jsr debug_write_hex
     lda #':':jsr debug_write_char
@@ -168,6 +207,7 @@ ELSE
     lda events_data
     jsr debug_write_hex_spc
 
+    .continue
     lda task_request
     clc:adc #'0'
     jsr debug_write_char

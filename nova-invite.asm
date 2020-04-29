@@ -4,7 +4,7 @@
 \ ******************************************************************
 
 _DEBUG = TRUE
-_DEBUG_RASTERS = TRUE
+_DEBUG_RASTERS = FALSE
 _DEBUG_BEGIN_PAUSED = _DEBUG AND FALSE
 _DEBUG_SHOW_PRELOAD = _DEBUG AND FALSE
 _DEBUG_STATUS_BAR = _DEBUG AND TRUE
@@ -679,7 +679,7 @@ include "lib/debug_mode4.asm"
 {
 	EQUB 63    			    ; R0  horizontal total
 	EQUB 32					; R1  horizontal displayed
-	EQUB 49					; R2  horizontal position
+	EQUB 45					; R2  horizontal position
 	EQUB &24				; R3  sync width
 	EQUB 38					; R4  vertical total
 	EQUB 0					; R5  vertical total adjust

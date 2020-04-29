@@ -7,6 +7,9 @@ IF _DEBUG
 .debug_reset_writeptr
 {
     lda display_buffer_HI
+    IF _DEBUG_STATUS_BAR
+    clc:adc #31
+    ENDIF
     sta debug_writeptr+1
     lda #0
     sta debug_writeptr
@@ -52,9 +55,11 @@ IF _DEBUG
 {
     sta char_def
 
+    IF NOT(_DEBUG_STATUS_BAR)
     lda &248
     cmp #ULA_Mode8
     beq plot_mode8
+    ENDIF
 
     lda #10
     ldx #LO(char_def)
@@ -81,6 +86,7 @@ IF _DEBUG
     .char_def
     skip 9
 
+    IF NOT(_DEBUG_STATUS_BAR)
     .plot_mode8
     lda char_def
     sec
@@ -113,6 +119,7 @@ IF _DEBUG
     inc debug_writeptr+1
 	.return8
     rts
+    ENDIF
 }
 
 .debug_plot_string
@@ -154,6 +161,7 @@ MACRO MODE8_PIXELS a,b,c,d
 EQUB a * 14 + b * 7, c * 14 + d * 7
 ENDMACRO
 
+IF NOT(_DEBUG_STATUS_BAR)
 .debug_font_data
 MODE8_PIXELS 0,3,0,0
 MODE8_PIXELS 3,0,3,0
@@ -298,4 +306,5 @@ MODE8_PIXELS 3,0,0,0
 MODE8_PIXELS 3,0,0,0
 MODE8_PIXELS 3,0,0,0
 MODE8_PIXELS 0,0,0,0
+ENDIF
 ENDIF

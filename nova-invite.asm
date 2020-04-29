@@ -7,6 +7,7 @@ _DEBUG = TRUE
 _DEBUG_RASTERS = TRUE
 _DEBUG_BEGIN_PAUSED = _DEBUG AND FALSE
 _DEBUG_SHOW_PRELOAD = _DEBUG AND FALSE
+_DEBUG_STATUS_BAR = _DEBUG AND FALSE
 
 INCLUDE "src/zp.h.asm"
 
@@ -92,6 +93,20 @@ MACRO SWRAM_BANK b
 }
 ENDMACRO
 
+MACRO SET_PALETTE_REG
+IF _DEBUG_STATUS_BAR
+{
+    pha:lsr a:lsr a:lsr a:lsr a
+    sta write_value+1:pla
+    .write_value
+    sta &00
+    sta &fe21
+}
+ELSE
+    sta &fe21
+ENDIF
+ENDMACRO
+
 \ ******************************************************************
 \ *	GLOBAL constants
 \ ******************************************************************
@@ -111,7 +126,11 @@ FramePeriod = 312*64-2
 
 ; This is when we trigger the next frame draw during the frame
 ; Essentially how much time we give the main loop to stream the next track
+IF _DEBUG_STATUS_BAR
+TimerValue = (32+254-9)*64 - 2*64
+ELSE
 TimerValue = (32+254)*64 - 2*64
+ENDIF
 
 KEY_PAUSE_INKEY = -56           ; 'P'
 KEY_STEP_FRAME_INKEY = -68      ; 'F'
@@ -127,6 +146,10 @@ ORG &00
 GUARD zp_top
 
 .zp_start
+
+IF _DEBUG_STATUS_BAR
+.debug_palette_copy skip 16
+ENDIF
 
 INCLUDE "lib/exo.h.asm"
 
@@ -421,7 +444,10 @@ GUARD screen3_addr
     beq return
 
     txa:pha:tya:pha
-    SET_BGCOL PAL_red
+
+    IF _DEBUG_STATUS_BAR
+    jsr debug_show_status_bar
+    ENDIF
 
     IF _DEBUG
     {
@@ -435,6 +461,8 @@ GUARD screen3_addr
         .do_update
     }
     ENDIF
+
+    SET_BGCOL PAL_red
 
     \\ Update frame counter.
     {
@@ -458,6 +486,8 @@ GUARD screen3_addr
 
     \\ Then per-frame func.
     jsr do_per_frame_fn
+
+    SET_BGCOL PAL_blue
 
     \\ Then update music - could be on a mid-frame timer.
     jsr MUSIC_JUMP_VGM_UPDATE
@@ -562,6 +592,31 @@ ENDMACRO
     rts
 }
 
+include "src/music_jump.asm"
+.main_end
+
+\ ******************************************************************
+\ *	FX MODULES
+\ ******************************************************************
+
+.fx_start
+include "src/fx_tracker.asm"
+include "src/anims.asm"
+.fx_end
+
+\ ******************************************************************
+\ *	LIBRARY MODULES
+\ ******************************************************************
+
+.library_start
+include "lib/screen.asm"
+include "lib/exo.asm"
+include "lib/disksys.asm"
+.library_end
+
+.debug_start
+include "lib/debug4.asm"
+
 IF _DEBUG
 .do_pause_controls
 {
@@ -656,30 +711,70 @@ IF _DEBUG
     sec
     rts
 }
+
+.fx_tracker_show_debug
+{
+    jsr debug_reset_writeptr
+    lda events_pattern
+    jsr debug_write_hex
+    lda events_line
+    jsr debug_write_hex_spc
+    lda events_code
+    jsr debug_write_hex
+    lda events_data
+    jsr debug_write_hex_spc
+
+    IF _DEBUG_SHOW_PRELOAD    
+    lda preload_pattern
+    jsr debug_write_hex
+    lda preload_line
+    jsr debug_write_hex_spc
+    lda preload_code
+    jsr debug_write_hex
+    lda preload_data
+    jsr debug_write_hex_spc
+    ENDIF
+
+    rts
+}
+
+.debug_show_status_bar
+{
+    lda #ULA_Mode4:sta &fe20        ; force MODE 4
+
+    \\ Force palette to status bar colours for visibility.
+    lda #PAL_white
+    .bg_loop
+    sta &fe21
+    clc:adc #&10
+    bpl bg_loop
+    eor #7
+    .fg_loop
+    sta &fe21
+    clc:adc #&10
+    bcc fg_loop
+
+    \\ Wait ~7 scanlines = ~900 cycles
+    ldx #100
+    .wait_loop
+    bit &1234       ; 4c
+    dex             ; 2c
+    bne wait_loop   ; 3c
+
+    \\ Restore mode and palette to what it was previously!
+    lda &248:sta &fe20
+
+    ldx #15
+    .pal_loop
+    lda &00, X
+    sta &fe21
+    dex
+    bpl pal_loop
+
+    rts
+}
 ENDIF
-
-include "src/music_jump.asm"
-.main_end
-
-\ ******************************************************************
-\ *	FX MODULES
-\ ******************************************************************
-
-.fx_start
-include "src/fx_tracker.asm"
-include "src/anims.asm"
-.fx_end
-
-\ ******************************************************************
-\ *	LIBRARY MODULES
-\ ******************************************************************
-
-.additional_start
-include "lib/screen.asm"
-include "lib/exo.asm"
-include "lib/disksys.asm"
-include "lib/debug4.asm"
-.additional_end
+.debug_end
 
 \ ******************************************************************
 \ *	Preinitialised data
@@ -814,7 +909,8 @@ PRINT "------"
 PRINT "ZP size =", ~zp_end-zp_start, "(",~&80-zp_end,"free)"
 PRINT "MAIN size =", ~main_end-main_start
 PRINT "FX size = ", ~fx_end-fx_start
-PRINT "LIBRARY size =",~additional_end-additional_start
+PRINT "LIBRARY size =",~library_end-library_start
+PRINT "DEBUG CODE size =",~debug_end-debug_start
 PRINT "DATA size =",~data_end-data_start
 PRINT "RELOC size =",~reloc_from_end-reloc_from_start
 PRINT "BSS size =",~bss_end-bss_start

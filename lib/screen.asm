@@ -30,7 +30,7 @@
 	ldx #15
 	.pal_loop
 	lda mode4_default_palette, X
-	sta &fe21
+	SET_PALETTE_REG
 	dex
 	bpl pal_loop
 	rts
@@ -67,24 +67,24 @@
 
 .set_mode4_fg_colour
 {
-    ora #&80:sta &fe21
+    ora #&80:SET_PALETTE_REG
 }
 \\ fall through
 .set_mode4_colours
 {
-    eor #&10:sta &fe21
-    eor #&30:sta &fe21
-    eor #&10:sta &fe21
-    eor #&70:sta &fe21
-    eor #&10:sta &fe21
-    eor #&30:sta &fe21
-    eor #&10:sta &fe21
+    eor #&10:SET_PALETTE_REG
+    eor #&30:SET_PALETTE_REG
+    eor #&10:SET_PALETTE_REG
+    eor #&70:SET_PALETTE_REG
+    eor #&10:SET_PALETTE_REG
+    eor #&30:SET_PALETTE_REG
+    eor #&10:SET_PALETTE_REG
     rts
 }
 
 .set_mode4_bg_colour
 {
-    sta &fe21
+    SET_PALETTE_REG
     jmp set_mode4_colours
 }
 
@@ -115,7 +115,7 @@
 {
     lda #PAL_black
     .loop
-    sta &fe21
+    SET_PALETTE_REG
     clc
     adc #&10
     bcc loop

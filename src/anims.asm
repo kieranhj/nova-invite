@@ -89,7 +89,7 @@
 
     lda mod15_plus1_asl4_table, X
     ora (anims_ramp_ptr), Y
-    sta &fe21
+    SET_PALETTE_REG
 
     iny
     cpy anims_ramp_length
@@ -117,7 +117,7 @@
 
     lda ping_pong_table, X
     ora (anims_ramp_ptr), Y
-    sta &fe21
+    SET_PALETTE_REG
 
     iny
     cpy anims_ramp_length
@@ -153,7 +153,7 @@
 
     lda mod15_plus1_asl4_table, X
     ora (anims_ramp_ptr), Y
-    sta &fe21
+    SET_PALETTE_REG
 
     dey
     bne loop
@@ -176,7 +176,7 @@
 
     lda mod15_plus1_asl4_table, X
     ora (anims_ramp_ptr), Y
-    sta &fe21
+    SET_PALETTE_REG
     .off_end
 
     dey
@@ -218,7 +218,7 @@
 
     lda mod15_plus1_asl4_table, X
     ora (anims_ramp_ptr), Y
-    sta &fe21
+    SET_PALETTE_REG
 
     .temp_x
     ldx #0
@@ -251,7 +251,7 @@
     tax
     lda mod15_plus1_asl4_table, X
     ora (anims_ramp_ptr), Y
-    sta &fe21
+    SET_PALETTE_REG
     iny
     cpy anims_ramp_length
     bcc loop

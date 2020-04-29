@@ -478,31 +478,3 @@ ENDMACRO
     bne loop
     rts
 }
-
-IF _DEBUG
-.fx_tracker_show_debug
-{
-    jsr debug_reset_writeptr
-    lda events_pattern
-    jsr debug_write_hex
-    lda events_line
-    jsr debug_write_hex_spc
-    lda events_code
-    jsr debug_write_hex
-    lda events_data
-    jsr debug_write_hex_spc
-
-    IF _DEBUG_SHOW_PRELOAD    
-    lda preload_pattern
-    jsr debug_write_hex
-    lda preload_line
-    jsr debug_write_hex_spc
-    lda preload_code
-    jsr debug_write_hex
-    lda preload_data
-    jsr debug_write_hex_spc
-    ENDIF
-
-    rts
-}
-ENDIF

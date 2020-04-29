@@ -27,22 +27,22 @@
 .anims_mode_table
 {
     ; mode func, optional start value for index
-    EQUW do_nothing, &FF            ; c700
-    EQUW anim_loop_forwards, &FF    ; c701
-    EQUW anim_loop_backwards, &FF   ; c702
-    EQUW anim_oneshot_forwards, 0   ; c703
-    EQUW anim_oneshot_backwards, 0  ; c704
-    EQUW anim_ping_pong, &FF        ; c705
-    EQUW anim_random, &FF           ; c706
-    EQUW 0, 0                       ; c707
-    EQUW 0, 0                       ; c708
-    EQUW 0, 0                       ; c709
-    EQUW 0, 0                       ; c70A
-    EQUW 0, 0                       ; c70B
-    EQUW 0, 0                       ; c70C
-    EQUW 0, 0                       ; c70D
-    EQUW 0, 0                       ; c70E
-    EQUW 0, 0                       ; c70F
+    EQUW do_nothing, &FF            ; c60y
+    EQUW anim_loop_forwards, &FF    ; c61y
+    EQUW anim_loop_backwards, &FF   ; c62y
+    EQUW anim_oneshot_forwards, 0   ; c63y
+    EQUW anim_oneshot_backwards, 0  ; c64y
+    EQUW anim_ping_pong, &FF        ; c65y
+    EQUW anim_random, &FF           ; c66y
+    EQUW 0, 0                       ; c67y
+    EQUW 0, 0                       ; c68y
+    EQUW 0, 0                       ; c69y
+    EQUW 0, 0                       ; c6Ay
+    EQUW 0, 0                       ; c6By
+    EQUW 0, 0                       ; c6Cy
+    EQUW 0, 0                       ; c6Dy
+    EQUW 0, 0                       ; c6Ey
+    EQUW 0, 0                       ; c6Fy
 }
 
 .anims_ramp_black

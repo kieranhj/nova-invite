@@ -3,6 +3,27 @@
 \ *	FX TRACKER MODULE
 \ ******************************************************************
 
+.event_fn_table
+{
+\\ Event handler and preload fn per event type &xy
+    EQUW do_nothing,            0               ; c0 yy
+    EQUW handle_image,          preload_image   ; c1 yy set image y = image no.
+    EQUW handle_anim,           preload_anim    ; c2 yy set anim y = anim no.
+    EQUW handle_set_colour,     0               ; c3 yy set fg colour y = colour no.
+    EQUW handle_special_fx, preload_special_fx  ; c4 yy special Fx 
+    EQUW anims_set_ramp,        0               ; c5 yy set anim ramp y = ramp no.
+    EQUW anims_set_mode_and_speed, 0            ; c6 xy set anim mode x and speed y
+    EQUW do_nothing,            0               ; c7 yy
+    EQUW do_nothing,            0               ; c8 yy
+    EQUW do_nothing,            0               ; c9 yy
+    EQUW do_nothing,            0               ; cA yy
+    EQUW do_nothing,            0               ; cB yy
+    EQUW do_nothing,            0               ; cC yy
+    EQUW do_nothing,            0               ; cD yy
+    EQUW do_nothing,            0               ; cE yy
+    EQUW do_nothing,            0               ; cF yy
+}
+
 MACRO EVENTS_SET_ADDRESS_XY
 {
     stx events_ptr
@@ -44,7 +65,10 @@ ENDMACRO
     PRELOAD_SET_ADDRESS_XY
 
     lda #1:sta events_delay
-    jsr anims_set_mode
+
+    lda #&11    ; default to forward loop at speed 1
+    jsr anims_set_mode_and_speed
+
     jmp preload_update
 }
 
@@ -288,27 +312,6 @@ ENDMACRO
     eor #7
     sta last_fg_colour
     jmp set_mode4_fg_colour
-}
-
-.event_fn_table
-{
-\\ Event handler and preload fn per event type &xy
-    EQUW do_nothing,            0               ; &0y
-    EQUW handle_image,          preload_image   ; &1y set image y = image no.
-    EQUW handle_anim,           preload_anim    ; &2y set anim y = anim no.
-    EQUW handle_set_colour,     0               ; &3y set fg colour y = colour no.
-    EQUW handle_special_fx, preload_special_fx  ; &4y special Fx 
-    EQUW anims_set_ramp,        0               ; &5y set anim ramp y = ramp no.
-    EQUW anims_set_speed,       0               ; &6y set anim speed
-    EQUW anims_set_mode,        0               ; &7y set anim mode
-    EQUW do_nothing,            0               ; &8y
-    EQUW do_nothing,            0               ; &9y
-    EQUW do_nothing,            0               ; &Ay
-    EQUW do_nothing,            0               ; &By
-    EQUW do_nothing,            0               ; &Cy
-    EQUW do_nothing,            0               ; &Dy
-    EQUW do_nothing,            0               ; &Ey
-    EQUW do_nothing,            0               ; &Fy
 }
 
 .handle_ctrl_code

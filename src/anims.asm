@@ -26,17 +26,14 @@
     rts
 }
 
-; A = delay
-.anims_set_speed
+; A = &MS where M = anim mode and S = anims speed
+.anims_set_mode_and_speed
 {
+    tax
+    and #&0f
     sta anims_frame_speed
-    rts
-}
 
-; A = anim mode
-.anims_set_mode
-{
-    asl a:asl a:tax
+    txa:and #&f0:lsr a:lsr a:tax
     lda anims_mode_table+1, X
     IF _DEBUG
     bne ok
@@ -47,6 +44,13 @@
     lda anims_mode_table+0, X
     sta anim_frame_update_fn+1
 
+    ; zero speed means manual cycle
+    lda anims_frame_speed
+    bne not_zero_speed
+    lda #1:sta anims_frame_delay
+    bne return  ; don't set start value with manual cycle
+
+    .not_zero_speed
     ; optional start value for index
     lda anims_mode_table+2, X
     bmi return
@@ -58,6 +62,9 @@
 
 .anims_frame_update
 {
+    lda anims_frame_delay
+    beq return
+
     dec anims_frame_delay
     bne return
 

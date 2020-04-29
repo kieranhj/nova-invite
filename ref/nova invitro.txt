@@ -252,7 +252,7 @@ TODO
 - Debug controls
     - Pause / play - DONE
     - Step frame, step line, step to end of pattern - DONE
-    - (Eventually, reload events)
+    - (Eventually, reload events) - DONE
 - Make Google sheet of all control codes.
     - https://drive.google.com/open?id=1nPhbag9fAhDcQTmo_VQmBMRLQR4kX4u2HnAkiunwvUI
 - Special FX:
@@ -260,6 +260,9 @@ TODO
     - Quarter screen
     - Bounce screen with VADJ?
     - Can do a line-draw effect as a preload...
+- Colour cycle ideas:
+    - Use MODE 8 screen as a mask over a 15 colour full screen pattern that can be cycled
+    - Lissajous, rose curve, sine wave beat
 - Structure data folder same as Google Drive - DONE
 
 New event system!
@@ -272,7 +275,16 @@ Also means we can mix colour changes and Fx etc.
     - Optimise parsing anyway - DONE
     - Can move preload update to main loop - DONE
     - Can move music player to mid-frame on a different timer - DO WHEN ADDING NEW IRQ
-    - Separate events and preload into modules
+    - Separate events and preload into modules - MAYBE
     - Change event line to start at &FF - DONE
-    - Need better error messages & pause, not crash on invalid data!
     - Set anim / set image commands have to be last on line currently - FIXED
+    - Combine anim play mode and anim speed into one command
+
+Status bar
+    - Need better error messages & pause, not crash on invalid data! <- TODO!
+    - Set status message
+    - Set error message (auto pause)
+    - Will need severe hacking to force bottom line of the screen into MODE 4
+      whilst also restoring the mode and palette for the main FX.
+      SET_PALETTE_REG macro that saves off the palette values in DEBUG.
+

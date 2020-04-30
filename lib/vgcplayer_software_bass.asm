@@ -7,15 +7,15 @@
 ;---------------------------------------------------------------
 ; VGM Player Library code
 ;---------------------------------------------------------------
-VGM_DEBUG = FALSE
-VGM_ENABLE_RASTERS = TRUE
+
+VGM_DEBUG = FALSE                       ; check that interrupts are as expected
+VGM_ENABLE_RASTERS = TRUE               ; show interrupt timing on screen
 
 VGM_RASTER_COLOUR_ENTER_IRQ = 7         ; white
 VGM_RASTER_COLOUR_TONE_0 = 4            ; blue
 VGM_RASTER_COLOUR_TONE_1 = 1            ; red
 VGM_RASTER_COLOUR_TONE_2 = 2            ; green
 VGM_RASTER_COLOUR_EXIT_IRQ = 0          ; black
-
 
 MACRO VGM_RASTER c
 IF VGM_ENABLE_RASTERS
@@ -779,16 +779,16 @@ ENDMACRO
     \\ Interrupt doesn't come from UserVIA.
 	lda $fe4d
 	bpl not_sysvia
-	and $fe4e
+	and $fe4e           ; not sure why this is necessary?
 	and #$20            ; was bit #$20
 	bne sysvia_timer2
 
     .not_sysvia
-    VGM_RASTER VGM_RASTER_COLOUR_EXIT_IRQ
-	rts
+    IRET
 }
 
 .sysvia_timer2
+    ; ack?
     VGM_RASTER VGM_RASTER_COLOUR_TONE_2
     IF VGM_DEBUG
     {
@@ -828,18 +828,20 @@ s2writeval=*+1
 }
 
 .uservia
-	lda $fe6e       ;and $fe6e
+	lda $fe6d       ;and $fe6e
 	and #$40        ;bit #$40
 	bne uservia_timer1
     IF VGM_DEBUG
     {
-        bit #$20
+        lda $fe6e
+        and #$20    ;bit #$20
         bne uservia_timer2
         brk
     }
     ENDIF
     
 .uservia_timer2
+    ; ack?
     VGM_RASTER VGM_RASTER_COLOUR_TONE_1        ; red
     IF VGM_DEBUG
     {
@@ -880,6 +882,7 @@ u2writeval=*+1
 
 .uservia_timer1
 {
+    ; ack?
     VGM_RASTER VGM_RASTER_COLOUR_TONE_0        ; magenta
     IF VGM_DEBUG
     {

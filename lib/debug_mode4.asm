@@ -90,9 +90,6 @@ EQUS "0123456789ABCDEF"
 	.return
     rts
 
-    .char_def
-    skip 9
-
     IF NOT(_DEBUG_STATUS_BAR)
     .plot_mode8
     lda char_def

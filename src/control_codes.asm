@@ -47,7 +47,7 @@
 {
     EQUW prepare_static,        handle_static       ; c400
     EQUW prepare_quad_image,    handle_image        ; c401
-    EQUW 0 ,0                                       ; c402
+    EQUW prepare_quad_anim,     handle_anim         ; c402
     EQUW 0 ,0                                       ; c403
     EQUW 0 ,0                                       ; c404
     EQUW 0 ,0                                       ; c405

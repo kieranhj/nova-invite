@@ -445,7 +445,7 @@ GUARD screen3_addr + RELOC_SPACE
     txa:pha:tya:pha
 
     IF _DEBUG_STATUS_BAR
-    jsr debug_highlight_status_bar
+    jsr DEBUG_highlight_status_bar
     ENDIF
 
     IF _DEBUG
@@ -494,14 +494,14 @@ GUARD screen3_addr + RELOC_SPACE
     IF _DEBUG
     .skip_update
     {
-        jsr do_pause_controls       ; C set = paused
+        jsr DEBUG_do_pause_controls       ; C set = paused
         bcs show_debug
 
         lda #1:sta debug_step
 
         .show_debug
         SET_BGCOL PAL_green
-        jsr debug_show_tracker_info
+        jsr DEBUG_show_tracker_info
     }
     ENDIF
 
@@ -593,6 +593,7 @@ ENDMACRO
 }
 
 include "src/music_jump.asm"
+include "src/debug_jump.asm"
 .main_end
 
 \ ******************************************************************
@@ -615,11 +616,6 @@ include "lib/exo.asm"
 include "lib/disksys.asm"
 .library_end
 
-.debug_start
-include "src/debug_tracker.asm"
-include "lib/debug_mode4.asm"
-.debug_end
-
 \ ******************************************************************
 \ *	Preinitialised data
 \ ******************************************************************
@@ -631,6 +627,8 @@ include "lib/debug_mode4.asm"
 .bank1_filename     EQUS "BANK1", 13
 .bank2_filename     EQUS "BANK2", 13
 .events_filename    EQUS "EVENTS", 13
+
+.char_def           skip 9
 
 .mode4_default_palette
 {
@@ -743,7 +741,6 @@ SAVE "build/INVITE", start, end, main
 \ *	Space reserved for runtime buffers not preinitialised
 \ ******************************************************************
 
-CLEAR reloc_from_start, screen3_addr
 ORG reloc_from_start
 GUARD screen3_addr
 
@@ -761,7 +758,6 @@ PRINT "ZP size =", ~zp_end-zp_start, "(",~&80-zp_end,"free)"
 PRINT "MAIN size =", ~main_end-main_start
 PRINT "FX size = ", ~fx_end-fx_start
 PRINT "LIBRARY size =",~library_end-library_start
-PRINT "DEBUG CODE size =",~debug_end-debug_start
 PRINT "DATA size =",~data_end-data_start
 PRINT "RELOC size =",~reloc_from_end-reloc_from_start
 PRINT "BSS size =",~bss_end-bss_start
@@ -859,7 +855,15 @@ CLEAR &8000, &C000
 ORG &8000
 GUARD &C000
 .bank3_start
+.music_start
 include "src/music.asm"
+.music_end
+
+.debug_start
+include "src/debug_tracker.asm"
+include "lib/debug_mode4.asm"
+.debug_end
+
 .bank3_end
 
 SAVE "build/MUSIC", bank3_start, bank3_end, bank3_start
@@ -867,7 +871,8 @@ SAVE "build/MUSIC", bank3_start, bank3_end, bank3_start
 PRINT "------"
 PRINT "BANK 3"
 PRINT "------"
-PRINT "SIZE =", ~bank2_end-bank2_start
+PRINT "MUSIC size =", ~music_end-music_start
+PRINT "DEBUG CODE size =",~debug_end-debug_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%
 PRINT "------"

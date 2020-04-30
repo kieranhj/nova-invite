@@ -37,11 +37,6 @@
     jmp handle_anim
 }
 
-quad_line_count = temp+0
-quad_temp_y = temp+1
-quad_temp_byte = temp+2
-quad_writeptr = temp+3
-
 ; A = next screen buffer HI
 ; X = display screen buffer HI
 ; Y = prev screen buffer HI
@@ -49,6 +44,32 @@ quad_writeptr = temp+3
 {
     sta writeptr+1
     stx readptr+1
+    ldx #LO(quad_copy_image_line)
+    ldy #HI(quad_copy_image_line)
+    jmp quad_display_to_next
+}
+
+; A = next screen buffer HI
+; X = display screen buffer HI
+; Y = prev screen buffer HI
+.prepare_quad_anim
+{
+    sta writeptr+1
+    stx readptr+1
+    ldx #LO(quad_copy_anim_line)
+    ldy #HI(quad_copy_anim_line)
+    jmp quad_display_to_next
+}
+
+quad_line_count = temp+0
+quad_temp_y = temp+1
+quad_temp_byte = temp+2
+quad_writeptr = temp+3
+
+.quad_display_to_next
+{
+    stx jmp_copy_fn+1
+    sty jmp_copy_fn+2
 
     lda #0
     sta writeptr
@@ -63,6 +84,8 @@ quad_writeptr = temp+3
     lda #16*8
     sta quad_line_count
     .loop
+
+    .jmp_copy_fn
     jsr quad_copy_image_line
 
     {
@@ -115,6 +138,39 @@ quad_writeptr = temp+3
     tax
     lda alt_pixels_to_lh, X
     lsr a:lsr a:lsr a:lsr a
+    ora quad_temp_byte
+    sta quad_temp_byte
+
+    lda quad_temp_y:lsr a:tay
+    lda quad_temp_byte
+    sta (writeptr), Y
+    sta (quad_writeptr), Y
+
+    lda quad_temp_y:lsr a:clc:adc #&80:tay
+    lda quad_temp_byte
+    sta (writeptr), Y
+    sta (quad_writeptr), Y
+
+    lda quad_temp_y:clc:adc #16:tay
+    bne loop
+    rts
+}
+
+.quad_copy_anim_line
+{
+    ldy #0
+    .loop
+    sty quad_temp_y
+
+    lda (readptr), Y
+    and #&AA    ; lh pixel
+    sta quad_temp_byte
+
+    lda quad_temp_y:clc:adc #8:tay
+
+    lda (readptr), Y
+    and #&AA    ; lh pixel
+    lsr a       ; rh pixel
     ora quad_temp_byte
     sta quad_temp_byte
 

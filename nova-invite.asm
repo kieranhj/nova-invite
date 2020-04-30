@@ -362,6 +362,15 @@ GUARD screen3_addr
     lda events_line:sta pause_line
     ENDIF
 
+    \\ Complete any initial preload task.
+    {
+        lda task_request
+        beq no_initial_task
+        jsr do_task
+        dec task_request
+        .no_initial_task
+    }
+
     \\ Go!
     \\ Start music player
     {
@@ -779,7 +788,22 @@ CLEAR &8000, &C000
 ORG &8000
 GUARD &C000
 .bank1_start
-include "src/anims_data.asm"
+.exo_anims_world
+INCBIN "build/world.exo"
+.exo_anims_shift
+INCBIN "build/shift.exo"
+.exo_anims_turbluent
+INCBIN "build/turbulent.exo"
+.exo_anims_triangle
+INCBIN "build/triangle.exo"
+.exo_anims_claw
+INCBIN "build/claw.exo"
+.exo_anims_star
+INCBIN "build/star.exo"
+.exo_anims_circle
+INCBIN "build/circle.exo"
+.exo_anims_faces
+INCBIN "build/faces.exo"
 .bank1_end
 
 SAVE "build/BANK1", bank1_start, bank1_end, bank1_start
@@ -800,10 +824,10 @@ CLEAR &8000, &C000
 ORG &8000
 GUARD &C000
 .bank2_start
-.exo_anims_triangle
-INCBIN "build/triangle.exo"
-.exo_anims_claw
-INCBIN "build/claw.exo"
+.exo_anims_square
+INCBIN "build/square.exo"
+.exo_anims_kaleidoscope
+INCBIN "build/kaleidoscope.exo"
 .bank2_end
 
 SAVE "build/BANK2", bank2_start, bank2_end, bank2_start

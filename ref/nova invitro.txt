@@ -281,10 +281,12 @@ Also means we can mix colour changes and Fx etc.
     - Combine anim play mode and anim speed into one command
 
 Status bar
-    - Need better error messages & pause, not crash on invalid data! <- TODO!
-    - Set status message
-    - Set error message (auto pause)
+    - Need better error messages & pause, not crash on invalid data! <- DONE
+    - Set status message - DONE
+    - Set error message (auto pause) - DONE
     - Will need severe hacking to force bottom line of the screen into MODE 4
       whilst also restoring the mode and palette for the main FX.
-      SET_PALETTE_REG macro that saves off the palette values in DEBUG.
+      SET_PALETTE_REG macro that saves off the palette values in DEBUG. - DONE
 
+TODO
+    - Doesn't work on Model B as catalogue trashed.

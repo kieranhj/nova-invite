@@ -330,13 +330,20 @@ ENDMACRO
     jmp display_next_buffer
 }
 
+MACRO REQUEST_TASK
+{
+    CHECK_TASK_NOT_RUNNING
+    inc task_request
+}
+ENDMACRO
+
 MACRO SET_TASK_FN func
 {
     lda #LO(func)
     sta do_task_jmp+1
     lda #HI(func)
     sta do_task_jmp+2
-    inc task_request
+    REQUEST_TASK
 }
 ENDMACRO
 
@@ -422,30 +429,47 @@ ENDMACRO
 }
 
 ; A = fx no.
-.preload_special_fx
-{
-    CHECK_TASK_NOT_RUNNING
-    ; just static for now.
-    lda next_buffer_HI
-    sta do_task_load_A+1
-
-    lda #LO(plot_static)
-    sta do_task_jmp+1
-
-    lda #HI(plot_static)
-    sta do_task_jmp+2
-
-    inc task_request
-    rts
-}
-
 .handle_special_fx
 {
-    jsr set_mode_4
-    lda #PAL_white:jsr set_mode4_fg_colour
-    lda #PAL_black:jsr set_mode4_bg_colour
-    jsr set_per_frame_do_nothing
-    jmp display_next_buffer
+    asl a:asl a:tax 
+    lda special_fx_table+3, X
+    IF _DEBUG
+    {
+        bne ok
+        DEBUG_ERROR debug_msg_error_special
+        rts
+        .ok
+    }
+    ENDIF
+    sta do_fx_jmp+2
+    lda special_fx_table+2, X
+    sta do_fx_jmp+1
+
+    .do_fx_jmp
+    jmp &FFFF
+}
+
+; A = fx no.
+.preload_special_fx
+{
+    asl a:asl a:tax 
+    lda special_fx_table+1, X
+    IF _DEBUG
+    {
+        bne ok
+        DEBUG_ERROR debug_msg_error_special
+        rts
+        .ok
+    }
+    ENDIF
+    sta do_task_jmp+2
+    lda special_fx_table+0, X
+    sta do_task_jmp+1
+
+    lda next_buffer_HI
+    sta do_task_load_A+1
+    REQUEST_TASK
+    rts
 }
 
 MACRO RND
@@ -473,23 +497,3 @@ MACRO RND16
     eor seed
 }
 ENDMACRO
-
-.plot_static
-{
-    sta writeptr+1
-    lda #0
-    sta writeptr
-
-    ldx #HI(SCREEN_SIZE_BYTES)
-    ldy #0
-    .loop
-    RND16
-    sta (writeptr), Y
-    iny
-    bne loop
-
-    inc writeptr+1
-    dex
-    bne loop
-    rts
-}

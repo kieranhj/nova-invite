@@ -26,6 +26,7 @@ IF _DEBUG_STATUS_BAR
     EQUW debug_message_8
     EQUW debug_message_9
     EQUW debug_message_10
+    EQUW debug_message_11
 }
 
 .debug_message_0 EQUS "Play", 0
@@ -39,6 +40,7 @@ IF _DEBUG_STATUS_BAR
 .debug_message_8 EQUS "ERROR:Parse failed", 0
 .debug_message_9 EQUS "ERROR:Unknown image", 0
 .debug_message_10 EQUS "ERROR:Unknown anim", 0
+.debug_message_11 EQUS "ERROR:Unknown spfx", 0
 ENDIF
 
 IF _DEBUG

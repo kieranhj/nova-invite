@@ -14,6 +14,7 @@ debug_msg_error_mode = 7
 debug_msg_error_parse = 8
 debug_msg_error_image = 9
 debug_msg_error_anim = 10
+debug_msg_error_special = 11
 
 MACRO DEBUG_ERROR e
 IF _DEBUG_STATUS_BAR

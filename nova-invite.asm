@@ -179,8 +179,9 @@ GUARD &800
 incbin "build/events.bin"
 .event_data_end
 
+RELOC_SPACE = &200
 ORG &E00
-GUARD &10FF
+GUARD &E00 + RELOC_SPACE
 .reloc_to_start
 .mod15_plus1_asl4_table
 skip &100
@@ -193,7 +194,7 @@ skip &100
 \ ******************************************************************
 
 ORG &1100
-GUARD screen3_addr
+GUARD screen3_addr + RELOC_SPACE
 
 .start
 .main_start
@@ -599,6 +600,7 @@ include "src/music_jump.asm"
 .fx_start
 include "src/fx_tracker.asm"
 include "src/anims.asm"
+include "src/special_fx.asm"
 .fx_end
 
 \ ******************************************************************

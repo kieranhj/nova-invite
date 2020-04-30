@@ -28,10 +28,13 @@ EQUB PAL_black, PAL_cyan, PAL_black
 EQUB PAL_black, PAL_white, PAL_black
 
 .anims_ramp_galaxy
-EQUB PAL_black,PAL_blue,PAL_red,PAL_yellow,PAL_white, PAL_black
+EQUB PAL_black, PAL_blue, PAL_red, PAL_yellow, PAL_white, PAL_black
 
 .anims_ramp_atom
-EQUB PAL_black,PAL_blue,PAL_blue,PAL_cyan,PAL_white, PAL_black
+EQUB PAL_black, PAL_blue, PAL_blue, PAL_cyan, PAL_white, PAL_black
 
 .anims_ramp_world
-EQUB PAL_black,PAL_blue,PAL_green,PAL_cyan, PAL_black
+EQUB PAL_black, PAL_blue, PAL_green, PAL_cyan, PAL_black
+
+.anims_ramp_static
+EQUB PAL_black, PAL_white, PAL_white, PAL_white, PAL_black, PAL_white, PAL_white, PAL_white, PAL_black

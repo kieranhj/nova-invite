@@ -7,10 +7,6 @@
 ;---------------------------------------------------------------
 ; VGM Player Library code
 ;---------------------------------------------------------------
-MASTER=1
-IF MASTER
-	CPU 1
-ENDIF
 DEBUG=0
 RASTERS=1
 NO_IRQ=1	
@@ -42,7 +38,6 @@ VGM_FX_VOL3     = 7 ; noise
 VGM_FX_TONE0_HI = 8
 VGM_FX_TONE1_HI = 9
 VGM_FX_TONE2_HI = 10
-
 ENDIF
 
 ;-------------------------------------------
@@ -170,31 +165,29 @@ ENDIF
 .sn_write_with_attenuation
 {
 	tax
-        and #$f0         ; %xrrr0000
-        sta remask+1
-        txa              ; %xrrrvvvv
-        and #$0f         ; %0000vvvv
-        tax
-        lda sn_volume_table,x
+    and #$f0         ; %xrrr0000
+    sta remask+1
+    txa              ; %xrrrvvvv
+    and #$0f         ; %0000vvvv
+    tax
+    lda sn_volume_table,x
 .remask:ora #$ff
+
 .*sn_write
     php
     sei
     ldx #255
     stx &fe43
     sta &fe41
-IF MASTER
-    stz &fe40
-ELSE
     inx
     stx &fe40
-ENDIF
     nop:nop:nop
     lda #8
     sta &fe40
     plp
     rts
 }
+
 .sn_volume_table:equb 3,4,5,6,7,8,9,10,11,12,13,14,15,15,15,15
 
 
@@ -561,12 +554,8 @@ ENDIF
     lsr a
     lsr a
 
-IF MASTER
-    inc a
-ELSE
     clc
     adc #1
-ENDIF
     ldx vgm_temp
     sta vgm_register_counts,x
     tya
@@ -629,11 +618,11 @@ ENDIF
     lda #$40
     sta $fe6e
     sta $fe6d ; clear
-    stz bass_flag+0
+    lda #0:sta bass_flag+0
     lda u1writeval ; restore vol
     jsr sn_write_with_attenuation
     pla
-    bra do_normal_tone
+    jmp do_normal_tone
 .do_bass
     jsr set_up_timer_values
     sta $fe66 ; tone0_bass_timer_lo
@@ -674,11 +663,11 @@ ENDIF
     lda #$20
     sta $fe6e
     lda $fe68 ; clear
-    stz bass_flag+1
+    lda #0:sta bass_flag+1
     lda u2writeval ; restore vol
     jsr sn_write_with_attenuation
     pla
-    bra do_normal_tone
+    jmp do_normal_tone
 .do_bass
     jsr set_up_timer_values
     sta u2latchlo ; tone1_bass_timer_lo
@@ -712,11 +701,11 @@ ENDIF
     lda #$20
     sta $fe4e
     lda $fe48 ; clear
-    stz bass_flag+2
+    lda #0:sta bass_flag+2
     lda s2writeval ; restore vol
     jsr sn_write_with_attenuation
     pla
-    bra do_normal_tone
+    jmp do_normal_tone
 .do_bass
     jsr set_up_timer_values
     sta s2latchlo ; tone2_bass_timer_lo
@@ -769,55 +758,37 @@ IF 0
 ENDIF
 
 MACRO IRET
-IF NO_IRQ
-	rts
-ELSE
-	lda $fc
-	rti
-ENDIF
+rts
 ENDMACRO
+
 .vgm_irq
+{
 IF RASTERS
 	lda #0
 	sta $fe21
-ENDIF	
+ENDIF
+
 	lda $fe6d
 	bmi uservia
 .not_uservia
 	lda $fe4d
 	bpl not_sysvia
 	and $fe4e
-	bit #$20
+	and #$20            ; was bit #$20
 	bne sysvia_timer2
-IF 0
-	bit #$02
-	beq sysvia_not_ca2
-	pha
-	phx
-	phy
-	jsr vgm_update
-	ply
-	plx
-	pla
-.sysvia_not_ca2
-ENDIF
-.sysvia_timer1 ; we don't use sysvia timer1
-	;brk
-.not_sysvia
-.do_oldirq
+
+    .not_sysvia
 IF RASTERS
 	lda #7
 	sta $fe21
 ENDIF
-IF NO_IRQ
 	rts
-ENDIF
-.oldirq
-        jmp $ffff
+}
+
 .sysvia_timer2
-IF RASTERS
+    IF RASTERS
     lda #&05:sta&fe21
-ENDIF
+    ENDIF
 IF DEBUG
 {
 	bit bass_flag+2
@@ -846,7 +817,7 @@ s2writeval=*+1
 	ora #$0f
 .irq_silent
 	sta $fe41
-	stz $fe40
+	lda #0:sta $fe40
 	lda flip
 	eor #$20
 	sta flip
@@ -857,12 +828,10 @@ IF RASTERS
 ENDIF
 	IRET
 }
-	;brk
-	;jmp oldirq
 
 .uservia
-	and $fe6e
-	bit #$40
+	lda $fe6e       ;and $fe6e
+	and #$40        ;bit #$40
 	bne uservia_timer1
 IF DEBUG
 	bit #$20
@@ -901,7 +870,7 @@ u2writeval=*+1
 	ora #$0f
 .irq_silent
 	sta $fe41
-	stz $fe40
+	lda #0:sta $fe40
 	lda flip
 	eor #$20
 	sta flip
@@ -936,7 +905,7 @@ u1writeval=*+1
 	ora #$0f
 .irq_silent
 	sta $fe41
-	stz $fe40
+	lda #0:sta $fe40
 	lda flip
 	eor #$20
 	sta flip
@@ -947,6 +916,7 @@ IF RASTERS
 ENDIF
 	IRET
 }
+
 .vgm_end
 
 

@@ -46,13 +46,13 @@ bne loop
 rts
 }
 
-INCLUDE "lib/vgcplayer.asm"
+INCLUDE "lib/vgcplayer_software_bass.asm"
 .music_code_end
 
 .music_data_start
 PAGE_ALIGN
 .vgc_data_tune
-INCBIN "build/acid_test.vgc"
+INCBIN "build/bass_test.vgc"
 .music_data_end
 
 \ ******************************************************************

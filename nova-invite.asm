@@ -107,6 +107,20 @@ ELSE
 ENDIF
 ENDMACRO
 
+MACRO SELECT_MUSIC_SLOT
+{
+    lda &f4:pha
+    lda MUSIC_SLOT_ZP
+    sta &f4:sta &fe30
+}
+ENDMACRO
+
+MACRO RESTORE_SLOT
+{
+    pla:sta &f4:sta &fe30
+}
+ENDMACRO
+
 \ ******************************************************************
 \ *	GLOBAL constants
 \ ******************************************************************
@@ -349,10 +363,22 @@ GUARD screen3_addr + RELOC_SPACE
 	LDA #HI(FramePeriod):STA &FE47
 
 	LDA #&7F					; (disable all interrupts)
-	STA &FE4E					; R14=Interrupt Enable
+	sta $fe6e
+	sta $fe4e
 	STA &FE43					; R3=Data Direction Register "A" (set keyboard data direction)
+
 	LDA #&C0					; 
 	STA &FE4E					; R14=Interrupt Enable
+
+	lda #$40 ; enable continuous interrupts for ut1
+    sta $fe6b
+    sta $fe4b
+
+	lda #1
+	sta $fe64
+    sta $fe65
+	lda $fe68 ; clear ut2
+	lda $fe48 ; clear st2
 
     LDA #LO(irq_handler):STA IRQ1V
     LDA #HI(irq_handler):STA IRQ1V+1		; set interrupt handler
@@ -428,6 +454,10 @@ GUARD screen3_addr + RELOC_SPACE
 	lda &FE4D
 	and #&40
 	bne is_vsync
+
+    SELECT_MUSIC_SLOT
+    jsr vgm_irq
+    RESTORE_SLOT
 
  	.return
 	pla

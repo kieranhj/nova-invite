@@ -256,8 +256,8 @@ TODO
 - Make Google sheet of all control codes.
     - https://drive.google.com/open?id=1nPhbag9fAhDcQTmo_VQmBMRLQR4kX4u2HnAkiunwvUI
 - Special FX:
-    - Proper static noise
-    - Quarter screen
+    - Proper static noise - DONE
+    - Quarter screen - DONE
     - Bounce screen with VADJ?
     - Can do a line-draw effect as a preload...
 - Colour cycle ideas:
@@ -278,7 +278,7 @@ Also means we can mix colour changes and Fx etc.
     - Separate events and preload into modules - MAYBE
     - Change event line to start at &FF - DONE
     - Set anim / set image commands have to be last on line currently - FIXED
-    - Combine anim play mode and anim speed into one command
+    - Combine anim play mode and anim speed into one command - DONE
 
 Status bar
     - Need better error messages & pause, not crash on invalid data! <- DONE

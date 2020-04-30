@@ -686,8 +686,8 @@ include "lib/debug_mode4.asm"
 	EQUB LO(screen1_addr/8)	; R13 screen start address, low
 }
 
-include "src/asset_tables.asm"
-include "src/anims_tables.asm"
+include "src/control_codes.asm"
+include "src/anims_data.asm"
 
 .data_end
 
@@ -767,7 +767,7 @@ CLEAR &8000, &C000
 ORG &8000
 GUARD &C000
 .bank0_start
-include "src/image_data.asm"
+include "src/image_assets.asm"
 .bank0_end
 
 SAVE "build/BANK0", bank0_start, bank0_end, bank0_start

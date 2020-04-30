@@ -7,9 +7,25 @@
 ;---------------------------------------------------------------
 ; VGM Player Library code
 ;---------------------------------------------------------------
-DEBUG=0
-RASTERS=1
-NO_IRQ=1	
+VGM_DEBUG = FALSE
+VGM_ENABLE_RASTERS = TRUE
+
+VGM_RASTER_COLOUR_ENTER_IRQ = 7         ; white
+VGM_RASTER_COLOUR_TONE_0 = 4            ; blue
+VGM_RASTER_COLOUR_TONE_1 = 1            ; red
+VGM_RASTER_COLOUR_TONE_2 = 2            ; green
+VGM_RASTER_COLOUR_EXIT_IRQ = 0          ; black
+
+
+MACRO VGM_RASTER c
+IF VGM_ENABLE_RASTERS
+{
+    lda #c EOR 7: sta &fe21
+}
+ELSE
+ENDIF
+ENDMACRO
+
 .vgm_start
 
 ;--------------------------------------------------
@@ -727,29 +743,18 @@ ENDIF
 }
 
 IF 0
-.irq_init
+.vgm_irq_init
 {
 	php
 	sei
-        lda $0204
-        sta oldirq+1
-        lda $0205
-        sta oldirq+2
-        lda #<irq
-        sta $204
-        lda #>irq
-        sta $205
-	lda #$7f ; all interrupts off
+	lda #$7f ; all interrupts off for uservia
 	sta $fe6e
-	lda #$7F ; except sysvia ca1 (vblank)
-	sta $fe4e
 	lda #$40 ; enable continuous interrupts for ut1
-        sta $fe6b
-        sta $fe4b
+    sta $fe6b
+    sta $fe4b
 	lda #1
 	sta $fe64
-        sta $fe65
-	;lda $fe64 ; clear t1
+    sta $fe65
 	lda $fe68 ; clear ut2
 	lda $fe48 ; clear st2
 	plp
@@ -758,19 +763,20 @@ IF 0
 ENDIF
 
 MACRO IRET
-rts
+{
+    VGM_RASTER VGM_RASTER_COLOUR_EXIT_IRQ
+    rts
+}
 ENDMACRO
 
-.vgm_irq
+.vgm_irq_for_software_bass
 {
-IF RASTERS
-	lda #0
-	sta $fe21
-ENDIF
+    VGM_RASTER VGM_RASTER_COLOUR_ENTER_IRQ
 
 	lda $fe6d
 	bmi uservia
-.not_uservia
+    
+    \\ Interrupt doesn't come from UserVIA.
 	lda $fe4d
 	bpl not_sysvia
 	and $fe4e
@@ -778,25 +784,20 @@ ENDIF
 	bne sysvia_timer2
 
     .not_sysvia
-IF RASTERS
-	lda #7
-	sta $fe21
-ENDIF
+    VGM_RASTER VGM_RASTER_COLOUR_EXIT_IRQ
 	rts
 }
 
 .sysvia_timer2
-    IF RASTERS
-    lda #&05:sta&fe21
+    VGM_RASTER VGM_RASTER_COLOUR_TONE_2
+    IF VGM_DEBUG
+    {
+        bit bass_flag+2
+        bmi ok
+        brk
+    .ok
+    }
     ENDIF
-IF DEBUG
-{
-	bit bass_flag+2
-	bmi ok
-	brk
-.ok
-}
-ENDIF
 s2latchlo=*+1
 	lda #0
 	;adc $fe48
@@ -823,9 +824,6 @@ s2writeval=*+1
 	sta flip
 	lda #8
 	sta $fe40
-IF RASTERS
-    lda #&07:sta&fe21
-ENDIF
 	IRET
 }
 
@@ -833,23 +831,24 @@ ENDIF
 	lda $fe6e       ;and $fe6e
 	and #$40        ;bit #$40
 	bne uservia_timer1
-IF DEBUG
-	bit #$20
-	bne uservia_timer2
-	brk
-ENDIF
+    IF VGM_DEBUG
+    {
+        bit #$20
+        bne uservia_timer2
+        brk
+    }
+    ENDIF
+    
 .uservia_timer2
-IF RASTERS
-    lda #&06:sta&fe21
-ENDIF
-IF DEBUG
-{
-	bit bass_flag+1
-	bmi ok
-	brk
-.ok
-}
-ENDIF
+    VGM_RASTER VGM_RASTER_COLOUR_TONE_1        ; red
+    IF VGM_DEBUG
+    {
+        bit bass_flag+1
+        bmi ok
+        brk
+        .ok
+    }
+    ENDIF
 u2latchlo=*+1
 	lda #0
 	;adc $fe68
@@ -876,27 +875,24 @@ u2writeval=*+1
 	sta flip
 	lda #8
 	sta $fe40
-IF RASTERS
-    lda #&07:sta&fe21
-ENDIF
-;jmp oldirq
 	IRET
 }
+
 .uservia_timer1
-IF RASTERS
-    lda #&02:sta&fe21
-ENDIF
-IF DEBUG
 {
-	bit bass_flag+0
-	bmi ok
-	brk
-	.ok
-}
-ENDIF
+    VGM_RASTER VGM_RASTER_COLOUR_TONE_0        ; magenta
+    IF VGM_DEBUG
+    {
+        bit bass_flag+0
+        bmi ok
+        brk
+        .ok
+    }
+    ENDIF
 	lda $fe64 ;clear
 	lda #255
 	sta $fe43
+}
 u1writeval=*+1
 {
 	lda #$9f
@@ -911,9 +907,6 @@ u1writeval=*+1
 	sta flip
 	lda #8
 	sta $fe40
-IF RASTERS
-    lda #&07:sta&fe21
-ENDIF
 	IRET
 }
 
@@ -922,11 +915,9 @@ ENDIF
 
 .decoder_start
 
-
 ;-------------------------------
 ; lz4 decoder
 ;-------------------------------
-
 
 
 ; fetch a byte from the current decode buffer at the current read ptr offset

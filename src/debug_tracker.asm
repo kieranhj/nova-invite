@@ -73,7 +73,7 @@ IF _DEBUG
     bne not_pressed_pause
 
     \\ Entering pause
-    jsr MUSIC_JUMP_SN_RESET
+    MUSIC_JUMP_SN_RESET
 
     \\ Toggle pause
     lda debug_paused:eor #1:sta debug_paused

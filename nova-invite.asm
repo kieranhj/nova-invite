@@ -179,9 +179,10 @@ INCLUDE "lib/exo.h.asm"
 .seed               skip 2
 .temp               skip 8
 
-INCLUDE "lib/vgcplayer.h.asm"
 INCLUDE "src/fx_tracker.h.asm"
 INCLUDE "src/debug_tracker.h.asm"
+INCLUDE "src/music.h.asm"
+INCLUDE "lib/vgcplayer.h.asm"
 
 .zp_end
 
@@ -251,7 +252,7 @@ GUARD screen3_addr + RELOC_SPACE
         jsr disksys_load_file
 
         \\ Initialise music
-        jsr MUSIC_JUMP_INIT_TUNE
+        MUSIC_JUMP_INIT_TUNE
         .no_music
     }
 
@@ -443,7 +444,7 @@ GUARD screen3_addr + RELOC_SPACE
     LDA old_irqv+1:STA IRQ1V+1	; set interrupt handler
     CLI
 
-    jmp MUSIC_JUMP_SN_RESET
+    MUSIC_JUMP_SN_RESET
 }
 
 .irq_handler
@@ -455,9 +456,7 @@ GUARD screen3_addr + RELOC_SPACE
 	and #&40
 	bne is_vsync
 
-    SELECT_MUSIC_SLOT
-    jsr vgm_irq
-    RESTORE_SLOT
+    MUSIC_JUMP_VGM_IRQ
 
  	.return
 	pla
@@ -519,7 +518,7 @@ GUARD screen3_addr + RELOC_SPACE
     SET_BGCOL PAL_blue
 
     \\ Then update music - could be on a mid-frame timer.
-    jsr MUSIC_JUMP_VGM_UPDATE
+    MUSIC_JUMP_VGM_UPDATE
 
     IF _DEBUG
     .skip_update
@@ -622,7 +621,6 @@ ENDMACRO
     rts
 }
 
-include "src/music_jump.asm"
 include "src/debug_jump.asm"
 .main_end
 

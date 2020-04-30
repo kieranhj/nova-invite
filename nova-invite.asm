@@ -153,6 +153,7 @@ ENDIF
 
 INCLUDE "lib/exo.h.asm"
 
+.readptr            skip 2
 .writeptr           skip 2
 .music_enabled      skip 1
 
@@ -162,6 +163,7 @@ INCLUDE "lib/exo.h.asm"
 
 .task_request       skip 1
 .seed               skip 2
+.temp               skip 8
 
 INCLUDE "lib/vgcplayer.h.asm"
 INCLUDE "src/fx_tracker.h.asm"
@@ -690,6 +692,13 @@ include "lib/debug_mode4.asm"
 
 include "src/control_codes.asm"
 include "src/anims_data.asm"
+
+.alt_pixels_to_lh
+{
+    FOR n,0,&AA,1
+    EQUB (n AND &80) OR ((n AND &20)<<1) OR ((n AND &8)<<2) OR ((n AND &2)<<3)
+    NEXT
+}
 
 .data_end
 

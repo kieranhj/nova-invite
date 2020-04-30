@@ -45,22 +45,22 @@
 
 .special_fx_table
 {
-    EQUW prepare_static, handle_static  ; c400
-    EQUW 0 ,0                           ; c401
-    EQUW 0 ,0                           ; c402
-    EQUW 0 ,0                           ; c403
-    EQUW 0 ,0                           ; c404
-    EQUW 0 ,0                           ; c405
-    EQUW 0 ,0                           ; c406
-    EQUW 0 ,0                           ; c407
-    EQUW 0 ,0                           ; c408
-    EQUW 0 ,0                           ; c409
-    EQUW 0 ,0                           ; c40A
-    EQUW 0 ,0                           ; c40B
-    EQUW 0 ,0                           ; c40C
-    EQUW 0 ,0                           ; c40D
-    EQUW 0 ,0                           ; c40E
-    EQUW 0 ,0                           ; c40F
+    EQUW prepare_static,        handle_static       ; c400
+    EQUW prepare_quad_image,    handle_image        ; c401
+    EQUW 0 ,0                                       ; c402
+    EQUW 0 ,0                                       ; c403
+    EQUW 0 ,0                                       ; c404
+    EQUW 0 ,0                                       ; c405
+    EQUW 0 ,0                                       ; c406
+    EQUW 0 ,0                                       ; c407
+    EQUW 0 ,0                                       ; c408
+    EQUW 0 ,0                                       ; c409
+    EQUW 0 ,0                                       ; c40A
+    EQUW 0 ,0                                       ; c40B
+    EQUW 0 ,0                                       ; c40C
+    EQUW 0 ,0                                       ; c40D
+    EQUW 0 ,0                                       ; c40E
+    EQUW 0 ,0                                       ; c40F
 }
 
 .anims_ramp_table

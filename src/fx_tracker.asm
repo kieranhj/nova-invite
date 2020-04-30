@@ -468,6 +468,10 @@ ENDMACRO
 
     lda next_buffer_HI
     sta do_task_load_A+1
+    lda display_buffer_HI
+    sta do_task_load_X+1
+    lda prev_buffer_HI
+    sta do_task_load_Y+1
     REQUEST_TASK
     rts
 }

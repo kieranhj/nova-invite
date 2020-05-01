@@ -7,8 +7,8 @@
 {
     EQUW hide_screen                ; c000
     EQUW show_screen                ; c001
-    EQUW 0                          ; c002
-    EQUW 0                          ; c003
+    EQUW swap_to_prev_screen_image  ; c002
+    EQUW swap_to_prev_screen_anim   ; c003
     EQUW 0                          ; c004
     EQUW 0                          ; c005
     EQUW 0                          ; c006

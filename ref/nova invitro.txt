@@ -255,14 +255,6 @@ TODO
     - (Eventually, reload events) - DONE
 - Make Google sheet of all control codes.
     - https://drive.google.com/open?id=1nPhbag9fAhDcQTmo_VQmBMRLQR4kX4u2HnAkiunwvUI
-- Special FX:
-    - Proper static noise
-    - Quarter screen
-    - Bounce screen with VADJ?
-    - Can do a line-draw effect as a preload...
-- Colour cycle ideas:
-    - Use MODE 8 screen as a mask over a 15 colour full screen pattern that can be cycled
-    - Lissajous, rose curve, sine wave beat
 - Structure data folder same as Google Drive - DONE
 
 New event system!
@@ -278,7 +270,7 @@ Also means we can mix colour changes and Fx etc.
     - Separate events and preload into modules - MAYBE
     - Change event line to start at &FF - DONE
     - Set anim / set image commands have to be last on line currently - FIXED
-    - Combine anim play mode and anim speed into one command
+    - Combine anim play mode and anim speed into one command - DONE
 
 Status bar
     - Need better error messages & pause, not crash on invalid data! <- DONE
@@ -288,5 +280,31 @@ Status bar
       whilst also restoring the mode and palette for the main FX.
       SET_PALETTE_REG macro that saves off the palette values in DEBUG. - DONE
 
-TODO
+BUGS
     - Doesn't work on Model B as catalogue trashed.
+
+TODO
+- Screen FX (no preload):
+    - Hide screen / show screen
+    - Swap current with previous image
+    - Swap current with previous anim
+    - Bounce screen with VADJ?
+- Special FX (with preload):
+    - Proper static noise - DONE
+    - Quarter screen - DONE
+    - Scene poetry - words in centre in MODE 4
+    - Zooming letters - generate 15 frames on fly for colour cycle?
+    - Use MODE 8 screen as a mask over a 15 colour full screen pattern that can be cycled
+        - Need to generate patterns in code?
+- Colour cycle anim ideas:
+    - Sine wave as beat
+    - 
+- Real-time FX in preload?
+    - Line bounce
+    - Line circles
+    - Lissajous, rose curve etc.?
+- Interrupt driven FX?
+    - Rupture screen to rearrange?
+    - Set palette in strips?
+    - Set strips visible?
+    - 

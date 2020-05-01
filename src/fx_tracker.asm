@@ -6,11 +6,11 @@
 .event_fn_table
 {
 \\ Event handler and preload fn per event type &xy
-    EQUW do_nothing,            0               ; c0 yy
+    EQUW handle_screen,         0               ; c0 yy screen control y = command
     EQUW handle_image,          preload_image   ; c1 yy set image y = image no.
     EQUW handle_anim,           preload_anim    ; c2 yy set anim y = anim no.
     EQUW handle_set_colour,     0               ; c3 yy set fg colour y = colour no.
-    EQUW handle_special_fx, preload_special_fx  ; c4 yy special Fx 
+    EQUW handle_special_fx, preload_special_fx  ; c4 yy set special Fx y = fx no.
     EQUW anims_set_ramp,        0               ; c5 yy set anim ramp y = ramp no.
     EQUW anims_set_mode_and_speed, 0            ; c6 xy set anim mode x and speed y
     EQUW do_nothing,            0               ; c7 yy
@@ -476,28 +476,23 @@ ENDMACRO
     rts
 }
 
-MACRO RND
+; A = code no.
+.handle_screen
 {
-    LDA seed
-    ASL A
-    ASL A
-    CLC
-    ADC seed
-    CLC
-    ADC #&45
-    STA seed
-}
-ENDMACRO
+    asl a: tax
+    lda screen_ctrl_table+1, X
+    IF _DEBUG
+    {
+        bne ok
+        DEBUG_ERROR debug_msg_error_special
+        rts
+        .ok
+    }
+    ENDIF
+    sta do_ctrl_jmp+2
+    lda screen_ctrl_table+0, X
+    sta do_ctrl_jmp+1
 
-MACRO RND16
-{
-    lda seed+1
-    lsr a
-    rol seed
-    bcc no_eor
-    eor #&b4
-    .no_eor
-    sta seed+1
-    eor seed
+    .do_ctrl_jmp
+    jmp &FFFF
 }
-ENDMACRO

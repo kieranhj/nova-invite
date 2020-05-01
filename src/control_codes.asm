@@ -3,6 +3,26 @@
 \ *	ASSET TABLES
 \ ******************************************************************
 
+.screen_ctrl_table
+{
+    EQUW hide_screen                ; c000
+    EQUW show_screen                ; c001
+    EQUW 0                          ; c002
+    EQUW 0                          ; c003
+    EQUW 0                          ; c004
+    EQUW 0                          ; c005
+    EQUW 0                          ; c006
+    EQUW 0                          ; c007
+    EQUW 0                          ; c008
+    EQUW 0                          ; c009
+    EQUW 0                          ; c00A
+    EQUW 0                          ; c00B
+    EQUW 0                          ; c00C
+    EQUW 0                          ; c00D
+    EQUW 0                          ; c00E
+    EQUW 0                          ; c00F
+}
+
 .image_table
 {
     EQUW exo_image_big_n            ; c100

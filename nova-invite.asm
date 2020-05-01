@@ -107,6 +107,33 @@ ELSE
 ENDIF
 ENDMACRO
 
+
+MACRO RND
+{
+    LDA seed
+    ASL A
+    ASL A
+    CLC
+    ADC seed
+    CLC
+    ADC #&45
+    STA seed
+}
+ENDMACRO
+
+MACRO RND16
+{
+    lda seed+1
+    lsr a
+    rol seed
+    bcc no_eor
+    eor #&b4
+    .no_eor
+    sta seed+1
+    eor seed
+}
+ENDMACRO
+
 \ ******************************************************************
 \ *	GLOBAL constants
 \ ******************************************************************
@@ -604,6 +631,7 @@ include "src/debug_jump.asm"
 include "src/fx_tracker.asm"
 include "src/anims.asm"
 include "src/special_fx.asm"
+include "src/screen_ctrl.asm"
 .fx_end
 
 \ ******************************************************************

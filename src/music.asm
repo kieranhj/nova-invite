@@ -52,7 +52,7 @@ INCLUDE "lib/vgcplayer.asm"
 .music_data_start
 PAGE_ALIGN
 .vgc_data_tune
-INCBIN "build/acid_test.vgc"
+INCBIN "build/acid_demo.vgc"
 .music_data_end
 
 \ ******************************************************************

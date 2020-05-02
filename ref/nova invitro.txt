@@ -297,7 +297,7 @@ TODO
     - Use MODE 8 screen as a mask over a 15 colour full screen pattern that can be cycled
         - Need to generate patterns in code?
 - Colour cycle anim ideas:
-    - Sine wave as beat
+    - Sine wave as beat - DONE but make a better one that is filled not just a line.
     - 
 - Real-time FX in preload?
     - Line bounce

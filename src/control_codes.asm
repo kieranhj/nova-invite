@@ -45,22 +45,22 @@
 
 .anims_table
 {
-    EQUW exo_anims_shift,       6   ; c200
-    EQUW exo_anims_turbluent,   6   ; c201
-    EQUW exo_anims_triangle,    6   ; c202
-    EQUW exo_anims_claw,        6   ; c203
-    EQUW exo_anims_star,        6   ; c204
-    EQUW exo_anims_circle,      6   ; c205
-    EQUW exo_anims_faces,       6   ; c206
-    EQUW exo_anims_square,      7   ; c207
-    EQUW exo_anims_kaleidoscope, 7  ; c208
-    EQUW 0, 0                       ; c209
-    EQUW 0, 0                       ; c20A
+    EQUW exo_anims_shift,           6   ; c200
+    EQUW exo_anims_turbluent,       6   ; c201
+    EQUW exo_anims_triangle,        6   ; c202
+    EQUW exo_anims_claw,            6   ; c203
+    EQUW exo_anims_star,            6   ; c204
+    EQUW exo_anims_circle,          6   ; c205
+    EQUW exo_anims_faces,           6   ; c206
+    EQUW exo_anims_square,          7   ; c207
+    EQUW exo_anims_kaleidoscope,    7   ; c208
+    EQUW exo_anims_sine_horizontal, 7   ; c209
+    EQUW exo_anims_sine_vertical,   7   ; c20A
     EQUW 0, 0                       ; c20B
     EQUW 0, 0                       ; c20C
     EQUW 0, 0                       ; c20D
     EQUW 0, 0                       ; c20E
-    EQUW exo_anims_world,       6   ; c20F
+    EQUW exo_anims_world,           6   ; c20F
 }
 
 .special_fx_table

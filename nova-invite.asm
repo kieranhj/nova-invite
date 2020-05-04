@@ -134,6 +134,8 @@ MACRO RND16
 }
 ENDMACRO
 
+include "src/music_jump.asm"
+
 \ ******************************************************************
 \ *	GLOBAL constants
 \ ******************************************************************
@@ -256,16 +258,11 @@ GUARD screen3_addr + RELOC_SPACE
     \\ Load music into SWRAM (if available)
     {
         lda MUSIC_SLOT_ZP
-        bmi no_music
         sta &f4:sta &fe30
         ldx #LO(music_filename)
         ldy #HI(music_filename)
         lda #HI(&8000)
         jsr disksys_load_file
-
-        \\ Initialise music
-        jsr MUSIC_JUMP_INIT_TUNE
-        .no_music
     }
 
     \\ Load Banks
@@ -401,15 +398,17 @@ GUARD screen3_addr + RELOC_SPACE
         .no_initial_task
     }
 
-    \\ Go!
     \\ Start music player
     {
         lda MUSIC_SLOT_ZP
-        bmi no_music
+        sta &f4:sta &fe30
+
+        \\ Initialise music
+        MUSIC_JUMP_INIT_TUNE
         inc music_enabled
-        .no_music
     }
 
+    \\ Go!
     jsr wait_for_vsync
     jsr show_screen
 
@@ -444,7 +443,7 @@ GUARD screen3_addr + RELOC_SPACE
     LDA old_irqv+1:STA IRQ1V+1	; set interrupt handler
     CLI
 
-    jmp MUSIC_JUMP_SN_RESET
+    MUSIC_JUMP_SN_RESET
 }
 
 .irq_handler
@@ -516,7 +515,7 @@ GUARD screen3_addr + RELOC_SPACE
     SET_BGCOL PAL_blue
 
     \\ Then update music - could be on a mid-frame timer.
-    jsr MUSIC_JUMP_VGM_UPDATE
+    MUSIC_JUMP_VGM_UPDATE
 
     IF _DEBUG
     .skip_update
@@ -619,8 +618,8 @@ ENDMACRO
     rts
 }
 
-include "src/music_jump.asm"
 include "src/debug_jump.asm"
+
 .main_end
 
 \ ******************************************************************

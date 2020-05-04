@@ -163,13 +163,25 @@ quad_writeptr = temp+3
     sty quad_temp_y
 
     lda (readptr), Y
+    tax
     and #&AA    ; lh pixel
+    bne use_lh
+    txa
+    and #&55    ; use rh pixel
+    asl a
+    .use_lh
     sta quad_temp_byte
 
     lda quad_temp_y:clc:adc #8:tay
 
     lda (readptr), Y
+    tax
     and #&AA    ; lh pixel
+    bne use_lh2
+    txa
+    and #&55    ; use rh pixel
+    asl a
+    .use_lh2
     lsr a       ; rh pixel
     ora quad_temp_byte
     sta quad_temp_byte

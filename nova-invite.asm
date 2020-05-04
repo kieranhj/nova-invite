@@ -863,10 +863,10 @@ GUARD &C000
 INCBIN "build/square.exo"
 .exo_anims_kaleidoscope
 INCBIN "build/kaleidoscope.exo"
-.exo_anims_sine_horizontal
+.exo_anims_sine_wave
 INCBIN "build/sine.exo"
-.exo_anims_sine_vertical
-INCBIN "build/sine2.exo"
+.exo_anims_atom
+INCBIN "build/atom.exo"
 .bank2_end
 
 SAVE "build/BANK2", bank2_start, bank2_end, bank2_start

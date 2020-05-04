@@ -36,9 +36,8 @@ bin\exomizer.exe level -M256 build/bs_logo2.bin@0x0000 -o build/bs_logo2.exo
 bin\exomizer.exe level -M256 build/tmt_logo.bin@0x0000 -o build/tmt_logo.exo
 bin\exomizer.exe level -M256 build/tmt_logo2.bin@0x0000 -o build/tmt_logo2.exo
 
-rem bin\exomizer.exe level -M256 data/anims/a.atom@0x0000 -o build/atom.exo
 bin\exomizer.exe level -M256 data/anims/a.sine@0x0000 -o build/sine.exo
-bin\exomizer.exe level -M256 data/anims/a.sine2@0x0000 -o build/sine2.exo
+bin\exomizer.exe level -M256 data/anims/a.atom@0x0000 -o build/atom.exo
 bin\exomizer.exe level -M256 data/anims/a.world@0x0000 -o build/world.exo
 bin\exomizer.exe level -M256 data/anims/palette_shift_test.bin@0x0000 -o build/shift.exo
 

@@ -200,3 +200,67 @@ quad_writeptr = temp+3
     bne loop
     rts
 }
+
+.prepare_hbars
+{
+    ldx #7                      ; fixed SWRAM! TODO!
+    stx &f4:stx &fe30
+    ldx #LO(exo_anims_hbars)
+    ldy #HI(exo_anims_hbars)
+    ; A contains next_buffer_HI
+    jmp decrunch_to_page_A
+}
+
+.handle_hbars
+{
+    CHECK_TASK_NOT_RUNNING
+    jsr set_mode_8
+    jsr set_all_black_palette
+
+    lda #3:sta special_fx_vars+0
+    lda #11:sta special_fx_vars+1
+
+    lda #LO(special_fx_hbars_update)
+    sta do_per_frame_fn+1
+    lda #HI(special_fx_hbars_update)
+    sta do_per_frame_fn+2
+
+    jmp display_next_buffer
+}
+
+.special_fx_hbars_update
+{
+    jsr set_all_black_palette
+
+    ldy #0
+    .loop1
+    tya
+    clc
+    adc special_fx_vars+0
+    asl a:asl a:asl a:asl a
+    ora anims_ramp_hbars1, Y
+    SET_PALETTE_REG
+    iny
+    cpy #3
+    bcc loop1
+    
+    ldy #0
+    .loop2
+    tya
+    clc
+    adc special_fx_vars+1
+    asl a:asl a:asl a:asl a
+    ora anims_ramp_hbars2, Y
+    SET_PALETTE_REG
+    iny
+    cpy #5
+    bcc loop2
+
+    inc special_fx_vars+1
+    lda special_fx_vars+1
+    and #1
+    beq return
+    inc special_fx_vars+0
+    .return
+    rts
+}

@@ -865,8 +865,10 @@ INCBIN "build/square.exo"
 INCBIN "build/kaleidoscope.exo"
 .exo_anims_sine_wave
 INCBIN "build/sine.exo"
-.exo_anims_atom
-INCBIN "build/atom.exo"
+.exo_anims_hbars
+INCBIN "build/hbars.exo"
+.exo_anims_dbars
+INCBIN "build/dbars.exo"
 .bank2_end
 
 SAVE "build/BANK2", bank2_start, bank2_end, bank2_start

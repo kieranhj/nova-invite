@@ -55,8 +55,8 @@
     EQUW exo_anims_square,          7   ; c207
     EQUW exo_anims_kaleidoscope,    7   ; c208
     EQUW exo_anims_sine_wave,       7   ; c209
-    EQUW exo_anims_atom,            7   ; c20A
-    EQUW 0, 0                       ; c20B
+    EQUW 0,                         7   ; c20A
+    EQUW 0,                         7   ; c20B
     EQUW 0, 0                       ; c20C
     EQUW 0, 0                       ; c20D
     EQUW 0, 0                       ; c20E
@@ -68,7 +68,7 @@
     EQUW prepare_static,        handle_static       ; c400
     EQUW prepare_quad_image,    handle_image        ; c401
     EQUW prepare_quad_anim,     handle_anim         ; c402
-    EQUW 0 ,0                                       ; c403
+    EQUW prepare_hbars,         handle_hbars        ; c403
     EQUW 0 ,0                                       ; c404
     EQUW 0 ,0                                       ; c405
     EQUW 0 ,0                                       ; c406

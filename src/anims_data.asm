@@ -44,3 +44,9 @@ EQUB PAL_blue, PAL_magenta, PAL_blue
 
 .anims_ramp_hbars2
 EQUB PAL_green, PAL_yellow, PAL_yellow, PAL_yellow, PAL_green
+
+.anims_ramp_dbars1
+EQUB PAL_red, PAL_magenta, PAL_red
+
+.anims_ramp_dbars2
+EQUB PAL_blue, PAL_cyan, PAL_cyan, PAL_cyan, PAL_blue

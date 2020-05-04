@@ -420,7 +420,6 @@ ENDMACRO
 {
     CHECK_TASK_NOT_RUNNING
     tax
-    jsr set_mode_8
     jsr set_all_black_palette
     txa
     bpl regular_anim
@@ -440,6 +439,11 @@ ENDMACRO
     lda #1:sta anims_frame_delay    ; do per frame update immediately
 
     .return
+}
+\\ Fall through!
+.display_next_buffer_as_mode8
+{
+    jsr set_mode_8
     jmp display_next_buffer
 }
 

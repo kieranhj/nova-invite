@@ -90,8 +90,12 @@
 .anims_triggered_update
 {
     lda anims_trigger_frames
-    beq return
+    bne do_update
 
+    \\ No update, no colour.
+    jmp set_all_black_palette
+
+    .do_update
     jsr anims_frame_update
     bcc return
 

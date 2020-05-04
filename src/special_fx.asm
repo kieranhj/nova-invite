@@ -211,6 +211,16 @@ quad_writeptr = temp+3
     jmp decrunch_to_page_A
 }
 
+.prepare_dbars
+{
+    ldx #7                      ; fixed SWRAM! TODO!
+    stx &f4:stx &fe30
+    ldx #LO(exo_anims_dbars)
+    ldy #HI(exo_anims_dbars)
+    ; A contains next_buffer_HI
+    jmp decrunch_to_page_A
+}
+
 .handle_hbars
 {
     CHECK_TASK_NOT_RUNNING
@@ -220,15 +230,52 @@ quad_writeptr = temp+3
     lda #3:sta special_fx_vars+0
     lda #11:sta special_fx_vars+1
 
-    lda #LO(special_fx_hbars_update)
+    lda #LO(anims_ramp_hbars1)
+    sta special_fx_bars_ramp1+1
+    lda #HI(anims_ramp_hbars1)
+    sta special_fx_bars_ramp1+2
+
+    lda #LO(anims_ramp_hbars2)
+    sta special_fx_bars_ramp2+1
+    lda #HI(anims_ramp_hbars2)
+    sta special_fx_bars_ramp2+2
+
+    lda #LO(special_fx_bars_update)
     sta do_per_frame_fn+1
-    lda #HI(special_fx_hbars_update)
+    lda #HI(special_fx_bars_update)
     sta do_per_frame_fn+2
 
     jmp display_next_buffer
 }
 
-.special_fx_hbars_update
+.handle_dbars
+{
+    CHECK_TASK_NOT_RUNNING
+    jsr set_mode_8
+    jsr set_all_black_palette
+
+    lda #3:sta special_fx_vars+0
+    lda #11:sta special_fx_vars+1
+
+    lda #LO(anims_ramp_dbars1)
+    sta special_fx_bars_ramp1+1
+    lda #HI(anims_ramp_dbars1)
+    sta special_fx_bars_ramp1+2
+
+    lda #LO(anims_ramp_dbars2)
+    sta special_fx_bars_ramp2+1
+    lda #HI(anims_ramp_dbars2)
+    sta special_fx_bars_ramp2+2
+
+    lda #LO(special_fx_bars_update)
+    sta do_per_frame_fn+1
+    lda #HI(special_fx_bars_update)
+    sta do_per_frame_fn+2
+
+    jmp display_next_buffer
+}
+
+.special_fx_bars_update
 {
     jsr set_all_black_palette
 
@@ -238,7 +285,10 @@ quad_writeptr = temp+3
     clc
     adc special_fx_vars+0
     asl a:asl a:asl a:asl a
+    .^special_fx_bars_ramp1
     ora anims_ramp_hbars1, Y
+    SET_PALETTE_REG
+    eor #&80
     SET_PALETTE_REG
     iny
     cpy #3
@@ -250,6 +300,7 @@ quad_writeptr = temp+3
     clc
     adc special_fx_vars+1
     asl a:asl a:asl a:asl a
+    .^special_fx_bars_ramp2
     ora anims_ramp_hbars2, Y
     SET_PALETTE_REG
     iny

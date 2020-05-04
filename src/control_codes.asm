@@ -67,9 +67,9 @@
 {
     EQUW prepare_static,        handle_static       ; c400
     EQUW prepare_quad_image,    handle_image        ; c401
-    EQUW prepare_quad_anim,     handle_anim         ; c402
+    EQUW prepare_quad_anim,     display_next_buffer_as_mode8         ; c402
     EQUW prepare_hbars,         handle_hbars        ; c403
-    EQUW 0 ,0                                       ; c404
+    EQUW prepare_dbars,         handle_dbars        ; c404
     EQUW 0 ,0                                       ; c405
     EQUW 0 ,0                                       ; c406
     EQUW 0 ,0                                       ; c407

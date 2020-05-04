@@ -66,8 +66,10 @@
     rts
 }
 
+; return C=1 if the animation was updated.
 .anims_frame_update
 {
+    clc
     lda anims_frame_delay
     beq return
 
@@ -79,8 +81,36 @@
     
     lda anims_frame_speed
     sta anims_frame_delay
+    sec
+    .return
+    rts
+}
+
+; updates N animation frames only when triggered.
+.anims_triggered_update
+{
+    lda anims_trigger_frames
+    beq return
+
+    jsr anims_frame_update
+    bcc return
+
+    dec anims_trigger_frames
 
     .return
+    rts
+}
+
+; A = &IF where I = starting palette index and F = number of animation frames to run for
+.anims_trigger
+{
+    tax
+    and #&0f
+    sta anims_trigger_frames
+
+    txa
+    lsr a:lsr a:lsr a:lsr a
+    sta anims_colour_index
     rts
 }
 

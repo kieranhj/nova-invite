@@ -34,6 +34,7 @@
     lda #&62            ; random mode, speed = 2
     jsr anims_set_mode_and_speed
 
+    lda #0              ; dummy anim no.
     jmp handle_anim
 }
 
@@ -177,12 +178,11 @@ quad_writeptr = temp+3
     lda (readptr), Y
     tax
     and #&AA    ; lh pixel
+    lsr a       ; make rh pixel
     bne use_lh2
     txa
     and #&55    ; use rh pixel
-    asl a
     .use_lh2
-    lsr a       ; rh pixel
     ora quad_temp_byte
     sta quad_temp_byte
 

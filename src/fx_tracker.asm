@@ -13,7 +13,7 @@
     EQUW handle_special_fx, preload_special_fx  ; c4 yy set special Fx y = fx no.
     EQUW anims_set_ramp,        0               ; c5 yy set anim ramp y = ramp no.
     EQUW anims_set_mode_and_speed, 0            ; c6 xy set anim mode x and speed y
-    EQUW do_nothing,            0               ; c7 yy
+    EQUW anims_trigger,         0               ; c7 xy trigger anim from index x for y frames
     EQUW do_nothing,            0               ; c8 yy
     EQUW do_nothing,            0               ; c9 yy
     EQUW do_nothing,            0               ; cA yy
@@ -383,6 +383,7 @@ ENDMACRO
 ; A = anim no.
 .preload_anim
 {
+    and #&7f                    ; top-bit = triggered
     sta do_task_load_X+1
     lda next_buffer_HI
     sta do_task_load_A+1
@@ -418,13 +419,27 @@ ENDMACRO
 .handle_anim
 {
     CHECK_TASK_NOT_RUNNING
+    tax
     jsr set_mode_8
     jsr set_all_black_palette
+    txa
+    bpl regular_anim
+
+    \\ Triggered animation
+    lda #LO(anims_triggered_update)
+    sta do_per_frame_fn+1
+    lda #HI(anims_triggered_update)
+    sta do_per_frame_fn+2
+    bne return                      ; always taken
+
+    .regular_anim
     lda #LO(anims_frame_update)
     sta do_per_frame_fn+1
     lda #HI(anims_frame_update)
     sta do_per_frame_fn+2
     lda #1:sta anims_frame_delay    ; do per frame update immediately
+
+    .return
     jmp display_next_buffer
 }
 
@@ -445,6 +460,7 @@ ENDMACRO
     lda special_fx_table+2, X
     sta do_fx_jmp+1
 
+    lda #0
     .do_fx_jmp
     jmp &FFFF
 }
@@ -493,6 +509,7 @@ ENDMACRO
     lda screen_ctrl_table+0, X
     sta do_ctrl_jmp+1
 
+    lda #0
     .do_ctrl_jmp
     jmp &FFFF
 }

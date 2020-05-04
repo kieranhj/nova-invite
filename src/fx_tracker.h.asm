@@ -26,3 +26,4 @@
 
 .anims_frame_speed  skip 1
 .anims_frame_delay  skip 1
+.anims_trigger_frames   skip 1

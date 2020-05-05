@@ -205,7 +205,7 @@ INCLUDE "src/debug_tracker.h.asm"
 \ ******************************************************************
 
 ORG &400
-GUARD &800
+GUARD &D00
 .event_data
 incbin "build/events.bin"
 .event_data_end

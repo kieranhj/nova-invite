@@ -55,11 +55,11 @@
     EQUW exo_anims_square,          7   ; c207
     EQUW exo_anims_kaleidoscope,    7   ; c208
     EQUW exo_anims_sine_wave,       7   ; c209
-    EQUW 0,                         7   ; c20A
-    EQUW 0,                         7   ; c20B
-    EQUW 0, 0                       ; c20C
-    EQUW 0, 0                       ; c20D
-    EQUW 0, 0                       ; c20E
+    EQUW exo_anims_burst,           7   ; c20A
+    EQUW exo_anims_rotor,           7   ; c20B
+    EQUW exo_anims_swirl,           4   ; c20C      ; TODO! sort SWRAM!
+    EQUW exo_anims_tunnel,          4   ; c20D
+    EQUW 0, 0                           ; c20E
     EQUW exo_anims_world,           6   ; c20F
 }
 
@@ -98,9 +98,9 @@
     EQUW anims_ramp_galaxy, 5       ; c509
     EQUW anims_ramp_world, 4        ; c50A
     EQUW anims_ramp_static, 8       ; c50B
-    EQUW 0, 0                       ; c50C
-    EQUW 0, 0                       ; c50D
-    EQUW 0, 0                       ; c50E
+    EQUW anims_ramp_burst, 4        ; c50C
+    EQUW anims_ramp_cool, 4         ; c50D
+    EQUW anims_ramp_swirl, 4        ; c50E
     EQUW 0, 0                       ; c50F
 }
 

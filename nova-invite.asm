@@ -204,8 +204,10 @@ INCLUDE "src/debug_tracker.h.asm"
 \ *	BSS DATA IN LOWER RAM
 \ ******************************************************************
 
+EVENTS_DATA_MAX = &900
+
 ORG &400
-GUARD &D00
+GUARD &400 + EVENTS_DATA_MAX
 .event_data
 incbin "build/events.bin"
 .event_data_end
@@ -868,6 +870,12 @@ INCBIN "build/sine.exo"
 INCBIN "build/hbars.exo"
 .exo_anims_dbars
 INCBIN "build/dbars.exo"
+.exo_anims_burst
+INCBIN "build/burst.exo"
+.exo_anims_particl
+INCBIN "build/particl.exo"
+.exo_anims_rotor
+INCBIN "build/rotor.exo"
 .bank2_end
 
 SAVE "build/BANK2", bank2_start, bank2_end, bank2_start
@@ -891,6 +899,11 @@ GUARD &C000
 .music_start
 include "src/music.asm"
 .music_end
+
+.exo_anims_swirl
+INCBIN "build/swirl.exo"
+.exo_anims_tunnel
+INCBIN "build/tunnel.exo"
 
 .debug_start
 include "src/debug_tracker.asm"
@@ -918,5 +931,5 @@ PRINT "------"
 PRINT "EVENTS"
 PRINT "------"
 PRINT "SIZE =", ~event_data_end-event_data
-PRINT "FREE =", ~&800-event_data_end
+PRINT "FREE =", ~EVENTS_DATA_MAX-event_data_end
 PRINT "------"

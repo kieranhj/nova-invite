@@ -50,3 +50,12 @@ EQUB PAL_red, PAL_magenta, PAL_red
 
 .anims_ramp_dbars2
 EQUB PAL_blue, PAL_cyan, PAL_cyan, PAL_cyan, PAL_blue
+
+.anims_ramp_burst
+EQUB PAL_black, PAL_red, PAL_yellow, PAL_white, PAL_black
+
+.anims_ramp_cool
+EQUB PAL_black, PAL_blue, PAL_cyan, PAL_white, PAL_black
+
+.anims_ramp_swirl
+EQUB PAL_black, PAL_magenta, PAL_yellow, PAL_green, PAL_black

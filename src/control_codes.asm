@@ -59,7 +59,7 @@
     EQUW exo_anims_rotor,           7   ; c20B
     EQUW exo_anims_swirl,           4   ; c20C      ; TODO! sort SWRAM!
     EQUW exo_anims_tunnel,          4   ; c20D
-    EQUW 0, 0                           ; c20E
+    EQUW exo_anims_particl,         7   ; c20E
     EQUW exo_anims_world,           6   ; c20F
 }
 

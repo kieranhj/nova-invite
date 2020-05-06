@@ -27,6 +27,38 @@ ELSE
 ENDIF
 ENDMACRO
 
+MACRO SELECT_DEBUG_SLOT
+{
+    lda &f4:pha
+    lda MUSIC_SLOT_ZP
+    sta &f4:sta &fe30
+}
+ENDMACRO
+
+MACRO DEBUG_do_pause_controls
+{
+    SELECT_DEBUG_SLOT
+    jsr do_pause_controls
+    RESTORE_SLOT
+}
+ENDMACRO
+
+MACRO DEBUG_show_tracker_info
+{
+    SELECT_DEBUG_SLOT
+    jsr debug_show_tracker_info
+    RESTORE_SLOT
+}
+ENDMACRO
+
+MACRO DEBUG_highlight_status_bar
+{
+    SELECT_DEBUG_SLOT
+    jsr debug_highlight_status_bar
+    RESTORE_SLOT
+}
+ENDMACRO
+
 IF _DEBUG
 .debug_writeptr     skip 2
 .debug_paused       skip 1
@@ -40,6 +72,8 @@ IF _DEBUG
 .step_line_debounce     skip 1
 .next_pattern_debounce  skip 1
 .restart_debounce       skip 1
+.display_key_debounce   skip 1
 
 .debug_msg_no       skip 1
+.debug_show_status  skip 1
 ENDIF

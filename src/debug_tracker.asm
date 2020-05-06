@@ -80,6 +80,15 @@ IF _DEBUG
     sta debug_msg_no
 
     .not_pressed_pause
+    lda #display_key_debounce
+    ldx #KEY_DISPLAY_INKEY AND 255
+    jsr debug_check_key
+    bne not_pressed_display
+
+    \\ Toggle display
+    lda debug_show_status:eor #1:sta debug_show_status
+
+    .not_pressed_display
     lda debug_paused
     beq exit_and_update
 
@@ -172,6 +181,10 @@ IF NOT(_DEBUG_STATUS_BAR)
 }
 ELSE
 {
+    lda debug_show_status
+    ora debug_paused
+    beq return
+
     jsr debug_reset_writeptr
 
     \\ PP:LL cCdd t>Status message
@@ -231,6 +244,8 @@ ELSE
     iny
     inx
     bne loop
+
+    .return
     rts
 }
 ENDIF
@@ -238,6 +253,10 @@ ENDIF
 IF _DEBUG_STATUS_BAR
 .debug_highlight_status_bar
 {
+    lda debug_show_status
+    ora debug_paused
+    beq no_mode_change
+
     lda #ULA_Mode4:sta &fe20        ; force MODE 4
 
     \\ Force palette to status bar colours for visibility.
@@ -251,6 +270,8 @@ IF _DEBUG_STATUS_BAR
     sta &fe21
     clc:adc #&10
     bcc fg_loop
+
+    .no_mode_change
 
     \\ Wait ~8 scanlines
     ldx #114

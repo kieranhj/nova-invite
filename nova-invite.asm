@@ -166,6 +166,7 @@ KEY_STEP_FRAME_INKEY = -68      ; 'F'
 KEY_STEP_LINE_INKEY = -87       ; 'L'
 KEY_NEXT_PATTERN_INKEY = -86    ; 'N'
 KEY_RESTART_INKEY = -52         ; 'R'
+KEY_DISPLAY_INKEY = -51         ; 'D'
 
 \ ******************************************************************
 \ *	ZERO PAGE
@@ -389,6 +390,7 @@ GUARD screen3_addr + RELOC_SPACE
     lda #0:sta debug_paused
     sta debug_msg_no
     lda events_line:sta pause_line
+    lda #1:sta debug_show_status
     ENDIF
 
     \\ Complete any initial preload task.
@@ -473,7 +475,7 @@ GUARD screen3_addr + RELOC_SPACE
     txa:pha:tya:pha
 
     IF _DEBUG_STATUS_BAR
-    jsr DEBUG_highlight_status_bar
+    DEBUG_highlight_status_bar
     ENDIF
 
     IF _DEBUG
@@ -522,14 +524,14 @@ GUARD screen3_addr + RELOC_SPACE
     IF _DEBUG
     .skip_update
     {
-        jsr DEBUG_do_pause_controls       ; C set = paused
+        DEBUG_do_pause_controls       ; C set = paused
         bcs show_debug
 
         lda #1:sta debug_step
 
         .show_debug
         SET_BGCOL PAL_green
-        jsr DEBUG_show_tracker_info
+        DEBUG_show_tracker_info
     }
     ENDIF
 
@@ -619,8 +621,6 @@ ENDMACRO
     sta do_per_frame_fn+2
     rts
 }
-
-include "src/debug_jump.asm"
 
 .main_end
 

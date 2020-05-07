@@ -315,3 +315,77 @@ quad_writeptr = temp+3
     .return
     rts
 }
+
+; A = next screen buffer HI
+; X = display screen buffer HI
+; Y = prev screen buffer HI
+.prepare_vubars
+{
+    ldx #6                      ; fixed SWRAM! TODO!
+    stx &f4:stx &fe30
+    ldx #LO(exo_anims_vupal)
+    ldy #HI(exo_anims_vupal)
+    ; A contains next_buffer_HI
+    jmp decrunch_to_page_A
+}
+
+.handle_vubars
+{
+    CHECK_TASK_NOT_RUNNING
+    jsr set_mode_8
+    jsr set_all_black_palette
+
+    lda #LO(special_fx_vubars_update)
+    sta do_per_frame_fn+1
+    lda #HI(special_fx_vubars_update)
+    sta do_per_frame_fn+2
+
+    jmp display_next_buffer
+}
+
+; called per frame
+.special_fx_vubars_update
+{
+    jsr set_all_black_palette
+
+    sec
+    lda #15
+    sbc vgm_fx+VGM_FX_VOL3
+    sta temp
+
+    ldx #1
+    .green_loop
+    cpx temp
+    bcs done_green
+    lda mult16_table, X
+    ora #PAL_green
+    SET_PALETTE_REG
+    inx
+    cpx #9
+    bcc green_loop
+    .done_green
+
+    .yellow_loop
+    cpx temp
+    bcs done_yellow
+    lda mult16_table, X
+    ora #PAL_yellow
+    SET_PALETTE_REG
+    inx
+    cpx #12
+    bcc yellow_loop
+    .done_yellow
+
+    .red_loop
+    cpx temp
+    bcs done_red
+    lda mult16_table, X
+    ora #PAL_red
+    SET_PALETTE_REG
+    inx
+    cpx #16
+    bcc red_loop
+    .done_red
+
+    rts
+}

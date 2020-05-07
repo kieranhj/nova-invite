@@ -46,6 +46,7 @@ bin\exomizer.exe level -M256 data/anims/a.particl@0x0000 -o build/particl.exo
 bin\exomizer.exe level -M256 data/anims/a.rotor@0x0000 -o build/rotor.exo
 bin\exomizer.exe level -M256 data/anims/a.swirl@0x0000 -o build/swirl.exo
 bin\exomizer.exe level -M256 data/anims/a.tunnel@0x0000 -o build/tunnel.exo
+bin\exomizer.exe level -M256 data/anims/a.vupal@0x0000 -o build/vupal.exo
 bin\exomizer.exe level -M256 data/anims/palette_shift_test.bin@0x0000 -o build/shift.exo
 
 bin\exomizer.exe level -M256 build/turbulent.bin@0x0000 -o build/turbulent.exo

@@ -727,6 +727,13 @@ include "src/anims_data.asm"
     NEXT
 }
 
+.mult16_table
+{
+    FOR n,0,15,1
+    EQUB n*16
+    NEXT
+}
+
 .data_end
 
 \ ******************************************************************
@@ -840,6 +847,8 @@ INCBIN "build/star.exo"
 INCBIN "build/circle.exo"
 .exo_anims_faces
 INCBIN "build/faces.exo"
+.exo_anims_vupal
+INCBIN "build/vupal.exo"
 .bank1_end
 
 SAVE "build/BANK1", bank1_start, bank1_end, bank1_start

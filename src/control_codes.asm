@@ -70,7 +70,7 @@
     EQUW prepare_quad_anim,     display_next_buffer_as_mode8         ; c402
     EQUW prepare_hbars,         handle_hbars        ; c403
     EQUW prepare_dbars,         handle_dbars        ; c404
-    EQUW 0 ,0                                       ; c405
+    EQUW prepare_vubars,        handle_vubars       ; c405
     EQUW 0 ,0                                       ; c406
     EQUW 0 ,0                                       ; c407
     EQUW 0 ,0                                       ; c408

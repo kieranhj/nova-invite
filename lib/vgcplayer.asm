@@ -18,27 +18,6 @@
 ;  sn_write()
 ;--------------------------------------------------
 
-; Sound chip data from the vgm player
-IF ENABLE_VGM_FX
-.vgm_fx SKIP 11
-; first 8 bytes are:
-; tone0 LO, tone1 LO, tone2 LO, tone3, vol0, vol1, vol2, vol3 (all 4-bit values)
-; next 3 bytes are:
-; tone0 HI, tone1 HI, tone2 HI (all 6-bit values)
-VGM_FX_TONE0_LO = 0
-VGM_FX_TONE1_LO = 1
-VGM_FX_TONE2_LO = 2
-VGM_FX_TONE3_LO = 3 ; noise
-VGM_FX_VOL0     = 4
-VGM_FX_VOL1     = 5
-VGM_FX_VOL2     = 6
-VGM_FX_VOL3     = 7 ; noise
-VGM_FX_TONE0_HI = 8
-VGM_FX_TONE1_HI = 9
-VGM_FX_TONE2_HI = 10
-
-ENDIF
-
 ;-------------------------------------------
 ; vgm_init
 ;-------------------------------------------

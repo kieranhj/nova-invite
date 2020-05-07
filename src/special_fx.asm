@@ -333,24 +333,68 @@ quad_writeptr = temp+3
 {
     CHECK_TASK_NOT_RUNNING
     jsr set_mode_8
-    jsr set_all_black_palette
 
-    lda #LO(special_fx_vubars_update)
+    lda #LO(special_fx_vubars_beat)
     sta do_per_frame_fn+1
-    lda #HI(special_fx_vubars_update)
+    lda #HI(special_fx_vubars_beat)
     sta do_per_frame_fn+2
+
+    ldx #LO(special_fx_vubars_update)
+    ldy #HI(special_fx_vubars_update)
+    jsr set_per_irq_fn
+
+    lda VGM_FX_TONE3_LO
+    sta VGM_FX_TONE2_HI+1
+
+    ldx #3
+    .loop
+    lda vgm_fx+VGM_FX_TONE0_HI, X   ; current tone value for channel X
+    sta special_fx_vars+4, X
+    lda #0
+    sta special_fx_vars+0, X        ; beat bar value
+    dex
+    bpl loop
 
     jmp display_next_buffer
 }
 
-; called per frame
-.special_fx_vubars_update
+.special_fx_vubars_beat
 {
     jsr set_all_black_palette
+    ldx #3
+    .loop
+    lda special_fx_vars, X
+    beq already_zero
+    sec
+    sbc #1
+    sta special_fx_vars, X
+    .already_zero
+    dex
+    bpl loop
+
+    lda VGM_FX_TONE3_LO
+    sta VGM_FX_TONE2_HI+1
+    rts
+}
+
+; called per irq
+.special_fx_vubars_update
+{
+    ldx irq_section                 ; 3 -> 0
+    lda vgm_fx+VGM_FX_TONE0_HI, X   ; current tone value for channel X
+    cmp special_fx_vars+4, X        ; previous tone value for channel X
+    beq ok
 
     sec
     lda #15
-    sbc vgm_fx+VGM_FX_VOL3
+    sbc vgm_fx+VGM_FX_VOL0, X
+    sta special_fx_vars, X
+
+    .ok
+    lda vgm_fx+VGM_FX_TONE0_HI, X   ; current tone value for channel X
+    sta special_fx_vars+4, X
+
+    lda special_fx_vars, X
     sta temp
 
     ldx #1

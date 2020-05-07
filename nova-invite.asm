@@ -10,6 +10,7 @@ _DEBUG_SHOW_PRELOAD = _DEBUG AND FALSE
 _DEBUG_STATUS_BAR = _DEBUG AND TRUE
 
 INCLUDE "src/zp.h.asm"
+include "src/music_jump.asm"
 
 TRACK_SPEED = 3
 TRACK_PATTERN_LENGTH = 128
@@ -73,16 +74,7 @@ ENDMACRO
 MACRO SET_BGCOL c
 IF _DEBUG_RASTERS
 {
-    LDA #&00+c:STA &FE21
-    lda &248:cmp #ULA_Mode8:beq done
-    LDA #&10+c:STA &FE21
-    LDA #&20+c:STA &FE21
-    LDA #&30+c:STA &FE21
-    LDA #&40+c:STA &FE21
-    LDA #&50+c:STA &FE21
-    LDA #&60+c:STA &FE21
-    LDA #&70+c:STA &FE21
-    .done
+    lda #c:jsr debug_rasters_set_bg_col
 }
 ENDIF
 ENDMACRO
@@ -134,8 +126,6 @@ MACRO RND16
 }
 ENDMACRO
 
-include "src/music_jump.asm"
-
 \ ******************************************************************
 \ *	GLOBAL constants
 \ ******************************************************************
@@ -152,13 +142,16 @@ screen3_addr = &2000
 
 ; Exact time for a 50Hz frame less latch load time
 FramePeriod = 312*64-2
+QuarterScreenPeriod = 64*64-2
 
 ; This is when we trigger the next frame draw during the frame
 ; Essentially how much time we give the main loop to stream the next track
 IF _DEBUG_STATUS_BAR
 TimerValue = (32+254-9)*64 - 2*64
+TopOfFrameTimeValue = (56+9)*64-2
 ELSE
 TimerValue = (32+254)*64 - 2*64
+TopOfFrameTimeValue = 56*64-2
 ENDIF
 
 KEY_PAUSE_INKEY = -56           ; 'P'
@@ -195,6 +188,8 @@ INCLUDE "lib/exo.h.asm"
 .seed               skip 2
 .temp               skip 8
 
+.irq_section        skip 1
+
 INCLUDE "lib/vgcplayer.h.asm"
 INCLUDE "src/fx_tracker.h.asm"
 INCLUDE "src/debug_tracker.h.asm"
@@ -213,14 +208,18 @@ GUARD &400 + EVENTS_DATA_MAX
 incbin "build/events.bin"
 .event_data_end
 
-RELOC_SPACE = &200
+RELOC_SPACE = &300
 ORG &E00
-GUARD &E00 + RELOC_SPACE
+GUARD &E00 + RELOC_SPACE - 1
 .reloc_to_start
 .mod15_plus1_asl4_table
 skip &100
 .ping_pong_table
 skip &100
+.alt_pixels_to_lh
+skip &AB
+.mult16_table
+skip 16
 .reloc_to_end
 
 \ ******************************************************************
@@ -377,9 +376,13 @@ GUARD screen3_addr + RELOC_SPACE
 
 	LDA #&7F					; (disable all interrupts)
 	STA &FE4E					; R14=Interrupt Enable
+    sta &fe6e                   ; uservia
 	STA &FE43					; R3=Data Direction Register "A" (set keyboard data direction)
 	LDA #&C0					; 
 	STA &FE4E					; R14=Interrupt Enable
+    lda #64
+    sta &fe4b                   ; T1 free-run mode
+    sta &fe6b                   ; uservia
 
     LDA #LO(irq_handler):STA IRQ1V
     LDA #HI(irq_handler):STA IRQ1V+1		; set interrupt handler
@@ -457,20 +460,49 @@ GUARD screen3_addr + RELOC_SPACE
 
 	lda &FE4D
 	and #&40
-	bne is_vsync
+	bne is_timer1_sysvia
+
+	lda &FE6D
+	and #&40
+	beq return
+	sta &FE6D
+
+    \\ USERVIA Timer 1
+    txa:pha:tya:pha
+    .^do_per_irq_fn
+    nop:nop:nop
+    pla:tay:pla:tax
+    
+    dec irq_section
+    bpl return
+
+    lda #&7f:sta &fe6e          ; disable USERVIA T1    
 
  	.return
 	pla
 	sta &FC
 	rti 
 
-    .is_vsync
+    .is_timer1_sysvia
 	\\ Acknowledge vsync interrupt
 	sta &FE4D
 
     \\ Play music
     lda music_enabled
     beq return
+
+    \\ Set up USERVIA
+
+	; Write T1 low now (the timer will not be written until you write the high byte)
+    LDA #LO(TopOfFrameTimeValue):STA &FE64
+    LDA #HI(TopOfFrameTimeValue):STA &FE65            ; start T1 counting
+
+  	; Latch T1 to interupt exactly every 50Hz frame
+	LDA #LO(QuarterScreenPeriod):STA &FE66
+	LDA #HI(QuarterScreenPeriod):STA &FE67
+
+    lda #3:sta irq_section
+    lda #&c0:sta &fe6e          ; enable USERVIA T1
 
     txa:pha:tya:pha
 
@@ -484,7 +516,9 @@ GUARD screen3_addr + RELOC_SPACE
         beq do_update
 
         lda debug_step
-        beq skip_update
+        bne do_step
+        jmp skip_update
+        .do_step
 
         dec debug_step
         .do_update
@@ -514,7 +548,8 @@ GUARD screen3_addr + RELOC_SPACE
     }
 
     \\ Then per-frame func.
-    jsr do_per_frame_fn
+    .^do_per_frame_fn
+    jsr do_nothing
 
     SET_BGCOL PAL_blue
 
@@ -531,7 +566,9 @@ GUARD screen3_addr + RELOC_SPACE
 
         .show_debug
         SET_BGCOL PAL_green
+        ;CLI                             \\ this bit is slow...
         DEBUG_show_tracker_info
+        ;SEI
     }
     ENDIF
 
@@ -608,11 +645,6 @@ IF _DEBUG
 ENDIF
 ENDMACRO
 
-.do_per_frame_fn
-{
-    jmp do_nothing    
-}
-
 .set_per_frame_do_nothing
 {
     lda #LO(do_nothing)
@@ -621,6 +653,43 @@ ENDMACRO
     sta do_per_frame_fn+2
     rts
 }
+
+.set_per_irq_do_nothing
+{
+    lda #&ea                ; nop
+    sta do_per_irq_fn+0
+    sta do_per_irq_fn+1
+    sta do_per_irq_fn+2
+    rts
+}
+
+.set_per_irq_fn
+{
+    lda #&20                ; jsr
+    sta do_per_irq_fn+0
+    stx do_per_irq_fn+1
+    sty do_per_irq_fn+2
+    rts
+}
+
+IF _DEBUG_RASTERS
+.debug_rasters_set_bg_col
+{
+    sta &FE21:sta load_c+1
+    lda &248:cmp #ULA_Mode8:beq done
+    .load_c
+    lda #0
+    eor #&10:STA &FE21
+    eor #&30:STA &FE21
+    eor #&10:STA &FE21
+    eor #&70:STA &FE21
+    eor #&10:STA &FE21
+    eor #&30:STA &FE21
+    eor #&10:STA &FE21
+    .done
+    rts
+}
+ENDIF
 
 .main_end
 
@@ -720,20 +789,6 @@ include "lib/disksys.asm"
 include "src/control_codes.asm"
 include "src/anims_data.asm"
 
-.alt_pixels_to_lh
-{
-    FOR n,0,&AA,1
-    EQUB (n AND &80) OR ((n AND &20)<<1) OR ((n AND &8)<<2) OR ((n AND &2)<<3)
-    NEXT
-}
-
-.mult16_table
-{
-    FOR n,0,15,1
-    EQUB n*16
-    NEXT
-}
-
 .data_end
 
 \ ******************************************************************
@@ -757,6 +812,20 @@ PING_PONG_MAX = 224
     a = n MOD 28
     b = 14 - ABS(a-14)
     EQUB (b+1) << 4
+    NEXT
+}
+
+.reloc_alt_pixels_to_lh
+{
+    FOR n,0,&AA,1
+    EQUB (n AND &80) OR ((n AND &20)<<1) OR ((n AND &8)<<2) OR ((n AND &2)<<3)
+    NEXT
+}
+
+.reloc_mult16_table
+{
+    FOR n,0,15,1
+    EQUB n*16
     NEXT
 }
 .reloc_from_end

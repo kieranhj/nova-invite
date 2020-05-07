@@ -28,4 +28,4 @@
 .anims_frame_delay      skip 1
 .anims_trigger_frames   skip 1
 
-.special_fx_vars        skip 2
+.special_fx_vars        skip 8

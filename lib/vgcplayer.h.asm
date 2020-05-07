@@ -67,7 +67,7 @@ zp_block_size = zp_temp+0 ; does not need to be zp
 
 ; Sound chip data from the vgm player
 IF ENABLE_VGM_FX
-.vgm_fx SKIP 11
+.vgm_fx SKIP 12 ; was 11
 ; first 8 bytes are:
 ; tone0 LO, tone1 LO, tone2 LO, tone3, vol0, vol1, vol2, vol3 (all 4-bit values)
 ; next 3 bytes are:

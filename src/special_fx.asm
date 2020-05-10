@@ -343,57 +343,109 @@ quad_writeptr = temp+3
     ldy #HI(special_fx_vubars_update)
     jsr set_per_irq_fn
 
-    lda VGM_FX_TONE3_LO
-    sta VGM_FX_TONE2_HI+1
-
     ldx #3
     .loop
-    lda vgm_fx+VGM_FX_TONE0_HI, X   ; current tone value for channel X
-    sta special_fx_vars+4, X
     lda #0
     sta special_fx_vars+0, X        ; beat bar value
+    lda #0
+    sta special_fx_vars+4, X        ; beat bar fade?
     dex
     bpl loop
 
     jmp display_next_buffer
 }
 
+special_fx_vubars_reg_copy = &A0
+
 .special_fx_vubars_beat
 {
     jsr set_all_black_palette
+
+    \\ TONE3 (noise) doesn't have a HI byte so make one.
+    lda VGM_FX_TONE3_LO
+    sta VGM_FX_TONE2_HI+1
+
     ldx #3
     .loop
+    \\ Only fade if no noise.
+    lda special_fx_vars+4, X
+    beq already_zero
+
+    \\ Reduce beat bar length.
     lda special_fx_vars, X
     beq already_zero
     sec
     sbc #1
     sta special_fx_vars, X
+    bne already_zero
+
+    \\ Once reached zero cancel fade.
+    sta special_fx_vars+4, X
     .already_zero
+
+    \\ Check for new beats.
+    lda vgm_fx+VGM_FX_TONE0_HI, X           ; current tone value for channel X
+    cmp special_fx_vubars_reg_copy+VGM_FX_TONE0_HI, X       ; previous tone value for channel X
+    bne make_beat
+
+    lda vgm_fx+VGM_FX_TONE0_LO, X           ; current tone value for channel X
+    cmp special_fx_vubars_reg_copy+VGM_FX_TONE0_LO, X       ; previous tone value for channel X
+    bne make_beat
+
+    lda vgm_fx+VGM_FX_VOL0, X               ; current volume value for channel X
+    cmp special_fx_vubars_reg_copy+VGM_FX_VOL0, X       ; previous volume value for channel X
+    bne make_beat
+
+    .loop_continue
     dex
     bpl loop
 
-    lda VGM_FX_TONE3_LO
-    sta VGM_FX_TONE2_HI+1
+; hack status bar to show vgm_fx registers.
+;    SELECT_DEBUG_SLOT
+;    jsr debug_reset_writeptr
+
+    ldx #11
+    .copy_loop
+    lda vgm_fx, X
+    sta special_fx_vubars_reg_copy, X
+
+IF 0    ; hack status bar to show vgm_fx registers.
+    stx temp
+    ldx debug_show_status
+    beq no_debug
+    jsr debug_write_hex_spc
+    .no_debug
+    ldx temp
+ENDIF
+
+    dex
+    bpl copy_loop
+;    RESTORE_SLOT
     rts
+
+    .make_beat
+    \\ Make a beat.
+    sec
+    lda #15
+    sbc vgm_fx+VGM_FX_VOL0, X
+    beq fade_if_vol_zero            ; don't set bar to zero, let it fade.
+
+    cmp special_fx_vars, X          ; don't set bar length lower than current value.
+    bcc loop_continue
+
+    sta special_fx_vars, X          ; otherwise set bar length to volume level.
+    bne loop_continue
+
+    .fade_if_vol_zero
+    lda #&ff
+    sta special_fx_vars+4, X        ; set bar to fade.
+    bne loop_continue
 }
 
 ; called per irq
 .special_fx_vubars_update
 {
     ldx irq_section                 ; 3 -> 0
-    lda vgm_fx+VGM_FX_TONE0_HI, X   ; current tone value for channel X
-    cmp special_fx_vars+4, X        ; previous tone value for channel X
-    beq ok
-
-    sec
-    lda #15
-    sbc vgm_fx+VGM_FX_VOL0, X
-    sta special_fx_vars, X
-
-    .ok
-    lda vgm_fx+VGM_FX_TONE0_HI, X   ; current tone value for channel X
-    sta special_fx_vars+4, X
-
     lda special_fx_vars, X
     sta temp
 
@@ -430,6 +482,16 @@ quad_writeptr = temp+3
     cpx #16
     bcc red_loop
     .done_red
+
+    .black_loop
+    cpx #16
+    bcs done_black
+    lda mult16_table, X
+    ora #PAL_black
+    SET_PALETTE_REG
+    inx
+    bne black_loop
+    .done_black
 
     rts
 }

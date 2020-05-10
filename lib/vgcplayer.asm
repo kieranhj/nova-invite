@@ -481,6 +481,19 @@ ENDIF
     cmp #&ef
     beq skip_tone3
     jsr sn_write ; clobbers X
+
+IF ENABLE_VGM_FX
+    tya
+    and #&0f
+    ldx vgm_temp
+;   ora vgm_register_headers,X
+;   cmp #&ef ; tone3 skip?
+;   beq skip_tone3_fx
+    and #&0f
+    sta vgm_fx,x ; store the register (0-7) setting in fx array
+.skip_tone3_fx
+ENDIF
+
 .skip_tone3
     ; get run length (top 4-bits + 1)
     tya
@@ -492,17 +505,6 @@ ENDIF
     adc #1
     ldx vgm_temp
     sta vgm_register_counts,x
-
-IF ENABLE_VGM_FX
-    tya
-    and #&0f
-    ora vgm_register_headers,X
-    cmp #&ef ; tone3 skip?
-    beq skip_tone3_fx
-    and #&0f
-    sta vgm_fx,x ; store the register (0-7) setting in fx array
-.skip_tone3_fx
-ENDIF
 
     sec
 }
@@ -523,7 +525,7 @@ ENDIF
     jsr vgm_get_register_data
 IF ENABLE_VGM_FX
     ldx vgm_temp ; still contains the stream id from previous call to vgm_update_register1()
-    sta vgm_fx+8,x ; store the register (0-2) setting for fx
+    sta vgm_fx+VGM_FX_TONE0_HI,x ; store the register (0-2) setting for fx
 ENDIF    
     jmp sn_write ; clobbers X
 }

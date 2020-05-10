@@ -171,7 +171,7 @@ GUARD zp_top
 .zp_start
 
 IF _DEBUG_STATUS_BAR
-.debug_palette_copy skip 16
+.debug_palette_copy skip 16     ; must be at &00!
 ENDIF
 
 INCLUDE "lib/exo.h.asm"
@@ -566,9 +566,9 @@ GUARD screen3_addr + RELOC_SPACE
 
         .show_debug
         SET_BGCOL PAL_green
-        ;CLI                             \\ this bit is slow...
+        CLI                             \\ this bit is slow...
         DEBUG_show_tracker_info
-        ;SEI
+        SEI
     }
     ENDIF
 

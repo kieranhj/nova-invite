@@ -880,6 +880,11 @@ ORG &8000
 GUARD &C000
 .bank0_start
 include "src/image_assets.asm"
+
+.exo_anims_swirl
+INCBIN "build/swirl.exo"
+.exo_anims_tunnel
+INCBIN "build/tunnel.exo"
 .bank0_end
 
 SAVE "build/BANK0", bank0_start, bank0_end, bank0_start
@@ -977,11 +982,6 @@ GUARD &C000
 .music_start
 include "src/music.asm"
 .music_end
-
-.exo_anims_swirl
-INCBIN "build/swirl.exo"
-.exo_anims_tunnel
-INCBIN "build/tunnel.exo"
 
 .debug_start
 include "src/debug_tracker.asm"

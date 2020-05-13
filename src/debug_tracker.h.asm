@@ -30,7 +30,7 @@ ENDMACRO
 MACRO SELECT_DEBUG_SLOT
 {
     lda &f4:pha
-    lda MUSIC_SLOT_ZP
+    lda swram_slots_base + SLOT_MUSIC
     sta &f4:sta &fe30
 }
 ENDMACRO

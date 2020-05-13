@@ -26,7 +26,7 @@ if %ERRORLEVEL% neq 0 (
 
 echo Building DISC...
 mkdir disc
-bin\beebasm.exe -i disc-build.asm -do disc\nova-invite.ssd -title NOVA-INVITE -opt 2 -v
+bin\beebasm.exe -i disc-build.asm -do disc\nova-invite.ssd -title NOVA-INVITE -opt 3 -v
 
 if %ERRORLEVEL% neq 0 (
 	echo Failed to build disc image 'nova-invite.ssd'

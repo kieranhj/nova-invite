@@ -375,8 +375,7 @@ ENDMACRO
     ENDIF
     lda image_table+0, X
     tax
-    lda #5
-    sta &f4:sta &fe30
+    SWRAM_SELECT SLOT_BANK0
     pla
     jmp decrunch_to_page_A
 }
@@ -398,7 +397,9 @@ ENDMACRO
 {
     pha
     txa:asl a:asl a:tax 
-    lda anims_table+2, X
+    ldy anims_table+2, X
+    ; SWRAM_SELECT
+    lda swram_slots_base, y
     sta &f4:sta &fe30
 
     ldy anims_table+1, X

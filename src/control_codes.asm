@@ -45,22 +45,22 @@
 
 .anims_table
 {
-    EQUW exo_anims_shift,           6   ; c200
-    EQUW exo_anims_turbluent,       6   ; c201
-    EQUW exo_anims_triangle,        6   ; c202
-    EQUW exo_anims_claw,            6   ; c203
-    EQUW exo_anims_star,            6   ; c204
-    EQUW exo_anims_circle,          6   ; c205
-    EQUW exo_anims_faces,           6   ; c206
-    EQUW exo_anims_square,          7   ; c207
-    EQUW exo_anims_kaleidoscope,    7   ; c208
-    EQUW exo_anims_sine_wave,       7   ; c209
-    EQUW exo_anims_burst,           7   ; c20A
-    EQUW exo_anims_rotor,           7   ; c20B
-    EQUW exo_anims_swirl,           5   ; c20C      ; TODO! sort SWRAM!
-    EQUW exo_anims_tunnel,          5   ; c20D
-    EQUW exo_anims_particl,         7   ; c20E
-    EQUW exo_anims_world,           6   ; c20F
+    EQUW exo_anims_shift,           SLOT_BANK1   ; c200
+    EQUW exo_anims_turbluent,       SLOT_BANK1   ; c201
+    EQUW exo_anims_triangle,        SLOT_BANK1   ; c202
+    EQUW exo_anims_claw,            SLOT_BANK1   ; c203
+    EQUW exo_anims_star,            SLOT_BANK1   ; c204
+    EQUW exo_anims_circle,          SLOT_BANK1   ; c205
+    EQUW exo_anims_faces,           SLOT_BANK1   ; c206
+    EQUW exo_anims_square,          SLOT_BANK2   ; c207
+    EQUW exo_anims_kaleidoscope,    SLOT_BANK2   ; c208
+    EQUW exo_anims_sine_wave,       SLOT_BANK2   ; c209
+    EQUW exo_anims_burst,           SLOT_BANK2   ; c20A
+    EQUW exo_anims_rotor,           SLOT_BANK2   ; c20B
+    EQUW exo_anims_swirl,           SLOT_BANK0   ; c20C
+    EQUW exo_anims_tunnel,          SLOT_BANK0   ; c20D
+    EQUW exo_anims_particl,         SLOT_BANK2   ; c20E
+    EQUW exo_anims_world,           SLOT_BANK1   ; c20F
 }
 
 .special_fx_table

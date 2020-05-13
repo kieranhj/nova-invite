@@ -203,21 +203,21 @@ quad_writeptr = temp+3
 
 .prepare_hbars
 {
-    ldx #7                      ; fixed SWRAM! TODO!
-    stx &f4:stx &fe30
+    pha
+    SWRAM_SELECT SLOT_BANK2     ; fixed SWRAM! TODO!
     ldx #LO(exo_anims_hbars)
     ldy #HI(exo_anims_hbars)
-    ; A contains next_buffer_HI
+    pla; A contains next_buffer_HI
     jmp decrunch_to_page_A
 }
 
 .prepare_dbars
 {
-    ldx #7                      ; fixed SWRAM! TODO!
-    stx &f4:stx &fe30
+    pha
+    SWRAM_SELECT SLOT_BANK2     ; fixed SWRAM! TODO!
     ldx #LO(exo_anims_dbars)
     ldy #HI(exo_anims_dbars)
-    ; A contains next_buffer_HI
+    pla; A contains next_buffer_HI
     jmp decrunch_to_page_A
 }
 
@@ -321,8 +321,7 @@ quad_writeptr = temp+3
 ; Y = prev screen buffer HI
 .prepare_vubars
 {
-    ldx #6                      ; fixed SWRAM! TODO!
-    stx &f4:stx &fe30
+    SWRAM_SELECT SLOT_BANK1     ; fixed SWRAM! TODO!
     ldx #LO(exo_anims_vupal)
     ldy #HI(exo_anims_vupal)
     ; A contains next_buffer_HI

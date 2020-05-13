@@ -79,9 +79,9 @@ IF _DEBUG_RASTERS
 ENDIF
 ENDMACRO
 
-MACRO SWRAM_BANK b
+MACRO SWRAM_SELECT slot
 {
-    LDA #b:STA &F4:STA &FE30
+    LDA swram_slots_base + slot:STA &F4:STA &FE30
 }
 ENDMACRO
 
@@ -248,9 +248,6 @@ GUARD screen3_addr + RELOC_SPACE
     LDA IRQ1V+1:STA old_irqv+1
     CLI
 
-    \\ Consts for now
-    lda #4:sta MUSIC_SLOT_ZP
-
 	\\ Relocate data to lower RAM
 	lda #HI(reloc_from_start)
 	ldx #HI(reloc_to_start)
@@ -259,8 +256,7 @@ GUARD screen3_addr + RELOC_SPACE
 
     \\ Load music into SWRAM (if available)
     {
-        lda MUSIC_SLOT_ZP
-        sta &f4:sta &fe30
+        SWRAM_SELECT SLOT_MUSIC
         ldx #LO(music_filename)
         ldy #HI(music_filename)
         lda #HI(&8000)
@@ -269,19 +265,19 @@ GUARD screen3_addr + RELOC_SPACE
 
     \\ Load Banks
     {
-        SWRAM_BANK 5
+        SWRAM_SELECT SLOT_BANK0
         ldx #LO(bank0_filename)
         ldy #HI(bank0_filename)
         lda #HI(&8000)
         jsr disksys_load_file
 
-        SWRAM_BANK 6
+        SWRAM_SELECT SLOT_BANK1
         ldx #LO(bank1_filename)
         ldy #HI(bank1_filename)
         lda #HI(&8000)
         jsr disksys_load_file
 
-        SWRAM_BANK 7
+        SWRAM_SELECT SLOT_BANK2
         ldx #LO(bank2_filename)
         ldy #HI(bank2_filename)
         lda #HI(&8000)
@@ -407,10 +403,6 @@ GUARD screen3_addr + RELOC_SPACE
 
     \\ Start music player
     {
-        lda MUSIC_SLOT_ZP
-        sta &f4:sta &fe30
-
-        \\ Initialise music
         MUSIC_JUMP_INIT_TUNE
         inc music_enabled
     }

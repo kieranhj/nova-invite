@@ -220,6 +220,12 @@ skip &100
 skip &AB
 .mult16_table
 skip 16
+.mode4_default_palette
+skip 16
+.mode8_default_palette
+skip 16
+.mode4_crtc_regs
+skip 14
 .reloc_to_end
 
 \ ******************************************************************
@@ -261,12 +267,6 @@ GUARD screen3_addr + RELOC_SPACE
         ldy #HI(music_filename)
         lda #HI(&8000)
         jsr disksys_load_file
-
-        lda #hi(vgm_stream_buffers)
-        ldx #lo(vgc_data_tune)
-        ldy #hi(vgc_data_tune)
-        sec ; loop
-        jsr vgm_init
     }
 
     \\ Load Banks
@@ -358,6 +358,14 @@ GUARD screen3_addr + RELOC_SPACE
 
     lda &fe44:sta seed
     lda &fe45:sta seed+1
+
+    \\ Init music - has to be here for reload.
+    SWRAM_SELECT SLOT_MUSIC
+    lda #hi(vgm_stream_buffers)
+    ldx #lo(vgc_data_tune)
+    ldy #hi(vgc_data_tune)
+    sec ; loop
+    jsr vgm_init
 
     \\ This also initiates a preload update.
     jsr events_init
@@ -696,8 +704,11 @@ ENDIF
 
 .fx_start
 include "src/fx_tracker.asm"
+.fx_anims
 include "src/anims.asm"
+.fx_special_fx
 include "src/special_fx.asm"
+.fx_screen_ctrl
 include "src/screen_ctrl.asm"
 .fx_end
 
@@ -717,71 +728,11 @@ include "lib/disksys.asm"
 
 .data_start
 
+.events_filename    EQUS "EVENTS", 13
 .music_filename     EQUS "MUSIC", 13
 .bank0_filename     EQUS "BANK0", 13
 .bank1_filename     EQUS "BANK1", 13
 .bank2_filename     EQUS "BANK2", 13
-.events_filename    EQUS "EVENTS", 13
-
-.char_def           skip 9
-
-.mode4_default_palette
-{
-	EQUB &00 + PAL_black
-	EQUB &10 + PAL_black
-	EQUB &20 + PAL_black
-	EQUB &30 + PAL_black
-	EQUB &40 + PAL_black
-	EQUB &50 + PAL_black
-	EQUB &60 + PAL_black
-	EQUB &70 + PAL_black
-	EQUB &80 + PAL_white
-	EQUB &90 + PAL_white
-	EQUB &A0 + PAL_white
-	EQUB &B0 + PAL_white
-	EQUB &C0 + PAL_white
-	EQUB &D0 + PAL_white
-	EQUB &E0 + PAL_white
-	EQUB &F0 + PAL_white
-}
-
-.mode8_default_palette
-{
-	EQUB &00 + PAL_black
-	EQUB &10 + PAL_red
-	EQUB &20 + PAL_green
-	EQUB &30 + PAL_yellow
-	EQUB &40 + PAL_blue
-	EQUB &50 + PAL_magenta
-	EQUB &60 + PAL_cyan
-	EQUB &70 + PAL_white
-	EQUB &80 + PAL_black
-	EQUB &90 + PAL_red
-	EQUB &A0 + PAL_green
-	EQUB &B0 + PAL_yellow
-	EQUB &C0 + PAL_blue
-	EQUB &D0 + PAL_magenta
-	EQUB &E0 + PAL_cyan
-	EQUB &F0 + PAL_white
-}
-
-.mode4_crtc_regs
-{
-	EQUB 63    			    ; R0  horizontal total
-	EQUB 32					; R1  horizontal displayed
-	EQUB 45					; R2  horizontal position
-	EQUB &24				; R3  sync width
-	EQUB 38					; R4  vertical total
-	EQUB 0					; R5  vertical total adjust
-	EQUB 32					; R6  vertical displayed
-	EQUB 35					; R7  vertical position
-	EQUB &F0				; R8  no interlace; cursor off; display off
-	EQUB 7					; R9  scanlines per row
-	EQUB 32					; R10 cursor start
-	EQUB 8					; R11 cursor end
-	EQUB HI(screen1_addr/8)	; R12 screen start address, high
-	EQUB LO(screen1_addr/8)	; R13 screen start address, low
-}
 
 include "src/control_codes.asm"
 include "src/anims_data.asm"
@@ -825,6 +776,65 @@ PING_PONG_MAX = 224
     EQUB n*16
     NEXT
 }
+
+.reloc_mode4_default_palette
+{
+	EQUB &00 + PAL_black
+	EQUB &10 + PAL_black
+	EQUB &20 + PAL_black
+	EQUB &30 + PAL_black
+	EQUB &40 + PAL_black
+	EQUB &50 + PAL_black
+	EQUB &60 + PAL_black
+	EQUB &70 + PAL_black
+	EQUB &80 + PAL_white
+	EQUB &90 + PAL_white
+	EQUB &A0 + PAL_white
+	EQUB &B0 + PAL_white
+	EQUB &C0 + PAL_white
+	EQUB &D0 + PAL_white
+	EQUB &E0 + PAL_white
+	EQUB &F0 + PAL_white
+}
+
+.reloc_mode8_default_palette
+{
+	EQUB &00 + PAL_black
+	EQUB &10 + PAL_red
+	EQUB &20 + PAL_green
+	EQUB &30 + PAL_yellow
+	EQUB &40 + PAL_blue
+	EQUB &50 + PAL_magenta
+	EQUB &60 + PAL_cyan
+	EQUB &70 + PAL_white
+	EQUB &80 + PAL_black
+	EQUB &90 + PAL_red
+	EQUB &A0 + PAL_green
+	EQUB &B0 + PAL_yellow
+	EQUB &C0 + PAL_blue
+	EQUB &D0 + PAL_magenta
+	EQUB &E0 + PAL_cyan
+	EQUB &F0 + PAL_white
+}
+
+.reloc_mode4_crtc_regs
+{
+	EQUB 63    			    ; R0  horizontal total
+	EQUB 32					; R1  horizontal displayed
+	EQUB 45					; R2  horizontal position
+	EQUB &24				; R3  sync width
+	EQUB 38					; R4  vertical total
+	EQUB 0					; R5  vertical total adjust
+	EQUB 32					; R6  vertical displayed
+	EQUB 35					; R7  vertical position
+	EQUB &F0				; R8  no interlace; cursor off; display off
+	EQUB 7					; R9  scanlines per row
+	EQUB 32					; R10 cursor start
+	EQUB 8					; R11 cursor end
+	EQUB HI(screen1_addr/8)	; R12 screen start address, high
+	EQUB LO(screen1_addr/8)	; R13 screen start address, low
+}
+
 .reloc_from_end
 
 \ ******************************************************************
@@ -856,9 +866,13 @@ GUARD screen3_addr
 PRINT "------"
 PRINT "NOVA-INVITE"
 PRINT "------"
-PRINT "ZP size =", ~zp_end-zp_start, "(",~&80-zp_end,"free)"
+PRINT "ZP size =", ~zp_end-zp_start, "(",~zp_top-zp_end,"free)"
 PRINT "MAIN size =", ~main_end-main_start
 PRINT "FX size = ", ~fx_end-fx_start
+PRINT "FX SIZE (fx_tracker) =", ~(fx_anims-fx_start)
+PRINT "FX SIZE (anims) =", ~(fx_special_fx-fx_anims)
+PRINT "FX SIZE (special_fx) =", ~(fx_screen_ctrl-fx_special_fx)
+PRINT "FX SIZE (screen_ctrl) =", ~(fx_end-fx_screen_ctrl)
 PRINT "LIBRARY size =",~library_end-library_start
 PRINT "DATA size =",~data_end-data_start
 PRINT "RELOC size =",~reloc_from_end-reloc_from_start

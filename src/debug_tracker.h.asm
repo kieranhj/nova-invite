@@ -76,4 +76,6 @@ IF _DEBUG
 
 .debug_msg_no       skip 1
 .debug_show_status  skip 1
+
+.char_def           skip 9
 ENDIF

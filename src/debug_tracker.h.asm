@@ -15,6 +15,7 @@ debug_msg_error_parse = 8
 debug_msg_error_image = 9
 debug_msg_error_anim = 10
 debug_msg_error_special = 11
+debug_msg_error_text = 12
 
 MACRO DEBUG_ERROR e
 IF _DEBUG_STATUS_BAR
@@ -76,4 +77,6 @@ IF _DEBUG
 
 .debug_msg_no       skip 1
 .debug_show_status  skip 1
+
+.char_def           skip 9
 ENDIF

@@ -8,6 +8,11 @@ FONT_GLYPH_WIDTH_BYTES = 2
 FONT_GLYPH_HEIGHT = 16
 FONT_GLYPH_SIZE = FONT_GLYPH_WIDTH_BYTES * FONT_GLYPH_HEIGHT
 
+font_store_writeptr = temp+0
+font_text_index = temp+2
+font_scr_base = temp+3
+font_textptr = temp+4
+
 ; A = ASCII
 ; Plots at writeptr, only at character address alignment
 .font_plot_glyph
@@ -42,9 +47,9 @@ FONT_GLYPH_SIZE = FONT_GLYPH_WIDTH_BYTES * FONT_GLYPH_HEIGHT
     sta readptr+1
 
     lda writeptr
-    sta temp
+    sta font_store_writeptr
     lda writeptr+1
-    sta temp+1
+    sta font_store_writeptr+1
 
     ldx #FONT_GLYPH_HEIGHT
     .line_loop
@@ -84,10 +89,10 @@ FONT_GLYPH_SIZE = FONT_GLYPH_WIDTH_BYTES * FONT_GLYPH_HEIGHT
   
     .done_loop
     clc
-    lda temp
+    lda font_store_writeptr
     adc #16
     sta writeptr
-    lda temp+1
+    lda font_store_writeptr+1
     adc #0
     sta writeptr+1
     rts
@@ -97,18 +102,33 @@ FONT_GLYPH_SIZE = FONT_GLYPH_WIDTH_BYTES * FONT_GLYPH_HEIGHT
 ; X = text block no.
 .plot_text_block
 {
-    sta temp+3                  ; screen base
+    sta font_scr_base
     sta writeptr+1
     lda #0
     sta writeptr
 
-    SWRAM_SELECT SLOT_MUSIC     ; font data stored here.
+    \\ Page in font and text data (safe as this is from main thread)
+    SWRAM_SELECT SLOT_MUSIC
+
+    txa:asl a:tax 
+    lda text_block_table+1, X
+    IF _DEBUG
+    {
+        bmi ok
+        DEBUG_ERROR debug_msg_error_text
+        rts
+        .ok
+    }
+    ENDIF
+    sta font_textptr+1
+    lda text_block_table+0, X
+    sta font_textptr
 
     ldy #0
     .loop
-    sty temp+2          ; 0,1 used to store writeptr above
+    sty font_text_index
 
-    lda text_block_0, y
+    lda (font_textptr), y
     beq done_loop
     cmp #32
     bcs is_ascii
@@ -117,7 +137,7 @@ FONT_GLYPH_SIZE = FONT_GLYPH_WIDTH_BYTES * FONT_GLYPH_HEIGHT
     cmp #12             ; CLS
     bne not_cls
 
-    ldy temp+3
+    ldy font_scr_base
     ldx #HI(SCREEN_SIZE_BYTES)
     jsr clear_pages
     beq next_char
@@ -128,15 +148,15 @@ FONT_GLYPH_SIZE = FONT_GLYPH_WIDTH_BYTES * FONT_GLYPH_HEIGHT
 
     \\ Set cursor
     iny
-    lda text_block_0, Y
+    lda (font_textptr), Y
     asl a:asl a:asl a
     sta writeptr
     iny
-    lda text_block_0, Y
+    lda (font_textptr), Y
     clc
-    adc temp+3          ; screen base
+    adc font_scr_base
     sta writeptr+1
-    sty temp+2
+    sty font_text_index
     bne next_char
 
     .is_ascii
@@ -146,13 +166,10 @@ FONT_GLYPH_SIZE = FONT_GLYPH_WIDTH_BYTES * FONT_GLYPH_HEIGHT
 
     .not_vdu31
     .next_char
-    ldy temp+2
+    ldy font_text_index
     iny
     bne loop
     .done_loop
 
     rts
 }
-
-.text_block_0
-EQUS 12,31,5,15,"HELLO WORLD",0

@@ -1008,6 +1008,10 @@ INCBIN "build/anim_vupal.exo"
 INCBIN "build/font16.bin"
 .font_data_end
 
+.text_block_start
+include "src/text_blocks.asm"
+.text_block_end
+
 .debug_start
 include "src/debug_tracker.asm"
 include "lib/debug_mode4.asm"
@@ -1043,6 +1047,7 @@ PRINT "------"
 PRINT "MUSIC size =", ~music_end-music_start
 PRINT "SPECIAL FX DATA size =", ~special_fx_data_end-special_fx_data_start
 PRINT "FONT DATA size =", ~font_data_end-font_data
+PRINT "TEXT BLOCK size =", ~text_block_end-text_block_start
 PRINT "DEBUG CODE size =",~debug_end-debug_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%

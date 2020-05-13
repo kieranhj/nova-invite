@@ -88,17 +88,20 @@ ENDMACRO
 MACRO SET_PALETTE_REG
 IF _DEBUG_STATUS_BAR
 {
+    IF 1
+    jsr debug_set_palette_reg
+    ELSE
     pha:lsr a:lsr a:lsr a:lsr a
     sta write_value+1:pla
     .write_value
     sta &00
     sta &fe21
+    ENDIF
 }
 ELSE
     sta &fe21
 ENDIF
 ENDMACRO
-
 
 MACRO RND
 {
@@ -692,6 +695,18 @@ IF _DEBUG_RASTERS
     eor #&30:STA &FE21
     eor #&10:STA &FE21
     .done
+    rts
+}
+ENDIF
+
+IF _DEBUG_STATUS_BAR
+.debug_set_palette_reg
+{
+    pha:lsr a:lsr a:lsr a:lsr a
+    sta write_value+1:pla
+    .write_value
+    sta &00
+    sta &fe21
     rts
 }
 ENDIF

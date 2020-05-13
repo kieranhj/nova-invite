@@ -30,37 +30,37 @@
     EQUW exo_image_big_v            ; c102
     EQUW exo_image_big_a            ; c103
     EQUW exo_image_nova             ; c104
-    EQUW exo_image_nova_3           ; c105
-    EQUW exo_image_bs_logo          ; c106
+    EQUW exo_image_nova_2020        ; c105
+    EQUW 0                          ; c106
     EQUW exo_image_bs_logo2         ; c107
     EQUW exo_image_tmt_logo         ; c108
-    EQUW exo_image_tmt_logo2        ; c109
-    EQUW exo_image_nova_2020        ; c10A
-    EQUW 0                          ; c10B
-    EQUW 0                          ; c10C
-    EQUW 0                          ; c10D
+    EQUW 0                          ; c109
+    EQUW exo_slide_dates            ; c10A
+    EQUW exo_slide_chips            ; c10B
+    EQUW exo_slide_patarty          ; c10C
+    EQUW exo_image_bbc_owl          ; c10D
     EQUW 0                          ; c10E
     EQUW 0                          ; c10F
 }
 
 .anims_table
 {
-    EQUW exo_anims_shift,           SLOT_BANK1   ; c200
-    EQUW exo_anims_turbluent,       SLOT_BANK1   ; c201
+    EQUW 0,                         0   ; c200
+    EQUW 0,                         0   ; c201
     EQUW exo_anims_triangle,        SLOT_BANK1   ; c202
-    EQUW exo_anims_claw,            SLOT_BANK1   ; c203
+    EQUW 0,                         0   ; c203
     EQUW exo_anims_star,            SLOT_BANK1   ; c204
     EQUW exo_anims_circle,          SLOT_BANK1   ; c205
     EQUW exo_anims_faces,           SLOT_BANK1   ; c206
-    EQUW exo_anims_square,          SLOT_BANK2   ; c207
-    EQUW exo_anims_kaleidoscope,    SLOT_BANK2   ; c208
-    EQUW exo_anims_sine_wave,       SLOT_BANK2   ; c209
+    EQUW exo_anims_square,          SLOT_BANK1   ; c207
+    EQUW exo_anims_kaleidoscope,    SLOT_BANK1   ; c208
+    EQUW 0,                         0   ; c209
     EQUW exo_anims_burst,           SLOT_BANK2   ; c20A
     EQUW exo_anims_rotor,           SLOT_BANK2   ; c20B
-    EQUW exo_anims_swirl,           SLOT_BANK0   ; c20C
-    EQUW exo_anims_tunnel,          SLOT_BANK0   ; c20D
+    EQUW exo_anims_swirl,           SLOT_BANK2   ; c20C
+    EQUW exo_anims_tunnel,          SLOT_BANK2   ; c20D
     EQUW exo_anims_particl,         SLOT_BANK2   ; c20E
-    EQUW exo_anims_world,           SLOT_BANK1   ; c20F
+    EQUW 0,                         0   ; c20F
 }
 
 .special_fx_table

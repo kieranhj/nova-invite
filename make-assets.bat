@@ -13,6 +13,7 @@ python bin/png2bbc.py --quiet -o build/image_bs_logo.bin ./data/images/bslogo_sq
 python bin/png2bbc.py --quiet -o build/image_bs_logo2.bin ./data/images/bitshifters01.png 4 
 python bin/png2bbc.py --quiet -o build/image_tmt_logo.bin ./data/images/ready_tmt02.png 4 
 python bin/png2bbc.py --quiet -o build/image_tmt_logo2.bin ./data/images/ready_torment03.png 4 
+python bin/png2bbc.py --quiet -o build/image_bbc_owl.bin ./data/images/bbc_logo.png 4
 
 python bin/png2bbc.py --quiet -o build/image_wsm_graf.bin ./data/images/wsm_graf_01_v03.png 4 
 
@@ -46,6 +47,7 @@ bin\exomizer.exe level -M256 build/image_bs_logo2.bin@0x0000 -o build/image_bs_l
 bin\exomizer.exe level -M256 build/image_tmt_logo.bin@0x0000 -o build/image_tmt_logo.exo
 bin\exomizer.exe level -M256 build/image_tmt_logo2.bin@0x0000 -o build/image_tmt_logo2.exo
 bin\exomizer.exe level -M256 build/image_wsm_graf.bin@0x0000 -o build/image_wsm_graf.exo
+bin\exomizer.exe level -M256 build/image_bbc_owl.bin@0x0000 -o build/image_bbc_owl.exo
 
 bin\exomizer.exe level -M256 build/slide_dates.bin@0x0000 -o build/slide_dates.exo
 bin\exomizer.exe level -M256 build/slide_beach.bin@0x0000 -o build/slide_beach.exo

@@ -877,11 +877,6 @@ ORG &8000
 GUARD &C000
 .bank0_start
 include "src/image_assets.asm"
-
-.exo_anims_swirl
-INCBIN "build/anim_swirl.exo"
-.exo_anims_tunnel
-INCBIN "build/anim_tunnel.exo"
 .bank0_end
 
 SAVE "build/BANK0", bank0_start, bank0_end, bank0_start
@@ -902,24 +897,18 @@ CLEAR &8000, &C000
 ORG &8000
 GUARD &C000
 .bank1_start
-.exo_anims_world
-INCBIN "build/anim_world.exo"
-.exo_anims_shift
-INCBIN "build/anim_shift.exo"
-.exo_anims_turbluent
-INCBIN "build/anim_turbulent.exo"
 .exo_anims_triangle
 INCBIN "build/anim_triangle.exo"
-.exo_anims_claw
-INCBIN "build/anim_claw.exo"
 .exo_anims_star
 INCBIN "build/anim_star.exo"
 .exo_anims_circle
 INCBIN "build/anim_circle.exo"
 .exo_anims_faces
 INCBIN "build/anim_faces.exo"
-.exo_anims_vupal
-INCBIN "build/anim_vupal.exo"
+.exo_anims_square
+INCBIN "build/anim_square.exo"
+.exo_anims_kaleidoscope
+INCBIN "build/anim_kaleidoscope.exo"
 .bank1_end
 
 SAVE "build/BANK1", bank1_start, bank1_end, bank1_start
@@ -940,22 +929,16 @@ CLEAR &8000, &C000
 ORG &8000
 GUARD &C000
 .bank2_start
-.exo_anims_square
-INCBIN "build/anim_square.exo"
-.exo_anims_kaleidoscope
-INCBIN "build/anim_kaleidoscope.exo"
-.exo_anims_sine_wave
-INCBIN "build/anim_sine.exo"
-.exo_anims_hbars
-INCBIN "build/anim_hbars.exo"
-.exo_anims_dbars
-INCBIN "build/anim_dbars.exo"
 .exo_anims_burst
 INCBIN "build/anim_burst.exo"
-.exo_anims_particl
-INCBIN "build/anim_particl.exo"
 .exo_anims_rotor
 INCBIN "build/anim_rotor.exo"
+.exo_anims_swirl
+INCBIN "build/anim_swirl.exo"
+.exo_anims_tunnel
+INCBIN "build/anim_tunnel.exo"
+.exo_anims_particl
+INCBIN "build/anim_particl.exo"
 .bank2_end
 
 SAVE "build/BANK2", bank2_start, bank2_end, bank2_start
@@ -979,6 +962,15 @@ GUARD &C000
 .music_start
 include "src/music.asm"
 .music_end
+
+.special_fx_data_start
+.exo_anims_hbars
+INCBIN "build/anim_hbars.exo"
+.exo_anims_dbars
+INCBIN "build/anim_dbars.exo"
+.exo_anims_vupal
+INCBIN "build/anim_vupal.exo"
+.special_fx_data_end
 
 .debug_start
 include "src/debug_tracker.asm"
@@ -1013,6 +1005,7 @@ PRINT "------"
 PRINT "BANK 3"
 PRINT "------"
 PRINT "MUSIC size =", ~music_end-music_start
+PRINT "SPECIAL FX DATA size =", ~special_fx_data_end-special_fx_data_start
 PRINT "DEBUG CODE size =",~debug_end-debug_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%

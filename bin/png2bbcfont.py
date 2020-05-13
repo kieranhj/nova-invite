@@ -121,6 +121,8 @@ def main(options):
                 assert len(xs)==pixels_per_byte,(xs,pixels_per_byte,sx,x,y)
                 pixel_data.append(pack(xs))
         glyphs+=1
+        if options.max_glyphs is not None and glyphs>=options.max_glyphs:
+            break
 
     print '%d glyphs at %d bytes BBC data'%(glyphs,len(pixel_data))
 
@@ -152,6 +154,10 @@ if __name__=='__main__':
                         type=int,
                         nargs=2,
                         help='specify dimensions of a single glyph')
+    parser.add_argument('--max-glyphs',
+                        default=None,
+                        type=int,
+                        help='maximum number of glyphs to save')
     parser.add_argument('-q','--quiet',action='store_true',help='don\'t print warnings')
     parser.add_argument('input_path',metavar='FILE',help='load PNG data fro %(metavar)s')
     parser.add_argument('mode',type=int,help='screen mode')

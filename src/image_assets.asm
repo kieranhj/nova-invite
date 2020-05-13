@@ -15,17 +15,19 @@ INCBIN "build/image_v.exo"
 INCBIN "build/image_a.exo"
 .exo_image_nova
 INCBIN "build/image_nova.exo"
-.exo_image_nova_3
-INCBIN "build/image_nova3.exo"
-.exo_image_bs_logo
-INCBIN "build/image_bs_logo.exo"
+.exo_image_nova_2020
+INCBIN "build/image_nova2020.exo"
 .exo_image_bs_logo2
 INCBIN "build/image_bs_logo2.exo"
 .exo_image_tmt_logo
 INCBIN "build/image_tmt_logo.exo"
-.exo_image_tmt_logo2
-INCBIN "build/image_tmt_logo2.exo"
-.exo_image_nova_2020
-INCBIN "build/image_nova2020.exo"
+.exo_slide_dates
+INCBIN "build/slide_dates.exo"
+.exo_slide_chips
+INCBIN "build/slide_chips.exo"
+.exo_slide_patarty
+INCBIN "build/slide_patarty.exo"
+.exo_image_bbc_owl
+INCBIN "build/image_bbc_owl.exo"
 
 .image_data_end

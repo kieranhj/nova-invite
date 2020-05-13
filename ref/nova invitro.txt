@@ -298,8 +298,8 @@ TODO
         - Need to generate patterns in code?
 - Colour cycle anim ideas:
     - Sine wave as beat - DONE but make a better one that is filled not just a line.
-    - Spiral
-    - Plasma
+    - Spiral - 0XCODE
+    - Plasma - 0XCODE
     - Perhaps concentrate on the real-time FX?
 - Real-time FX in preload?
     - Line bounce
@@ -309,9 +309,14 @@ TODO
     - Rupture screen to rearrange?
     - Set palette in strips?
     - Set strips visible?
-    - 
 - Request from Rhino:
     - I'd really like to be able to do is to play just portions of the animations, such that they reveal slightly different bits on each beat.
       Say the circle growing outwards animation: On beat 1 I'd like to be able to cycle from index 0 to 4, on beat 2 from 1 to 5, etc,
-      so that it builds up a different part of the anim over time.
-    - Animation trigger: Start at index Y and play N frames and end on black. In addition to existing mode / speed command.
+      so that it builds up a different part of the anim over time. - DONE
+    - Animation trigger: Start at index Y and play N frames and end on black. In addition to existing mode / speed command. DONE
+
+12/5/20
+    - Need to sort out SWRAM slot choices for non-Master hw
+    - Can we squeeze any more RAM usage?
+    - Do we really need the third screen buffer?
+

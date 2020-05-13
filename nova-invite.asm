@@ -882,9 +882,9 @@ GUARD &C000
 include "src/image_assets.asm"
 
 .exo_anims_swirl
-INCBIN "build/swirl.exo"
+INCBIN "build/anim_swirl.exo"
 .exo_anims_tunnel
-INCBIN "build/tunnel.exo"
+INCBIN "build/anim_tunnel.exo"
 .bank0_end
 
 SAVE "build/BANK0", bank0_start, bank0_end, bank0_start
@@ -906,23 +906,23 @@ ORG &8000
 GUARD &C000
 .bank1_start
 .exo_anims_world
-INCBIN "build/world.exo"
+INCBIN "build/anim_world.exo"
 .exo_anims_shift
-INCBIN "build/shift.exo"
+INCBIN "build/anim_shift.exo"
 .exo_anims_turbluent
-INCBIN "build/turbulent.exo"
+INCBIN "build/anim_turbulent.exo"
 .exo_anims_triangle
-INCBIN "build/triangle.exo"
+INCBIN "build/anim_triangle.exo"
 .exo_anims_claw
-INCBIN "build/claw.exo"
+INCBIN "build/anim_claw.exo"
 .exo_anims_star
-INCBIN "build/star.exo"
+INCBIN "build/anim_star.exo"
 .exo_anims_circle
-INCBIN "build/circle.exo"
+INCBIN "build/anim_circle.exo"
 .exo_anims_faces
-INCBIN "build/faces.exo"
+INCBIN "build/anim_faces.exo"
 .exo_anims_vupal
-INCBIN "build/vupal.exo"
+INCBIN "build/anim_vupal.exo"
 .bank1_end
 
 SAVE "build/BANK1", bank1_start, bank1_end, bank1_start
@@ -944,21 +944,21 @@ ORG &8000
 GUARD &C000
 .bank2_start
 .exo_anims_square
-INCBIN "build/square.exo"
+INCBIN "build/anim_square.exo"
 .exo_anims_kaleidoscope
-INCBIN "build/kaleidoscope.exo"
+INCBIN "build/anim_kaleidoscope.exo"
 .exo_anims_sine_wave
-INCBIN "build/sine.exo"
+INCBIN "build/anim_sine.exo"
 .exo_anims_hbars
-INCBIN "build/hbars.exo"
+INCBIN "build/anim_hbars.exo"
 .exo_anims_dbars
-INCBIN "build/dbars.exo"
+INCBIN "build/anim_dbars.exo"
 .exo_anims_burst
-INCBIN "build/burst.exo"
+INCBIN "build/anim_burst.exo"
 .exo_anims_particl
-INCBIN "build/particl.exo"
+INCBIN "build/anim_particl.exo"
 .exo_anims_rotor
-INCBIN "build/rotor.exo"
+INCBIN "build/anim_rotor.exo"
 .bank2_end
 
 SAVE "build/BANK2", bank2_start, bank2_end, bank2_start

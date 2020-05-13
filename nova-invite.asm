@@ -725,6 +725,8 @@ include "src/anims.asm"
 include "src/special_fx.asm"
 .fx_screen_ctrl
 include "src/screen_ctrl.asm"
+.fx_font
+include "src/font_plot.asm"
 .fx_end
 
 \ ******************************************************************
@@ -760,16 +762,16 @@ include "src/anims_data.asm"
 
 PAGE_ALIGN
 .reloc_from_start
-MOD15_MAX = 240
-.reloc_mod15_plus1_asl4_table         ; could be PAGE_ALIGN'd
+MOD15_MAX = 240                     ; could be reduced to 30?
+.reloc_mod15_plus1_asl4_table
 {
     FOR n,0,255,1
     EQUB ((n MOD 15)+1) << 4
     NEXT
 }
 
-PING_PONG_MAX = 224
-.reloc_ping_pong_table                ; could be PAGE_ALIGN'd
+PING_PONG_MAX = 224                 ; could be reduced to 56?
+.reloc_ping_pong_table
 {
     FOR n,0,255,1
     a = n MOD 28
@@ -887,7 +889,8 @@ PRINT "FX size = ", ~fx_end-fx_start
 PRINT "FX SIZE (fx_tracker) =", ~(fx_anims-fx_start)
 PRINT "FX SIZE (anims) =", ~(fx_special_fx-fx_anims)
 PRINT "FX SIZE (special_fx) =", ~(fx_screen_ctrl-fx_special_fx)
-PRINT "FX SIZE (screen_ctrl) =", ~(fx_end-fx_screen_ctrl)
+PRINT "FX SIZE (screen_ctrl) =", ~(fx_font-fx_screen_ctrl)
+PRINT "FX SIZE (font_plot) =", ~(fx_end-fx_font)
 PRINT "LIBRARY size =",~library_end-library_start
 PRINT "DATA size =",~data_end-data_start
 PRINT "RELOC size =",~reloc_from_end-reloc_from_start
@@ -1001,6 +1004,10 @@ INCBIN "build/anim_dbars.exo"
 INCBIN "build/anim_vupal.exo"
 .special_fx_data_end
 
+.font_data
+INCBIN "build/font16.bin"
+.font_data_end
+
 .debug_start
 include "src/debug_tracker.asm"
 include "lib/debug_mode4.asm"
@@ -1035,6 +1042,7 @@ PRINT "BANK 3"
 PRINT "------"
 PRINT "MUSIC size =", ~music_end-music_start
 PRINT "SPECIAL FX DATA size =", ~special_fx_data_end-special_fx_data_start
+PRINT "FONT DATA size =", ~font_data_end-font_data
 PRINT "DEBUG CODE size =",~debug_end-debug_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%

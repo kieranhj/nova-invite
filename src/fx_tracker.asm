@@ -14,7 +14,7 @@
     EQUW anims_set_ramp,        0               ; c5 yy set anim ramp y = ramp no.
     EQUW anims_set_mode_and_speed, 0            ; c6 xy set anim mode x and speed y
     EQUW anims_trigger,         0               ; c7 xy trigger anim from index x for y frames
-    EQUW do_nothing,            0               ; c8 yy
+    EQUW handle_image,          prepare_text    ; c8 yy write text yy = text block no.
     EQUW do_nothing,            0               ; c9 yy
     EQUW do_nothing,            0               ; cA yy
     EQUW do_nothing,            0               ; cB yy
@@ -388,6 +388,16 @@ ENDMACRO
     lda next_buffer_HI
     sta do_task_load_A+1
     SET_TASK_FN decrunch_anim
+    rts
+}
+
+; A = text block no.
+.prepare_text
+{
+    sta do_task_load_X+1
+    lda next_buffer_HI
+    sta do_task_load_A+1
+    SET_TASK_FN plot_text_block
     rts
 }
 

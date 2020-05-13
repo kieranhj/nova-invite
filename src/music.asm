@@ -5,15 +5,7 @@
 
 .music_code_start
 
-.music_init_tune
-{
-    lda #hi(vgm_stream_buffers)
-    ldx #lo(vgc_data_tune)
-    ldy #hi(vgc_data_tune)
-    sec ; loop
-    jmp vgm_init
-}
-
+IF 0
 .music_silent
 {
 sei								; in case it's playing...
@@ -45,37 +37,16 @@ cpx #8
 bne loop
 rts
 }
+ENDIF
 
 INCLUDE "lib/vgcplayer.asm"
 .music_code_end
 
 .music_data_start
-PAGE_ALIGN
+; no need for VGC data to be page aligned.
 .vgc_data_tune
 INCBIN "build/acid_demo.vgc"
 .music_data_end
-
-\ ******************************************************************
-\ *	Space reserved for runtime buffers not preinitialised
-\ ******************************************************************
-
-.music_bss_start
-
-PAGE_ALIGN
-.vgm_buffer_start
-; reserve space for the vgm decode buffers (8x256 = 2Kb)
-.vgm_stream_buffers
-    skip 256
-    skip 256
-    skip 256
-    skip 256
-    skip 256
-    skip 256
-    skip 256
-    skip 256
-.vgm_buffer_end
-
-.music_bss_end
 
 \ ******************************************************************
 \ *	Memory Info
@@ -86,5 +57,4 @@ PRINT "MUSIC"
 PRINT "------"
 PRINT "CODE size =", ~music_code_end-music_code_start
 PRINT "DATA size =",~music_data_end-music_data_start
-PRINT "BSS size =",~music_bss_end-music_bss_start
 PRINT "------"

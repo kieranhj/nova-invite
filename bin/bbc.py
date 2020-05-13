@@ -192,9 +192,12 @@ transparent.
                             p[1]==transparent_rgb[1] and
                             p[2]==transparent_rgb[2]):
                 if transparent_physical_index is None:
-                    raise ValueError('invalid transparency')
-
-                pidx=transparent_physical_index
+                    if print_warnings:
+                        print>>sys.stderr,'invalid transparency'
+                    pidx=0
+                    #raise ValueError('invalid transparency')
+                else:
+                    pidx=transparent_physical_index
             elif use_fixed_16:
                 pidx=find_closest_fixed(p)
                 if pidx is None:

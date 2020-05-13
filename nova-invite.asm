@@ -261,6 +261,12 @@ GUARD screen3_addr + RELOC_SPACE
         ldy #HI(music_filename)
         lda #HI(&8000)
         jsr disksys_load_file
+
+        lda #hi(vgm_stream_buffers)
+        ldx #lo(vgc_data_tune)
+        ldy #hi(vgc_data_tune)
+        sec ; loop
+        jsr vgm_init
     }
 
     \\ Load Banks
@@ -403,7 +409,6 @@ GUARD screen3_addr + RELOC_SPACE
 
     \\ Start music player
     {
-        MUSIC_JUMP_INIT_TUNE
         inc music_enabled
     }
 
@@ -981,6 +986,26 @@ include "lib/debug_mode4.asm"
 .debug_end
 
 .bank3_end
+
+\ ******************************************************************
+\ *	Space reserved for runtime buffers not preinitialised
+\ ******************************************************************
+
+.music_bss_start
+PAGE_ALIGN
+.vgm_buffer_start
+; reserve space for the vgm decode buffers (8x256 = 2Kb)
+.vgm_stream_buffers
+    skip 256
+    skip 256
+    skip 256
+    skip 256
+    skip 256
+    skip 256
+    skip 256
+    skip 256
+.vgm_buffer_end
+.music_bss_end
 
 SAVE "build/MUSIC", bank3_start, bank3_end, bank3_start
 

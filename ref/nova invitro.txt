@@ -316,7 +316,31 @@ TODO
     - Animation trigger: Start at index Y and play N frames and end on black. In addition to existing mode / speed command. DONE
 
 12/5/20
-    - Need to sort out SWRAM slot choices for non-Master hw
+    - Need to sort out SWRAM slot choices for non-Master hw - DONE
     - Can we squeeze any more RAM usage?
     - Do we really need the third screen buffer?
+    - Could make this Master only?
 
+Memory Map
+&200 - &300 = Left to OS
+&400 - &D00 = Events (currently using <1 page)
+&D00 = Left to OS
+&E00 - &1100 = Relocated data
+&1100 - &2000 = Code inc. FX code plus small data
+&2000 - &8000 = 3x screen buffers (only 1x used)
+
+Bank 0 = Images
+Free = &800
+
+Bank 1 = Anims
+Free = &300
+
+Bank 2 = Anims
+Free = &700
+
+Bank 3 = Music
+Music data ~= 8K
+Music code =
+Music buffers = 2K
+Debug Code = ~3 pages
+Free = 4K

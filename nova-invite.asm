@@ -1005,7 +1005,7 @@ INCBIN "build/anim_vupal.exo"
 .special_fx_data_end
 
 .font_data
-INCBIN "build/font16.bin"
+INCBIN "build/font24x36_rle.bin"
 .font_data_end
 
 .text_block_start

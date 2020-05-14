@@ -13,11 +13,10 @@ font_text_index = temp+2
 font_scr_base = temp+3
 font_textptr = temp+4
 
-; A = ASCII
+; A = glyph no.
 ; Plots at writeptr, only at character address alignment
 .font_plot_glyph
 {
-    sta readptr
     IF _DEBUG
     {
         cmp #FONT_MAX_GLYPHS
@@ -27,22 +26,13 @@ font_textptr = temp+4
     }
     ENDIF
 
-    lda #0
-    sta readptr+1
-    
-    \\ Multiply by 32 - could be a 120 byte table obvs
+    \\ Start of font data contains own table of offsets per gylph.
+    asl a:tax
     clc
-    rol readptr:rol readptr+1
-    rol readptr:rol readptr+1
-    rol readptr:rol readptr+1
-    rol readptr:rol readptr+1
-    rol readptr:rol readptr+1
-
-    clc
-    lda readptr
+    lda font_data+0, X
     adc #LO(font_data)
     sta readptr
-    lda readptr+1
+    lda font_data+1, X
     adc #HI(font_data)
     sta readptr+1
 
@@ -51,46 +41,79 @@ font_textptr = temp+4
     lda writeptr+1
     sta font_store_writeptr+1
 
-    ldx #FONT_GLYPH_HEIGHT
-    .line_loop
+    \\ Super hack balls!
     ldy #0
     lda (readptr), Y
-    sta (writeptr), Y
-    iny
-    lda (readptr), Y
-    ldy #8
-    sta (writeptr), Y
+    bpl width_24
 
-    clc
-    lda readptr
-    adc #2
-    sta readptr
-    bcc no_carry
-    inc readptr+1
-    .no_carry
+    \\ Width 16
+    lda #3:sta readptr_step+1
+    lda #16:sta writeptr_step+1
+    lda #stop_plot-branch_plot:sta branch_plot-1        ; skip 6 bytes
+    bne rle_loop
 
-    dex
+    .width_24
+    lda #4:sta readptr_step+1
+    lda #24:sta writeptr_step+1
+    lda #keep_plot-branch_plot:sta branch_plot-1        ; skip 0 bytes
+
+    \\ RLE font
+    .rle_loop
+    ldy #0
+    lda (readptr), Y    ; negative means end of data.
+    cmp #255
     beq done_loop
+    and #&7f            ; remove top bit
+    tax                 ; first byte is number of repeats.
 
+    .line_loop
+    \\ Fixed widht of 24
+    ldy #1:lda (readptr), Y
+    ldy #0:sta (writeptr), Y
+    ldy #2:lda (readptr), Y
+    ldy #8:sta (writeptr), Y
+    ldy #3
+    bne stop_plot
+    .branch_plot
+    .keep_plot
+    lda (readptr), Y
+    ldy #16:sta (writeptr), Y
+    .stop_plot
+
+    \\ Next line on screen
     lda writeptr
     and #7
     cmp #7
     beq next_row
 
     inc writeptr
-    bne line_loop
+    bne next_line
 
     .next_row
     lda writeptr
     and #&f8
     sta writeptr
     inc writeptr+1
+
+    .next_line
+    dex
     bne line_loop
-  
+
+    clc
+    lda readptr
+    .readptr_step
+    adc #4
+    sta readptr
+    bcc no_carry
+    inc readptr+1
+    .no_carry
+    jmp rle_loop
+
     .done_loop
     clc
     lda font_store_writeptr
-    adc #16
+    .writeptr_step
+    adc #24
     sta writeptr
     lda font_store_writeptr+1
     adc #0

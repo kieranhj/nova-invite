@@ -108,6 +108,21 @@ def main(options):
         assert y==0 or len(bbc_lidxs[y])==len(bbc_lidxs[y-1])
         assert len(bbc_mask[y])==len(image[y])
 
+    glyph_widths=[]
+    for sx in range(0,len(bbc_lidxs[0]),options.glyph_dim[0]):
+        if sx+options.glyph_dim[0] > len(bbc_lidxs[0]):
+            break
+        
+        w=options.glyph_dim[0]
+        for x in range(0,w):
+            if image[0][sx+x]==-1:
+                w=x+1
+                break
+
+        glyph_widths.append(w)
+    
+    print glyph_widths
+
     pixel_data=[]
     data_offsets=[]
     glyphs=0
@@ -125,7 +140,7 @@ def main(options):
         # Saved as a line of bytes, not in screen format
         for y in range(0,options.glyph_dim[1]):
             pixel_line=[]
-            for x in range(0,options.glyph_dim[0],pixels_per_byte):
+            for x in range(0,glyph_widths[glyphs],pixels_per_byte):
                 assert y<len(bbc_lidxs)
                 assert sx+x<len(bbc_lidxs[y]),(sx,x,len(bbc_lidxs[y]),y)
                 xs=bbc_lidxs[y][sx+x:sx+x+pixels_per_byte]
@@ -137,7 +152,12 @@ def main(options):
                     dupes+=1
                 else:
                     if dupes > 0:
-                        pixel_data.append(dupes)
+                        # Hack balls!
+                        if glyph_widths[glyphs] < options.glyph_dim[0]:
+                            pixel_data.append(dupes | 0x80)
+                        else:
+                            pixel_data.append(dupes)
+
                         pixel_data.extend(existing_line)
                     existing_line=pixel_line
                     dupes=1
@@ -148,7 +168,10 @@ def main(options):
         if options.rle:
             # But only if not blanks.
             if sum(existing_line) != 0:
-                pixel_data.append(dupes)
+                if glyph_widths[glyphs] < options.glyph_dim[0]:
+                    pixel_data.append(dupes | 0x80)
+                else:
+                    pixel_data.append(dupes)
                 pixel_data.extend(existing_line)
 
             # Mark end of data.

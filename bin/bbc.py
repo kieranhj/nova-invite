@@ -194,7 +194,7 @@ transparent.
                 if transparent_physical_index is None:
                     if print_warnings:
                         print>>sys.stderr,'invalid transparency'
-                    pidx=0
+                    pidx=-1
                     #raise ValueError('invalid transparency')
                 else:
                     pidx=transparent_physical_index

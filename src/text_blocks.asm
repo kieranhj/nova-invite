@@ -5,7 +5,7 @@
 
 .text_block_table
 {
-    EQUW text_block_credits
+    EQUW text_block_test
     EQUW text_block_greetz
     EQUW 0
     EQUW 0
@@ -22,6 +22,16 @@
     EQUW 0
     EQUW 0
 }
+
+.text_block_test
+EQUS 12; cls
+;             "|--------|"
+EQUS 31,0,0,  "!#$&()*./-"
+EQUS 31,0,5,  "0123456789"
+EQUS 31,0,10, "ABCDEFGHIJ"
+EQUS 31,0,15, "KLMNOPQRST"
+EQUS 31,0,20, "UVWXYZ"
+EQUS 0
 
 .text_block_credits
 EQUS 12; cls

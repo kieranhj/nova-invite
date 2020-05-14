@@ -41,11 +41,29 @@ font_textptr = temp+4
     lda writeptr+1
     sta font_store_writeptr+1
 
+    \\ Super hack balls!
+    ldy #0
+    lda (readptr), Y
+    bpl width_24
+
+    \\ Width 16
+    lda #3:sta readptr_step+1
+    lda #16:sta writeptr_step+1
+    lda #stop_plot-branch_plot:sta branch_plot-1        ; skip 6 bytes
+    bne rle_loop
+
+    .width_24
+    lda #4:sta readptr_step+1
+    lda #24:sta writeptr_step+1
+    lda #keep_plot-branch_plot:sta branch_plot-1        ; skip 0 bytes
+
     \\ RLE font
     .rle_loop
     ldy #0
     lda (readptr), Y    ; negative means end of data.
-    bmi done_loop       
+    cmp #255
+    beq done_loop
+    and #&7f            ; remove top bit
     tax                 ; first byte is number of repeats.
 
     .line_loop
@@ -54,8 +72,13 @@ font_textptr = temp+4
     ldy #0:sta (writeptr), Y
     ldy #2:lda (readptr), Y
     ldy #8:sta (writeptr), Y
-    ldy #3:lda (readptr), Y
+    ldy #3
+    bne stop_plot
+    .branch_plot
+    .keep_plot
+    lda (readptr), Y
     ldy #16:sta (writeptr), Y
+    .stop_plot
 
     \\ Next line on screen
     lda writeptr
@@ -78,6 +101,7 @@ font_textptr = temp+4
 
     clc
     lda readptr
+    .readptr_step
     adc #4
     sta readptr
     bcc no_carry
@@ -88,6 +112,7 @@ font_textptr = temp+4
     .done_loop
     clc
     lda font_store_writeptr
+    .writeptr_step
     adc #24
     sta writeptr
     lda font_store_writeptr+1

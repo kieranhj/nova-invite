@@ -4,9 +4,12 @@ import png,argparse,sys,math,bbc
 ##########################################################################
 ##########################################################################
 
-def save_file(data,path,options):
+def save_file(header,data,path,options):
     if path is not None:
         with open(path,'wb') as f:
+            if header is not None:
+                f.write(''.join([chr(x) for x in header]))
+
             f.write(''.join([chr(x) for x in data]))
 
         if options.inf:
@@ -106,27 +109,66 @@ def main(options):
         assert len(bbc_mask[y])==len(image[y])
 
     pixel_data=[]
+    data_offsets=[]
     glyphs=0
     assert len(bbc_lidxs)==len(bbc_mask)
     # Arranged as single line of glyphs, not a grid
     for sx in range(0,len(bbc_lidxs[0]),options.glyph_dim[0]):
-        if sx+options.glyph_dim[0] >= len(bbc_lidxs[0]):
+        if sx+options.glyph_dim[0] > len(bbc_lidxs[0]):
             break
+        
+        if options.rle:
+            dupes=0
+            existing_line=[]
+            data_offsets.append(len(pixel_data))
+
         # Saved as a line of bytes, not in screen format
         for y in range(0,options.glyph_dim[1]):
+            pixel_line=[]
             for x in range(0,options.glyph_dim[0],pixels_per_byte):
                 assert y<len(bbc_lidxs)
                 assert sx+x<len(bbc_lidxs[y]),(sx,x,len(bbc_lidxs[y]),y)
                 xs=bbc_lidxs[y][sx+x:sx+x+pixels_per_byte]
                 assert len(xs)==pixels_per_byte,(xs,pixels_per_byte,sx,x,y)
-                pixel_data.append(pack(xs))
+                pixel_line.append(pack(xs))
+
+            if options.rle:
+                if existing_line==pixel_line:
+                    dupes+=1
+                else:
+                    if dupes > 0:
+                        pixel_data.append(dupes)
+                        pixel_data.extend(existing_line)
+                    existing_line=pixel_line
+                    dupes=1
+            else:
+                pixel_data.extend(pixel_line)
+
+        # Flush last line.
+        if options.rle:
+            # But only if not blanks.
+            if sum(existing_line) != 0:
+                pixel_data.append(dupes)
+                pixel_data.extend(existing_line)
+
+            # Mark end of data.
+            pixel_data.append(255)
+
         glyphs+=1
         if options.max_glyphs is not None and glyphs>=options.max_glyphs:
             break
 
     print '%d glyphs at %d bytes BBC data'%(glyphs,len(pixel_data))
 
-    save_file(pixel_data,options.output_path,options)
+    header_data = []
+    if options.rle:
+        for offset in data_offsets:
+            a=offset + glyphs*2
+            header_data.append(a % 256)
+            header_data.append(a / 256)
+        print 'plus %d bytes header'%(len(header_data))
+
+    save_file(header_data,pixel_data,options.output_path,options)
 
 ##########################################################################
 ##########################################################################
@@ -158,6 +200,7 @@ if __name__=='__main__':
                         default=None,
                         type=int,
                         help='maximum number of glyphs to save')
+    parser.add_argument('--rle',action='store_true',help='use simple per-line RLE encoding to save space')
     parser.add_argument('-q','--quiet',action='store_true',help='don\'t print warnings')
     parser.add_argument('input_path',metavar='FILE',help='load PNG data fro %(metavar)s')
     parser.add_argument('mode',type=int,help='screen mode')

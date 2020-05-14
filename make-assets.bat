@@ -36,6 +36,7 @@ python bin/png2bbc.py --quiet --fixed-16 -o build/anim_square.bin "./data/anims/
 python bin/png2bbc.py --quiet --fixed-16 -o build/anim_kaleidoscope.bin "./data/anims/palette_shift_08_64x256 (kaleidoscope).png" 2 
 
 python bin\png2bbcfont.py --transparent-rgb 255 0 0 --glyph-dim 16 16 -o build\font16.bin --quiet --max-glyphs 59 data\fonts\16_x_16_1_col.png 4
+python bin\png2bbcfont.py --transparent-rgb 255 0 0 --glyph-dim 24 36 -o build\font24x36_rle.bin --rle --quiet data\fonts\24_x_36_1_col_v02.png 4
 
 bin\exomizer.exe level -M256 build/image_n.bin@0x0000 -o build/image_n.exo
 bin\exomizer.exe level -M256 build/image_o.bin@0x0000 -o build/image_o.exo

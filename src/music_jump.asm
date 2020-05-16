@@ -25,7 +25,7 @@ ENDMACRO
 MACRO MUSIC_JUMP_VGM_UPDATE
 {
     SELECT_MUSIC_SLOT
-    jsr vgm_update
+    jsr vgm_poll_player
     RESTORE_SLOT
 }
 ENDMACRO
@@ -33,7 +33,7 @@ ENDMACRO
 MACRO MUSIC_JUMP_SN_RESET
 {
     SELECT_MUSIC_SLOT
-    jsr sn_reset
+    jsr vgm_deinit_player
     RESTORE_SLOT
 }
 ENDMACRO

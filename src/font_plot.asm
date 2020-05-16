@@ -3,6 +3,8 @@
 \ *	FONT PLOTTING
 \ ******************************************************************
 
+SLOT_FONT_AND_TEXT = SLOT_BANK0
+
 FONT_MAX_GLYPHS = 59
 FONT_GLYPH_WIDTH_BYTES = 2
 FONT_GLYPH_HEIGHT = 16
@@ -131,7 +133,7 @@ font_textptr = temp+4
     sta writeptr
 
     \\ Page in font and text data (safe as this is from main thread)
-    SWRAM_SELECT SLOT_MUSIC
+    SWRAM_SELECT SLOT_FONT_AND_TEXT
 
     txa:asl a:tax 
     lda text_block_table+1, X

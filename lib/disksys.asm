@@ -3,7 +3,7 @@
 ; http://chrisacorns.computinghistory.org.uk/docs/Acorn/Manuals/Acorn_DiscSystemUGI2.pdf
 ; Our SWR loader is 60% faster than *SRLOAD
 
-disksys_loadto_addr = &4000
+disksys_loadto_addr = &2000
 
 .beeb_disksys_start
 

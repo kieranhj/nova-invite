@@ -39,13 +39,14 @@ rts
 }
 ENDIF
 
-INCLUDE "lib/vgcplayer.asm"
+INCLUDE "lib/vgmplayer.asm"
+INCLUDE "lib/exomiser.asm"
 .music_code_end
 
 .music_data_start
 ; no need for VGC data to be page aligned.
 .vgc_data_tune
-INCBIN "build/acid_demo.vgc"
+INCBIN "data/acid_demo.vgm.bin.exo"
 .music_data_end
 
 \ ******************************************************************

@@ -193,7 +193,7 @@ INCLUDE "lib/exo.h.asm"
 
 .irq_section        skip 1
 
-INCLUDE "lib/vgcplayer.h.asm"
+INCLUDE "lib/exomiser.h.asm"
 INCLUDE "src/fx_tracker.h.asm"
 INCLUDE "src/debug_tracker.h.asm"
 
@@ -263,15 +263,6 @@ GUARD screen3_addr + RELOC_SPACE
 	ldy #HI(reloc_to_end - reloc_to_start + &ff)
 	jsr disksys_copy_block
 
-    \\ Load music into SWRAM (if available)
-    {
-        SWRAM_SELECT SLOT_MUSIC
-        ldx #LO(music_filename)
-        ldy #HI(music_filename)
-        lda #HI(&8000)
-        jsr disksys_load_file
-    }
-
     \\ Load Banks
     {
         SWRAM_SELECT SLOT_BANK0
@@ -289,6 +280,23 @@ GUARD screen3_addr + RELOC_SPACE
         SWRAM_SELECT SLOT_BANK2
         ldx #LO(bank2_filename)
         ldy #HI(bank2_filename)
+        lda #HI(&8000)
+        jsr disksys_load_file
+    }
+
+    \\ Load events
+    {
+        ldx #LO(events_filename)
+        ldy #HI(events_filename)
+        lda #HI(event_data)
+        jsr disksys_load_file
+    }
+
+    \\ Load music into SWRAM (if available)
+    {
+        SWRAM_SELECT SLOT_MUSIC
+        ldx #LO(music_filename)
+        ldy #HI(music_filename)
         lda #HI(&8000)
         jsr disksys_load_file
     }
@@ -315,14 +323,6 @@ GUARD screen3_addr + RELOC_SPACE
     inx
     cpx #zp_top
     bne zp_loop
-
-    \\ Load events
-    {
-        ldx #LO(events_filename)
-        ldy #HI(events_filename)
-        lda #HI(event_data)
-        jsr disksys_load_file
-    }
 
     \\ Set MODE w/out using OS.
 
@@ -364,11 +364,10 @@ GUARD screen3_addr + RELOC_SPACE
 
     \\ Init music - has to be here for reload.
     SWRAM_SELECT SLOT_MUSIC
-    lda #hi(vgm_stream_buffers)
     ldx #lo(vgc_data_tune)
     ldy #hi(vgc_data_tune)
     sec ; loop
-    jsr vgm_init
+    jsr vgm_init_stream
 
     \\ This also initiates a preload update.
     jsr events_init
@@ -909,6 +908,20 @@ ORG &8000
 GUARD &C000
 .bank0_start
 include "src/image_assets.asm"
+
+.font_data
+INCBIN "build/font24x36_rle.bin"
+.font_data_end
+
+.text_block_start
+include "src/text_blocks.asm"
+.text_block_end
+
+.debug_start
+include "src/debug_tracker.asm"
+include "lib/debug_mode4.asm"
+.debug_end
+
 .bank0_end
 
 SAVE "build/BANK0", bank0_start, bank0_end, bank0_start
@@ -971,6 +984,16 @@ INCBIN "build/anim_swirl.exo"
 INCBIN "build/anim_tunnel.exo"
 .exo_anims_particl
 INCBIN "build/anim_particl.exo"
+
+.special_fx_data_start
+.exo_anims_hbars
+INCBIN "build/anim_hbars.exo"
+.exo_anims_dbars
+INCBIN "build/anim_dbars.exo"
+.exo_anims_vupal
+INCBIN "build/anim_vupal.exo"
+.special_fx_data_end
+
 .bank2_end
 
 SAVE "build/BANK2", bank2_start, bank2_end, bank2_start
@@ -987,35 +1010,13 @@ PRINT "------"
 \ *	BANK 3: MUSIC
 \ ******************************************************************
 
-CLEAR &8000, &C000
+CLEAR &8000, &E000
 ORG &8000
-GUARD &C000
+GUARD &E000
 .bank3_start
 .music_start
 include "src/music.asm"
 .music_end
-
-.special_fx_data_start
-.exo_anims_hbars
-INCBIN "build/anim_hbars.exo"
-.exo_anims_dbars
-INCBIN "build/anim_dbars.exo"
-.exo_anims_vupal
-INCBIN "build/anim_vupal.exo"
-.special_fx_data_end
-
-.font_data
-INCBIN "build/font24x36_rle.bin"
-.font_data_end
-
-.text_block_start
-include "src/text_blocks.asm"
-.text_block_end
-
-.debug_start
-include "src/debug_tracker.asm"
-include "lib/debug_mode4.asm"
-.debug_end
 
 .bank3_end
 
@@ -1024,19 +1025,6 @@ include "lib/debug_mode4.asm"
 \ ******************************************************************
 
 .music_bss_start
-PAGE_ALIGN
-.vgm_buffer_start
-; reserve space for the vgm decode buffers (8x256 = 2Kb)
-.vgm_stream_buffers
-    skip 256
-    skip 256
-    skip 256
-    skip 256
-    skip 256
-    skip 256
-    skip 256
-    skip 256
-.vgm_buffer_end
 .music_bss_end
 
 SAVE "build/MUSIC", bank3_start, bank3_end, bank3_start

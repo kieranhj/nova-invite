@@ -3,6 +3,8 @@
 \ *	SPECIAL FX
 \ ******************************************************************
 
+SLOT_SPECIAL_FX = SLOT_BANK2
+
 ; A = next screen buffer HI
 ; X = display screen buffer HI
 ; Y = prev screen buffer HI
@@ -204,7 +206,7 @@ quad_writeptr = temp+3
 .prepare_hbars
 {
     pha
-    SWRAM_SELECT SLOT_MUSIC     ; fixed SWRAM! TODO!
+    SWRAM_SELECT SLOT_SPECIAL_FX     ; fixed SWRAM! TODO!
     ldx #LO(exo_anims_hbars)
     ldy #HI(exo_anims_hbars)
     pla; A contains next_buffer_HI
@@ -214,7 +216,7 @@ quad_writeptr = temp+3
 .prepare_dbars
 {
     pha
-    SWRAM_SELECT SLOT_MUSIC     ; fixed SWRAM! TODO!
+    SWRAM_SELECT SLOT_SPECIAL_FX     ; fixed SWRAM! TODO!
     ldx #LO(exo_anims_dbars)
     ldy #HI(exo_anims_dbars)
     pla; A contains next_buffer_HI
@@ -321,7 +323,7 @@ quad_writeptr = temp+3
 ; Y = prev screen buffer HI
 .prepare_vubars
 {
-    SWRAM_SELECT SLOT_MUSIC     ; fixed SWRAM! TODO!
+    SWRAM_SELECT SLOT_SPECIAL_FX     ; fixed SWRAM! TODO!
     ldx #LO(exo_anims_vupal)
     ldy #HI(exo_anims_vupal)
     ; A contains next_buffer_HI
@@ -359,7 +361,7 @@ special_fx_vubars_reg_copy = &A0
 .special_fx_vubars_beat
 {
     jsr set_all_black_palette
-
+IF 0
     \\ TONE3 (noise) doesn't have a HI byte so make one.
     lda VGM_FX_TONE3_LO
     sta VGM_FX_TONE2_HI+1
@@ -439,6 +441,9 @@ ENDIF
     lda #&ff
     sta special_fx_vars+4, X        ; set bar to fade.
     bne loop_continue
+ELSE
+    rts
+ENDIF
 }
 
 ; called per irq

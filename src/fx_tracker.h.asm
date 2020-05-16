@@ -19,6 +19,7 @@
 .preload_id         skip 1
 
 .last_fg_colour     skip 1
+.last_bg_colour     skip 1
 
 .anims_colour_index     skip 1
 .anims_ramp_ptr         skip 2

@@ -309,8 +309,15 @@ ENDMACRO
 .handle_set_colour
 {
     eor #7
+    cmp #&10
+    bcs set_bg
     sta last_fg_colour
     jmp set_mode4_fg_colour
+
+    .set_bg
+    and #&0f
+    sta last_bg_colour
+    jmp set_mode4_bg_colour
 }
 
 .handle_ctrl_code
@@ -325,7 +332,7 @@ ENDMACRO
     CHECK_TASK_NOT_RUNNING
     jsr set_mode_4
     lda last_fg_colour:jsr set_mode4_fg_colour
-    lda #PAL_black:jsr set_mode4_bg_colour
+    lda last_bg_colour:jsr set_mode4_bg_colour
     jsr set_per_frame_do_nothing
     jsr set_per_irq_do_nothing
     jmp display_next_buffer

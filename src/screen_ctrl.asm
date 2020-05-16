@@ -7,7 +7,7 @@
 {
     jsr set_mode_4
     lda last_fg_colour:jsr set_mode4_fg_colour
-    lda #PAL_black:jsr set_mode4_bg_colour
+    lda last_bg_colour:jsr set_mode4_bg_colour
     jsr set_per_frame_do_nothing
     jsr set_per_irq_do_nothing
     jmp display_prev_buffer

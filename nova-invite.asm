@@ -361,6 +361,7 @@ GUARD screen3_addr + RELOC_SPACE
 
     lda &fe44:sta seed
     lda &fe45:sta seed+1
+    lda #PAL_black:sta last_bg_colour
 
     \\ Init music - has to be here for reload.
     SWRAM_SELECT SLOT_MUSIC

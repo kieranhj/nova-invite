@@ -221,34 +221,43 @@ quad_writeptr = temp+3
     jmp decrunch_to_page_A
 }
 
-.handle_hbars
+.set_small_bars_colour
 {
-    CHECK_TASK_NOT_RUNNING
-    jsr set_mode_8
-    jsr set_all_black_palette
-
-    lda #3:sta special_fx_vars+0
-    lda #11:sta special_fx_vars+1
-
-    lda #LO(anims_ramp_hbars1)
+    sec
+    sbc #&0A
+    asl a:tax
+    lda small_bars_ramps+0,X
     sta special_fx_bars_ramp1+1
-    lda #HI(anims_ramp_hbars1)
+    lda small_bars_ramps+1,X
     sta special_fx_bars_ramp1+2
+    rts
 
-    lda #LO(anims_ramp_hbars2)
-    sta special_fx_bars_ramp2+1
-    lda #HI(anims_ramp_hbars2)
-    sta special_fx_bars_ramp2+2
-
-    lda #LO(special_fx_bars_update)
-    sta do_per_frame_fn+1
-    lda #HI(special_fx_bars_update)
-    sta do_per_frame_fn+2
-
-    jmp display_next_buffer
+    .small_bars_ramps
+    EQUW anims_ramp_small_bars1
+    EQUW anims_ramp_small_bars2
+    EQUW anims_ramp_small_bars3
+    EQUW anims_ramp_small_bars4
 }
 
-.handle_dbars
+.set_large_bars_colour
+{
+    sec
+    sbc #&0E
+    asl a:tax
+    lda large_bars_ramps+0,X
+    sta special_fx_bars_ramp2+1
+    lda large_bars_ramps+1,X
+    sta special_fx_bars_ramp2+2
+    rts
+
+    .large_bars_ramps
+    EQUW anims_ramp_large_bars1
+    EQUW anims_ramp_large_bars2
+    EQUW anims_ramp_large_bars3
+    EQUW anims_ramp_large_bars4
+}
+
+.handle_copper_bars
 {
     CHECK_TASK_NOT_RUNNING
     jsr set_mode_8
@@ -257,21 +266,12 @@ quad_writeptr = temp+3
     lda #3:sta special_fx_vars+0
     lda #11:sta special_fx_vars+1
 
-    lda #LO(anims_ramp_dbars1)
-    sta special_fx_bars_ramp1+1
-    lda #HI(anims_ramp_dbars1)
-    sta special_fx_bars_ramp1+2
-
-    lda #LO(anims_ramp_dbars2)
-    sta special_fx_bars_ramp2+1
-    lda #HI(anims_ramp_dbars2)
-    sta special_fx_bars_ramp2+2
-
     lda #LO(special_fx_bars_update)
     sta do_per_frame_fn+1
     lda #HI(special_fx_bars_update)
     sta do_per_frame_fn+2
 
+    jsr set_per_irq_do_nothing
     jmp display_next_buffer
 }
 
@@ -286,7 +286,7 @@ quad_writeptr = temp+3
     adc special_fx_vars+0
     asl a:asl a:asl a:asl a
     .^special_fx_bars_ramp1
-    ora anims_ramp_hbars1, Y
+    ora anims_ramp_small_bars1, Y
     SET_PALETTE_REG
     eor #&80
     SET_PALETTE_REG
@@ -301,7 +301,7 @@ quad_writeptr = temp+3
     adc special_fx_vars+1
     asl a:asl a:asl a:asl a
     .^special_fx_bars_ramp2
-    ora anims_ramp_hbars2, Y
+    ora anims_ramp_large_bars1, Y
     SET_PALETTE_REG
     iny
     cpy #5
@@ -321,10 +321,11 @@ quad_writeptr = temp+3
 ; Y = prev screen buffer HI
 .prepare_vubars
 {
+    PHA
     SWRAM_SELECT SLOT_MUSIC     ; fixed SWRAM! TODO!
     ldx #LO(exo_anims_vupal)
     ldy #HI(exo_anims_vupal)
-    ; A contains next_buffer_HI
+    PLA ; A contains next_buffer_HI
     jmp decrunch_to_page_A
 }
 
@@ -352,6 +353,26 @@ quad_writeptr = temp+3
     bpl loop
 
     jmp display_next_buffer
+}
+
+.set_vubars_colour
+{
+    sec
+    sbc #6
+    asl a
+    tax
+    lda vubars_ramps+0, X
+    sta vubars_read_green+1
+
+    lda vubars_ramps+1, X
+    sta vubars_read_green+2
+    rts
+
+    .vubars_ramps
+    EQUW anims_ramp_vubars_1
+    EQUW anims_ramp_vubars_2
+    EQUW anims_ramp_vubars_3
+    EQUW anims_ramp_vubars_4
 }
 
 special_fx_vubars_reg_copy = &A0
@@ -441,6 +462,23 @@ ENDIF
     bne loop_continue
 }
 
+.vubars_do_pal
+{
+    sta temp+1
+    .green_loop
+    cpx temp
+    bcs done_green
+    lda mult16_table, X
+    .^vubars_read_green
+    ora anims_ramp_vubars_1, Y
+    SET_PALETTE_REG
+    inx
+    cpx temp+1
+    bcc green_loop
+    .done_green
+    rts
+}
+
 ; called per irq
 .special_fx_vubars_update
 {
@@ -449,48 +487,16 @@ ENDIF
     sta temp
 
     ldx #1
-    .green_loop
-    cpx temp
-    bcs done_green
-    lda mult16_table, X
-    ora #PAL_green
-    SET_PALETTE_REG
-    inx
-    cpx #9
-    bcc green_loop
-    .done_green
+    ldy #0
+    lda #9:jsr vubars_do_pal
 
-    .yellow_loop
-    cpx temp
-    bcs done_yellow
-    lda mult16_table, X
-    ora #PAL_yellow
-    SET_PALETTE_REG
-    inx
-    cpx #12
-    bcc yellow_loop
-    .done_yellow
+    iny
+    lda #12:jsr vubars_do_pal
 
-    .red_loop
-    cpx temp
-    bcs done_red
-    lda mult16_table, X
-    ora #PAL_red
-    SET_PALETTE_REG
-    inx
-    cpx #16
-    bcc red_loop
-    .done_red
+    iny
+    lda #16:jsr vubars_do_pal
 
-    .black_loop
-    cpx #16
-    bcs done_black
-    lda mult16_table, X
-    ora #PAL_black
-    SET_PALETTE_REG
-    inx
-    bne black_loop
-    .done_black
-
-    rts
+    iny
+    lda #16:sta temp
+    jmp vubars_do_pal
 }

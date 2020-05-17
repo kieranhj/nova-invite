@@ -68,19 +68,21 @@
     EQUW prepare_static,        handle_static       ; c400
     EQUW prepare_quad_image,    handle_image        ; c401
     EQUW prepare_quad_anim,     display_next_buffer_as_mode8         ; c402
-    EQUW prepare_hbars,         handle_hbars        ; c403
-    EQUW prepare_dbars,         handle_dbars        ; c404
+    EQUW prepare_hbars,         handle_copper_bars  ; c403
+    EQUW prepare_dbars,         handle_copper_bars  ; c404
     EQUW prepare_vubars,        handle_vubars       ; c405
-    EQUW 0 ,0                                       ; c406
-    EQUW 0 ,0                                       ; c407
-    EQUW 0 ,0                                       ; c408
-    EQUW 0 ,0                                       ; c409
-    EQUW 0 ,0                                       ; c40A
-    EQUW 0 ,0                                       ; c40B
-    EQUW 0 ,0                                       ; c40C
-    EQUW 0 ,0                                       ; c40D
-    EQUW 0 ,0                                       ; c40E
-    EQUW 0 ,0                                       ; c40F
+    EQUW 0,                     set_vubars_colour   ; c406
+    EQUW 0,                     set_vubars_colour   ; c407
+    EQUW 0,                     set_vubars_colour   ; c408
+    EQUW 0,                     set_vubars_colour   ; c409
+    EQUW 0,                     set_small_bars_colour   ; c40A
+    EQUW 0,                     set_small_bars_colour   ; c40B
+    EQUW 0,                     set_small_bars_colour   ; c40C
+    EQUW 0,                     set_small_bars_colour   ; c40D
+    EQUW 0,                     set_large_bars_colour   ; c40E
+    EQUW 0,                     set_large_bars_colour   ; c40F
+    EQUW 0,                     set_large_bars_colour   ; c410
+    EQUW 0,                     set_large_bars_colour   ; c411
 }
 
 .anims_ramp_table
@@ -101,7 +103,7 @@
     EQUW anims_ramp_burst, 4        ; c50C
     EQUW anims_ramp_cool, 4         ; c50D
     EQUW anims_ramp_swirl, 4        ; c50E
-    EQUW 0, 0                       ; c50F
+    EQUW 0, 0   ; c50F
 }
 
 .anims_mode_table

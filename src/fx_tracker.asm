@@ -470,6 +470,8 @@ ENDMACRO
 ; A = fx no.
 .handle_special_fx
 {
+    sta load_fx_no+1
+
     asl a:asl a:tax 
     lda special_fx_table+3, X
     IF _DEBUG
@@ -484,8 +486,7 @@ ENDMACRO
     lda special_fx_table+2, X
     sta do_fx_jmp+1
 
-    jsr set_per_irq_do_nothing
-
+    .load_fx_no
     lda #0
     .do_fx_jmp
     jmp &FFFF
@@ -496,14 +497,8 @@ ENDMACRO
 {
     asl a:asl a:tax 
     lda special_fx_table+1, X
-    IF _DEBUG
-    {
-        bne ok
-        DEBUG_ERROR debug_msg_error_special
-        rts
-        .ok
-    }
-    ENDIF
+    beq no_preload
+
     sta do_task_jmp+2
     lda special_fx_table+0, X
     sta do_task_jmp+1
@@ -515,6 +510,8 @@ ENDMACRO
     lda prev_buffer_HI
     sta do_task_load_Y+1
     REQUEST_TASK
+
+    .no_preload
     rts
 }
 

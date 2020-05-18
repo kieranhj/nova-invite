@@ -6,17 +6,17 @@
 .event_fn_table
 {
 \\ Event handler and preload fn per event type &xy
-    EQUW handle_screen,         0               ; c0 yy screen control y = command
-    EQUW handle_image,          preload_image   ; c1 yy set image y = image no.
-    EQUW handle_anim,           preload_anim    ; c2 yy set anim y = anim no.
-    EQUW handle_set_colour,     0               ; c3 yy set fg colour y = colour no.
-    EQUW handle_special_fx, preload_special_fx  ; c4 yy set special Fx y = fx no.
-    EQUW anims_set_ramp,        0               ; c5 yy set anim ramp y = ramp no.
-    EQUW anims_set_mode_and_speed, 0            ; c6 xy set anim mode x and speed y
-    EQUW anims_trigger,         0               ; c7 xy trigger anim from index x for y frames
-    EQUW handle_image,          prepare_text    ; c8 yy write text yy = text block no.
-;    EQUW do_nothing,            0               ; c9 yy
-;    EQUW do_nothing,            0               ; cA yy
+    EQUW handle_screen,             0                   ; c0 yy screen control y = command
+    EQUW handle_image,              preload_image       ; c1 yy set image y = image no.
+    EQUW handle_anim,               preload_anim        ; c2 yy set anim y = anim no.
+    EQUW handle_set_colour,         0                   ; c3 yy set fg colour y = colour no.
+    EQUW handle_special_fx,         preload_special_fx  ; c4 yy set special Fx y = fx no.
+    EQUW anims_set_ramp,            0                   ; c5 yy set anim ramp y = ramp no.
+    EQUW anims_set_mode_and_speed,  0                   ; c6 xy set anim mode x and speed y
+    EQUW anims_trigger,             0                   ; c7 xy trigger anim from index x for y frames
+    EQUW handle_image,              prepare_text        ; c8 yy write text yy = text block no.
+    EQUW rotate_display_buffers,    preload_image       ; c9 yy load image to prev y = image no.
+    EQUW rotate_display_buffers,    preload_anim        ; cA yy load anim to prev y = anim no.
 ;    EQUW do_nothing,            0               ; cB yy
 ;    EQUW do_nothing,            0               ; cC yy
 ;    EQUW do_nothing,            0               ; cD yy

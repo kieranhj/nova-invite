@@ -600,15 +600,18 @@ GUARD screen3_addr + RELOC_SPACE
     ; set CRTC R12 (display HI)
     ldx #12:stx &fe00
     lda next_buffer_HI
-    pha
     lsr a:lsr a:lsr a
     sta &fe01
+}
+\\ Fall through!
+.rotate_display_buffers
+{
+    ldx next_buffer_HI
     lda prev_buffer_HI
     sta next_buffer_HI
     lda display_buffer_HI
     sta prev_buffer_HI
-    pla
-    sta display_buffer_HI
+    stx display_buffer_HI
     rts
 }
 

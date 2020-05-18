@@ -35,12 +35,13 @@
     EQUW exo_image_bs_logo2         ; c107
     EQUW exo_image_tmt_logo         ; c108
     EQUW 0                          ; c109
-    EQUW exo_slide_dates            ; c10A
+    EQUW 0                          ; c10A
     EQUW exo_slide_chips            ; c10B
     EQUW exo_slide_patarty          ; c10C
     EQUW exo_image_bbc_owl          ; c10D
-    EQUW 0                          ; c10E
-    EQUW 0                          ; c10F
+    EQUW exo_slide_beach            ; c10E
+    EQUW exo_slide_floppy           ; c10F
+    EQUW exo_slide_djsets           ; c110
 }
 
 .anims_table

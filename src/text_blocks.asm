@@ -5,22 +5,17 @@
 
 .text_block_table
 {
-    EQUW text_block_test2
-    EQUW text_block_credits
-    EQUW text_block_greetz
-    EQUW text_block_greetz2
-    EQUW 0
-    EQUW 0
-    EQUW 0
-    EQUW 0
-    EQUW 0
-    EQUW 0
-    EQUW 0
-    EQUW 0
-    EQUW 0
-    EQUW 0
-    EQUW 0
-    EQUW 0
+    EQUW text_block_test            ; c800
+    EQUW text_block_credits         ; c801
+    EQUW text_block_greetz          ; c802
+    EQUW text_block_greetz2         ; c803
+    EQUW text_slide_beach           ; c804
+    EQUW text_slide_chips           ; c805
+    EQUW text_slide_floppy          ; c806
+    EQUW text_slide_djsets          ; c807
+    EQUW text_slide_patarty         ; c808
+    EQUW text_slide_bitshifters     ; c809
+    EQUW text_slide_dates           ; c80A
 }
 
 .text_block_test
@@ -32,13 +27,6 @@ EQUS 31,0,10, "ABCDEFGHIJ"
 EQUS 31,0,15, "KLMNOPQRST"
 EQUS 31,0,20, "UVWXYZ"
 EQUS 31,0,25, "BITSHIFTERS"
-EQUS 0
-
-.text_block_test2
-EQUS 22, &0B    ; chips!
-;             "|--------|"
-EQUS 31,0,14,  "FISH &"
-EQUS 31,0,18,  "CHIPS!"
 EQUS 0
 
 .text_block_credits
@@ -72,4 +60,53 @@ EQUS 31,0,10,"RIFT"
 EQUS 31,0,15,"SLIPSTREAM"
 EQUS 31,0,20,"YM ROCKERZ"
 EQUS 31,0,25,"INV*PHASE"
+EQUS 0
+
+.text_slide_beach
+EQUS 22, &0E            ; beach
+;            "|--------|"
+EQUS 31,3,1, "BEACH FUN"
+EQUS 31,6,27,"BONFIRE"
+EQUS 0
+
+.text_slide_chips
+EQUS 22, &0B            ; chips
+;            "|--------|"
+EQUS 31,3,0, "CHIP SHOP"
+EQUS 31,3,27,"BIG QUEUE"
+EQUS 0
+
+.text_slide_floppy
+EQUS 22, &0F            ; floppy
+;            "|--------|"
+EQUS 31,1,0, "FLOPPY TOSS"
+EQUS 31,2,27,"FREE DISKS!"
+EQUS 0
+
+.text_slide_djsets
+EQUS 22, &10            ; djsets
+;            "|--------|"
+EQUS 31,6,0, "DJ SETS"
+EQUS 31,3,27,"CHIPTUNES"
+EQUS 0
+
+.text_slide_patarty
+EQUS 22, &0C            ; patarty
+;            "|--------|"
+EQUS 31,5,0, "PATARTY"
+EQUS 31,8,27,"PARTY"
+EQUS 0
+
+.text_slide_bitshifters
+EQUS 22, &07            ; bitshifters flux
+;            "|--------|"
+EQUS 31,0,0, "BITSHIFTERS"
+EQUS 31,0,27,"BITSHIFTERS"
+EQUS 0
+
+.text_slide_dates
+EQUS 22, &04            ; NOVA
+;            "|--------|"
+EQUS 31,15,7,"ONLINE"
+EQUS 31,4,24,"19-21 JUNE"
 EQUS 0

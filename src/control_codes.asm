@@ -9,18 +9,18 @@
     EQUW show_screen                ; c001
     EQUW swap_to_prev_screen_image  ; c002
     EQUW swap_to_prev_screen_anim   ; c003
-    EQUW 0                          ; c004
-    EQUW 0                          ; c005
-    EQUW 0                          ; c006
-    EQUW 0                          ; c007
-    EQUW 0                          ; c008
-    EQUW 0                          ; c009
-    EQUW 0                          ; c00A
-    EQUW 0                          ; c00B
-    EQUW 0                          ; c00C
-    EQUW 0                          ; c00D
-    EQUW 0                          ; c00E
-    EQUW 0                          ; c00F
+;    EQUW 0                          ; c004
+;    EQUW 0                          ; c005
+;    EQUW 0                          ; c006
+;    EQUW 0                          ; c007
+;    EQUW 0                          ; c008
+;    EQUW 0                          ; c009
+;    EQUW 0                          ; c00A
+;    EQUW 0                          ; c00B
+;    EQUW 0                          ; c00C
+;    EQUW 0                          ; c00D
+;    EQUW 0                          ; c00E
+;    EQUW 0                          ; c00F
 }
 
 .image_table
@@ -116,14 +116,14 @@
     EQUW anim_oneshot_backwards, 0  ; c64y
     EQUW anim_ping_pong, &FF        ; c65y
     EQUW anim_random, &FF           ; c66y
-    EQUW 0, 0                       ; c67y
-    EQUW 0, 0                       ; c68y
-    EQUW 0, 0                       ; c69y
-    EQUW 0, 0                       ; c6Ay
-    EQUW 0, 0                       ; c6By
-    EQUW 0, 0                       ; c6Cy
-    EQUW 0, 0                       ; c6Dy
-    EQUW 0, 0                       ; c6Ey
-    EQUW 0, 0                       ; c6Fy
+;    EQUW 0, 0                       ; c67y
+;    EQUW 0, 0                       ; c68y
+;    EQUW 0, 0                       ; c69y
+;    EQUW 0, 0                       ; c6Ay
+;    EQUW 0, 0                       ; c6By
+;    EQUW 0, 0                       ; c6Cy
+;    EQUW 0, 0                       ; c6Dy
+;    EQUW 0, 0                       ; c6Ey
+;    EQUW 0, 0                       ; c6Fy
 }
 

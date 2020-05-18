@@ -112,8 +112,9 @@
 }
 
 .set_all_black_palette
-{
     lda #PAL_black
+.set_all__palette
+{
     .loop
     SET_PALETTE_REG
     clc

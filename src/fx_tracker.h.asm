@@ -21,6 +21,9 @@
 .last_fg_colour     skip 1
 .last_bg_colour     skip 1
 
+.static_fg_colour   skip 1
+.static_bg_colour   skip 1
+
 .anims_colour_index     skip 1
 .anims_ramp_ptr         skip 2
 .anims_ramp_length      skip 1

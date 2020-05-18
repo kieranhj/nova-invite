@@ -344,3 +344,25 @@ Music code =
 Music buffers = 2K
 Debug Code = ~3 pages
 Free = 4K
+
+Pre-mortem thoughts!
+- It would be helpful for FX to be able to store/restore their own context to remove the need for some commands to have to specify image/anim/etc.
+- Confusing to the author that some FX have 'special status', just want to be able to swap between them at will.
+- Running out of RAM, need to be able to place FX code & data in SWRAM easily.
+- All FX need to be hermetic.
+
+Silent preload?
+Enough time to preload 2 anims during long static and want to be able to swap between them rapidly.
+0: prev 1: static image 2: loading anim <- enough time to load 2 anims
+0: next buffer 1: prev image 2: displayed anim <- not enough time to load 2nd anim
+
+0: prev 1: static image 2: next
+0: silent preload 1: static image 2: next
+0: silent preload 1: static image 2: loading next
+0: next 1: prev image 2: displayed <- wrong as want to dump the prev image in favour of silent preload
+
+0: prev 1: static image 2: next
+0: prev 1: static imgee 2: silent preload
+0: next 1: static image 2: preloaded but fake displayed
+0: regular preload: 1: static image 2: fake displayed
+0: displayed 1: next 2: prev

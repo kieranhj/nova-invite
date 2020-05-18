@@ -285,7 +285,7 @@
 .anim_random
 {
     jsr set_all_black_palette
-    ldy #1
+    ldy #1  ; why 1?
     .loop
     RND16
     tax

@@ -309,15 +309,32 @@ ENDMACRO
 .handle_set_colour
 {
     eor #7
-    cmp #&10
-    bcs set_bg
+    tax
+    and #&0f
+    cpx #&10
+    bcs not_fg
+    \\ Image foreground colour
     sta last_fg_colour
     jmp set_mode4_fg_colour
 
-    .set_bg
-    and #&0f
+    .not_fg
+    cpx #&20
+    bcs not_bg
+    \\ Image background colour
     sta last_bg_colour
     jmp set_mode4_bg_colour
+
+    .not_bg
+    cpx #&30
+    bcs not_static_fg
+    \\ Static foreground colour
+    sta static_fg_colour
+    rts
+
+    .not_static_fg
+    \\ Static background colour
+    sta static_bg_colour
+    rts
 }
 
 .handle_ctrl_code

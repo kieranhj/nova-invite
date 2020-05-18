@@ -28,14 +28,40 @@
 
 .handle_static
 {
-    lda #&0B            ; anim_ramp_static
-    jsr anims_set_ramp
+    CHECK_TASK_NOT_RUNNING
 
-    lda #&62            ; random mode, speed = 2
-    jsr anims_set_mode_and_speed
+    lda #LO(special_fx_static_update)
+    sta do_per_frame_fn+1
+    lda #HI(special_fx_static_update)
+    sta do_per_frame_fn+2
 
-    lda #0              ; dummy anim no.
-    jmp handle_anim
+    lda #1: sta special_fx_vars+0
+    jmp display_next_buffer_as_mode8
+}
+
+.special_fx_static_update
+{
+    dec special_fx_vars+0
+    bne return
+
+    lda static_bg_colour
+    jsr set_all__palette
+
+    ldy #8              ; static density
+    .loop
+    RND16
+    tax
+    lda mod15_plus1_asl4_table, X
+    ora static_fg_colour
+    SET_PALETTE_REG
+    dey
+    bpl loop
+
+    lda #2              ; speed
+    sta special_fx_vars+0
+
+    .return
+    rts
 }
 
 ; A = next screen buffer HI

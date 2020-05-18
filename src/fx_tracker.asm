@@ -472,9 +472,9 @@ ENDMACRO
     sta do_per_frame_fn+1
     lda #HI(anims_frame_update)
     sta do_per_frame_fn+2
-    lda #1:sta anims_frame_delay    ; do per frame update immediately
 
     .return
+    lda #1:sta anims_frame_delay    ; do per frame update immediately
 }
 \\ Fall through!
 .display_next_buffer_as_mode8

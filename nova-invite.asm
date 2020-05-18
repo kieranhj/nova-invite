@@ -408,7 +408,7 @@ GUARD screen3_addr + RELOC_SPACE
     lda #0:sta debug_paused
     sta debug_msg_no
     lda events_line:sta pause_line
-    lda #1:sta debug_show_status
+    lda #0:sta debug_show_status
     ENDIF
 
     \\ Complete any initial preload task.

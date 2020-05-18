@@ -99,7 +99,7 @@
     EQUW anims_ramp_atom, 5         ; c508
     EQUW anims_ramp_galaxy, 5       ; c509
     EQUW anims_ramp_world, 4        ; c50A
-    EQUW anims_ramp_static, 8       ; c50B
+    EQUW 0, 0   ; c50B
     EQUW anims_ramp_burst, 4        ; c50C
     EQUW anims_ramp_cool, 4         ; c50D
     EQUW anims_ramp_swirl, 4        ; c50E

@@ -5,7 +5,7 @@
 
 .text_block_table
 {
-    EQUW text_block_test
+    EQUW text_block_test2
     EQUW text_block_credits
     EQUW text_block_greetz
     EQUW text_block_greetz2
@@ -32,6 +32,13 @@ EQUS 31,0,10, "ABCDEFGHIJ"
 EQUS 31,0,15, "KLMNOPQRST"
 EQUS 31,0,20, "UVWXYZ"
 EQUS 31,0,25, "BITSHIFTERS"
+EQUS 0
+
+.text_block_test2
+EQUS 22, &0B    ; chips!
+;             "|--------|"
+EQUS 31,0,14,  "FISH &"
+EQUS 31,0,18,  "CHIPS!"
 EQUS 0
 
 .text_block_credits

@@ -15,13 +15,13 @@
     EQUW anims_set_mode_and_speed, 0            ; c6 xy set anim mode x and speed y
     EQUW anims_trigger,         0               ; c7 xy trigger anim from index x for y frames
     EQUW handle_image,          prepare_text    ; c8 yy write text yy = text block no.
-    EQUW do_nothing,            0               ; c9 yy
-    EQUW do_nothing,            0               ; cA yy
-    EQUW do_nothing,            0               ; cB yy
-    EQUW do_nothing,            0               ; cC yy
-    EQUW do_nothing,            0               ; cD yy
-    EQUW do_nothing,            0               ; cE yy
-    EQUW do_nothing,            0               ; cF yy
+;    EQUW do_nothing,            0               ; c9 yy
+;    EQUW do_nothing,            0               ; cA yy
+;    EQUW do_nothing,            0               ; cB yy
+;    EQUW do_nothing,            0               ; cC yy
+;    EQUW do_nothing,            0               ; cD yy
+;    EQUW do_nothing,            0               ; cE yy
+;    EQUW do_nothing,            0               ; cF yy
 }
 
 MACRO EVENTS_SET_ADDRESS_XY

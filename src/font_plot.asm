@@ -182,12 +182,25 @@ font_textptr = temp+4
     sty font_text_index
     bne next_char
 
+    .not_vdu31
+    cmp #22
+    bne not_show_image
+
+    \\ Display image
+    iny:sty font_text_index
+    lda (font_textptr), Y
+    tax
+    lda font_scr_base
+    jsr decrunch_image      ; this is usually a task fn.
+    SWRAM_SELECT SLOT_MUSIC ; so need to restore SWRAM slot after using it
+    jmp next_char
+
     .is_ascii
     ; C=1
     sbc #32
     jsr font_plot_glyph
 
-    .not_vdu31
+    .not_show_image
     .next_char
     ldy font_text_index
     iny

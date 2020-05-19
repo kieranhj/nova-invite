@@ -53,9 +53,14 @@ bin\exomizer.exe level -M256 -c build/image_nova2020.bin@0x0000 -o build/image_n
 rem bin\exomizer.exe level -M256 -c build/image_bs_logo.bin@0x0000 -o build/image_bs_logo.exo
 bin\exomizer.exe level -M256 -c build/image_bs_logo2.bin@0x0000 -o build/image_bs_logo2.exo
 bin\exomizer.exe level -M256 -c build/image_tmt_logo.bin@0x0000 -o build/image_tmt_logo.exo
-bin\exomizer.exe level -M256 -c build/image_tmt_logo2.bin@0x0000 -o build/image_tmt_logo2.exo
+rem bin\exomizer.exe level -M256 -c build/image_tmt_logo2.bin@0x0000 -o build/image_tmt_logo2.exo
 bin\exomizer.exe level -M256 -c build/image_wsm_graf.bin@0x0000 -o build/image_wsm_graf.exo
 bin\exomizer.exe level -M256 -c build/image_bbc_owl.bin@0x0000 -o build/image_bbc_owl.exo
+bin\exomizer.exe level -M256 -c build/image_nova_url.bin@0x0000 -o build/image_nova_url.exo
+bin\exomizer.exe level -M256 -c build/image_atari_bee.bin@0x0000 -o build/image_atari_bee.exo
+bin\exomizer.exe level -M256 -c build/image_half_bee.bin@0x0000 -o build/image_half_bee.exo
+bin\exomizer.exe level -M256 -c build/image_rocka_1.bin@0x0000 -o build/image_rocka_1.exo
+bin\exomizer.exe level -M256 -c build/image_rocka_2.bin@0x0000 -o build/image_rocka_2.exo
 
 rem bin\exomizer.exe level -M256 build/slide_dates.bin@0x0000 -o build/slide_dates.exo
 bin\exomizer.exe level -M256 -c build/slide_beach.bin@0x0000 -o build/slide_beach.exo

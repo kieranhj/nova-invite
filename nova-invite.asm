@@ -983,6 +983,12 @@ INCBIN "build/anim_swirl.exo"
 INCBIN "build/anim_tunnel.exo"
 .exo_anims_particl
 INCBIN "build/anim_particl.exo"
+
+.debug_start
+include "src/debug_tracker.asm"
+include "lib/debug_mode4.asm"
+.debug_end
+
 .bank2_end
 
 SAVE "build/BANK2", bank2_start, bank2_end, bank2_start
@@ -1023,11 +1029,6 @@ INCBIN "build/font24x36_rle.bin"
 .text_block_start
 include "src/text_blocks.asm"
 .text_block_end
-
-.debug_start
-include "src/debug_tracker.asm"
-include "lib/debug_mode4.asm"
-.debug_end
 
 .bank3_end
 
@@ -1073,5 +1074,5 @@ PRINT "------"
 PRINT "EVENTS"
 PRINT "------"
 PRINT "SIZE =", ~event_data_end-event_data
-PRINT "FREE =", ~EVENTS_DATA_MAX-event_data_end
+PRINT "FREE =", ~event_data+EVENTS_DATA_MAX-event_data_end
 PRINT "------"

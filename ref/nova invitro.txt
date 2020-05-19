@@ -370,3 +370,9 @@ Enough time to preload 2 anims during long static and want to be able to swap be
 0: next 1: static image 2: preloaded but fake displayed
 0: regular preload: 1: static image 2: fake displayed
 0: displayed 1: next 2: prev
+
+Last things to do / bugs.
+- Check everything works in non-debug build.
+- Update Simon's conversion scripts. - DONE
+- Remove loading glitch. - DONE
+- Python script to parse events binary.

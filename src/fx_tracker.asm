@@ -343,9 +343,9 @@ ENDMACRO
 
 .handle_set_colour
 {
-    eor #7
     tax
     and #&0f
+    eor #7
     cpx #&10
     bcs not_fg
     \\ Image foreground colour
@@ -367,9 +367,26 @@ ENDMACRO
     rts
 
     .not_static_fg
+    cpx #&40
+    bcs not_static_bg
     \\ Static background colour
     sta static_bg_colour
     rts
+
+    .not_static_bg
+    \\ Special Fx colours
+    eor #7
+    cpx #&50
+    bcs not_vubars
+    jmp set_vubars_colour
+
+    .not_vubars
+    cpx #&60
+    bcs not_small_bars
+    jmp set_small_bars_colour
+
+    .not_small_bars
+    jmp set_large_bars_colour
 }
 
 .handle_ctrl_code

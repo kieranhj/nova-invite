@@ -237,7 +237,7 @@ skip 14
 \ ******************************************************************
 
 ORG &1100
-GUARD &8000;screen3_addr + RELOC_SPACE
+GUARD screen3_addr + RELOC_SPACE
 
 .start
 .main_start

@@ -249,8 +249,6 @@ quad_writeptr = temp+3
 
 .set_small_bars_colour
 {
-    sec
-    sbc #&0A
     asl a:tax
     lda small_bars_ramps+0,X
     sta special_fx_bars_ramp1+1
@@ -267,8 +265,6 @@ quad_writeptr = temp+3
 
 .set_large_bars_colour
 {
-    sec
-    sbc #&0E
     asl a:tax
     lda large_bars_ramps+0,X
     sta special_fx_bars_ramp2+1
@@ -383,10 +379,7 @@ quad_writeptr = temp+3
 
 .set_vubars_colour
 {
-    sec
-    sbc #6
-    asl a
-    tax
+    asl a:tax
     lda vubars_ramps+0, X
     sta vubars_read_green+1
 

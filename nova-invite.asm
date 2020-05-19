@@ -207,6 +207,21 @@ INCLUDE "src/debug_tracker.h.asm"
 .zp_end
 
 \ ******************************************************************
+\ *	TABLES LOADED
+\ ******************************************************************
+
+TABLES_SPACE = &200
+ORG &D00 - TABLES_SPACE
+GUARD &D00
+
+.tables_start
+include "src/control_codes.asm"
+include "src/anims_data.asm"
+.tables_end
+
+SAVE "build/TABLES", tables_start, tables_end
+
+\ ******************************************************************
 \ *	BSS DATA IN LOWER RAM
 \ ******************************************************************
 
@@ -261,6 +276,14 @@ GUARD screen3_addr + RELOC_SPACE
 	ldx #HI(reloc_to_start)
 	ldy #HI(reloc_to_end - reloc_to_start + &ff)
 	jsr disksys_copy_block
+
+    \\ Load tables
+    {
+        ldx #LO(tables_filename)
+        ldy #HI(tables_filename)
+        lda #HI(tables_start)
+        jsr disksys_load_file
+    }
 
     \\ Load music into SWRAM (if available)
     {
@@ -766,14 +789,12 @@ include "lib/disksys.asm"
 
 .data_start
 
+.tables_filename    EQUS "TABLES", 13
 .events_filename    EQUS "EVENTS", 13
 .music_filename     EQUS "MUSIC", 13
 .bank0_filename     EQUS "BANK0", 13
 .bank1_filename     EQUS "BANK1", 13
 .bank2_filename     EQUS "BANK2", 13
-
-include "src/control_codes.asm"
-include "src/anims_data.asm"
 
 .data_end
 
@@ -914,6 +935,7 @@ PRINT "FX SIZE (screen_ctrl) =", ~(fx_font-fx_screen_ctrl)
 PRINT "FX SIZE (font_plot) =", ~(fx_end-fx_font)
 PRINT "LIBRARY size =",~library_end-library_start
 PRINT "DATA size =",~data_end-data_start
+PRINT "TABLES size =",~tables_end-tables_start
 PRINT "RELOC size =",~reloc_from_end-reloc_from_start
 PRINT "BSS size =",~bss_end-bss_start
 PRINT "------"

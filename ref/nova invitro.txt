@@ -375,4 +375,5 @@ Last things to do / bugs.
 - Check everything works in non-debug build.
 - Update Simon's conversion scripts. - DONE
 - Remove loading glitch. - DONE
-- Python script to parse events binary.
+- Python script to parse events binary. - STARTED
+- Check no page boundary crosses in Exo decompressor.

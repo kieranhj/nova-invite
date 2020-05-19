@@ -16,6 +16,7 @@
     EQUW text_slide_patarty         ; c808
     EQUW text_slide_bitshifters     ; c809
     EQUW text_slide_dates           ; c80A
+    EQUW text_slide_firealarm       ; c80B
 }
 
 .text_block_test
@@ -109,4 +110,11 @@ EQUS 22, &04            ; NOVA
 ;            "|--------|"
 EQUS 31,15,7,"ONLINE"
 EQUS 31,4,24,"19-21 JUNE"
+EQUS 0
+
+.text_slide_firealarm
+EQUS 22, &11            ; fire alarm
+;            "|--------|"
+EQUS 31,3,0, "FIRE ALARM"
+EQUS 31,3,27,"[OPTIONAL]"
 EQUS 0

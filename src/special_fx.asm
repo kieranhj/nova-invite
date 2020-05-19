@@ -298,7 +298,7 @@ quad_writeptr = temp+3
     sta do_per_frame_fn+2
 
     jsr set_per_irq_do_nothing
-    jmp display_next_buffer
+    jmp display_next_or_prev_buffer
 }
 
 .special_fx_bars_update
@@ -378,7 +378,7 @@ quad_writeptr = temp+3
     dex
     bpl loop
 
-    jmp display_next_buffer
+    jmp display_next_or_prev_buffer
 }
 
 .set_vubars_colour

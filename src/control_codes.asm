@@ -9,7 +9,7 @@
     EQUW show_screen                ; c001
     EQUW swap_to_prev_screen_image  ; c002
     EQUW swap_to_prev_screen_anim   ; c003
-;    EQUW 0                          ; c004
+    EQUW call_prev_handler          ; c004
 ;    EQUW 0                          ; c005
 ;    EQUW 0                          ; c006
 ;    EQUW 0                          ; c007

@@ -350,6 +350,10 @@ Pre-mortem thoughts!
 - Confusing to the author that some FX have 'special status', just want to be able to swap between them at will.
 - Running out of RAM, need to be able to place FX code & data in SWRAM easily.
 - All FX need to be hermetic.
+- Not clear how long assets take to preload / decompress, would it be possible to parse these at compile time?
+- Preprocess the event track anyway to reduce size.
+- Could preprocess the event track to allocate screen buffers programatically?
+- Debug status bar takes up valuable preloading / preparation time!
 
 Silent preload?
 Enough time to preload 2 anims during long static and want to be able to swap between them rapidly.

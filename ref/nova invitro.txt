@@ -236,7 +236,7 @@ passing in the event data.
 TODO
 ~~~
 - Wrap to 8K?
-- Alternate display & next and keep third buffer for special?
+- Alternate display & next and keep third buffer for special? - DONE
 - Debug info! - DONE
 - Workflow for iteration - hostfs / TubeLink on b2?
   => b2 will do direct disk access, so update the ssd and can reload the file
@@ -285,9 +285,9 @@ BUGS
 
 TODO
 - Screen FX (no preload):
-    - Hide screen / show screen
-    - Swap current with previous image
-    - Swap current with previous anim
+    - Hide screen / show screen - DONE
+    - Swap current with previous image - DONE
+    - Swap current with previous anim - DONE
     - Bounce screen with VADJ?
 - Special FX (with preload):
     - Proper static noise - DONE
@@ -318,7 +318,7 @@ TODO
 12/5/20
     - Need to sort out SWRAM slot choices for non-Master hw - DONE
     - Can we squeeze any more RAM usage?
-    - Do we really need the third screen buffer?
+    - Do we really need the third screen buffer? - YES
     - Could make this Master only?
 
 Memory Map

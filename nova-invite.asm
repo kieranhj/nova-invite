@@ -85,6 +85,12 @@ MACRO SWRAM_SELECT slot
 }
 ENDMACRO
 
+MACRO RESTORE_SLOT
+{
+    pla:sta &f4:sta &fe30
+}
+ENDMACRO
+
 MACRO SET_PALETTE_REG
 IF _DEBUG_STATUS_BAR
 {
@@ -204,14 +210,6 @@ INCLUDE "src/debug_tracker.h.asm"
 \ *	BSS DATA IN LOWER RAM
 \ ******************************************************************
 
-EVENTS_DATA_MAX = &900
-
-ORG &400
-GUARD &400 + EVENTS_DATA_MAX
-.event_data
-incbin "build/events.bin"
-.event_data_end
-
 RELOC_SPACE = &300
 ORG &E00
 GUARD &E00 + RELOC_SPACE - 1
@@ -319,6 +317,9 @@ GUARD screen3_addr + RELOC_SPACE
 
     \\ Load events
     {
+        \\ Ensure HAZEL RAM is writeable.
+        LDA &FE34:ORA #&8:STA &FE34
+
         ldx #LO(events_filename)
         ldy #HI(events_filename)
         lda #HI(event_data)
@@ -461,7 +462,7 @@ GUARD screen3_addr + RELOC_SPACE
     LDA old_irqv+1:STA IRQ1V+1	; set interrupt handler
     CLI
 
-    MUSIC_JUMP_SN_RESET
+    JMP MUSIC_JUMP_SN_RESET
 }
 
 .irq_handler
@@ -722,6 +723,14 @@ IF _DEBUG_STATUS_BAR
     rts
 }
 ENDIF
+
+.MUSIC_JUMP_SN_RESET
+{
+    SELECT_MUSIC_SLOT
+    jsr sn_reset
+    RESTORE_SLOT
+    rts
+}
 
 .main_end
 
@@ -1067,12 +1076,21 @@ PRINT "FREE =", ~&C000-P%
 PRINT "------"
 
 \ ******************************************************************
-\ *	EVENTS DATA
+\ *	EVENTS DATA - NOW MASTER ONLY! PANIC USE OF HAZEL
 \ ******************************************************************
+
+HAZEL_START=&C300       ; looks like first two pages are DFS catalog + scratch
+HAZEL_TOP=&DF00         ; looks like last page is FS control data
+
+ORG HAZEL_START
+GUARD HAZEL_TOP
+.event_data
+incbin "build/events.bin"
+.event_data_end
 
 PRINT "------"
 PRINT "EVENTS"
 PRINT "------"
 PRINT "SIZE =", ~event_data_end-event_data
-PRINT "FREE =", ~event_data+EVENTS_DATA_MAX-event_data_end
+PRINT "FREE =", ~HAZEL_TOP-event_data_end
 PRINT "------"

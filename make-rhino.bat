@@ -31,7 +31,7 @@ if %ERRORLEVEL% neq 0 (
 )
 
 echo Building EVENTS...
-bin\SongToRaw.exe -c 4 --dontEncodeSongSubsongMetadata --dontEncodeReferenceTables --dontEncodeSpeedTracks --dontEncodeEventTracks --dontEncodeInstruments --dontEncodeArpeggios --dontEncodePitches --dontEncodetranspositionsInLinker --dontEncodeHeightsInLinker -bin -adr 0x400 %1 build\events.bin
+bin\SongToRaw.exe -c 4 --dontEncodeSongSubsongMetadata --dontEncodeReferenceTables --dontEncodeSpeedTracks --dontEncodeEventTracks --dontEncodeInstruments --dontEncodeArpeggios --dontEncodePitches --dontEncodetranspositionsInLinker --dontEncodeHeightsInLinker -bin -adr 0xC300 %1 build\events.bin
 
 if %ERRORLEVEL% neq 0 (
 	echo Failed to extract events from AKS file '%1'...

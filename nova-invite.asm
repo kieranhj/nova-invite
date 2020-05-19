@@ -941,7 +941,7 @@ INCBIN "build/image_a.exo"
 .exo_image_nova
 INCBIN "build/image_nova.exo"
 .exo_image_nova_2020
-INCBIN "build/image_nova2020.exo"
+INCBIN "build/image_nova3.exo"
 .exo_image_bs_logo2
 INCBIN "build/image_bs_logo2.exo"
 .exo_image_tmt_logo
@@ -958,8 +958,6 @@ INCBIN "build/image_bbc_owl.exo"
 INCBIN "build/slide_floppies.exo"
 .exo_slide_djsets
 INCBIN "build/slide_djset.exo"
-;.exo_slide_firealarm
-;INCBIN "build/slide_firealarm.exo"
 
 .bank0_end
 
@@ -993,6 +991,18 @@ INCBIN "build/anim_faces.exo"
 INCBIN "build/anim_square.exo"
 .exo_anims_kaleidoscope
 INCBIN "build/anim_kaleidoscope.exo"
+
+.exo_slide_firealarm
+INCBIN "build/slide_firealarm.exo"
+.exo_image_atari_bee
+INCBIN "build/image_atari_bee.exo"
+.exo_image_half_bee
+INCBIN "build/image_half_bee.exo"
+.exo_image_rocka
+INCBIN "build/image_rocka_1.exo"
+.exo_image_nova_url
+INCBIN "build/image_nova_url.exo"
+
 .bank1_end
 
 SAVE "build/BANK1", bank1_start, bank1_end, bank1_start

@@ -42,6 +42,11 @@
     EQUW exo_slide_beach,        SLOT_BANK0 ; c10E
     EQUW exo_slide_floppy,       SLOT_BANK0 ; c10F
     EQUW exo_slide_djsets,       SLOT_BANK0 ; c110
+    EQUW exo_slide_firealarm,    SLOT_BANK1 ; c111
+    EQUW exo_image_atari_bee,    SLOT_BANK1 ; c112
+    EQUW exo_image_half_bee,     SLOT_BANK1 ; c113
+    EQUW exo_image_rocka,        SLOT_BANK1 ; c114
+    EQUW exo_image_nova_url,     SLOT_BANK1 ; c115
 }
 
 .anims_table

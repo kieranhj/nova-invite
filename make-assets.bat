@@ -5,24 +5,29 @@ python bin/png2bbc.py --quiet -o build/image_n.bin ./data/images/N_01.png 4
 python bin/png2bbc.py --quiet -o build/image_o.bin ./data/images/O_01.png 4
 python bin/png2bbc.py --quiet -o build/image_v.bin ./data/images/V_01.png 4
 python bin/png2bbc.py --quiet -o build/image_a.bin ./data/images/A_01.png 4
-python bin/png2bbc.py --quiet -o build/image_nova.bin ./data/images/ready_nova-logo.png 4
-python bin/png2bbc.py --quiet -o build/image_nova3.bin ./data/images/ready_3novas.png 4
+python bin/png2bbc.py --quiet -o build/image_nova.bin ./data/images/nova-logo_v02.png 4
+python bin/png2bbc.py --quiet -o build/image_nova3.bin ./data/images/ready_3novas_v02.png 4
 python bin/png2bbc.py --quiet -o build/image_nova2020.bin ./data/images/ready_novatidy.png 4
 
-python bin/png2bbc.py --quiet -o build/image_bs_logo.bin ./data/images/bslogo_square.png -p 03 4 
+rem python bin/png2bbc.py --quiet -o build/image_bs_logo.bin ./data/images/bslogo_square.png -p 03 4 
 python bin/png2bbc.py --quiet -o build/image_bs_logo2.bin ./data/detexted/bitshifters01_notext.png 4 
 python bin/png2bbc.py --quiet -o build/image_tmt_logo.bin ./data/images/ready_tmt02.png 4 
-python bin/png2bbc.py --quiet -o build/image_tmt_logo2.bin ./data/images/ready_torment03.png 4 
-python bin/png2bbc.py --quiet -o build/image_bbc_owl.bin ./data/images/bbc_logo.png 4
+rem python bin/png2bbc.py --quiet -o build/image_tmt_logo2.bin ./data/images/ready_torment03.png 4 
+python bin/png2bbc.py --quiet -o build/image_bbc_owl.bin ./data/images/bbc_logo_v03.png 4
 
 python bin/png2bbc.py --quiet -o build/image_wsm_graf.bin ./data/images/wsm_graf_01_v03.png 4 
+python bin/png2bbc.py --quiet -o build/image_nova_url.bin ./data/images/Layout_D_v03.png 4 
+python bin/png2bbc.py --quiet -o build/image_atari_bee.bin ./data/images/bee_v03.png 4
+python bin/png2bbc.py --quiet -o build/image_half_bee.bin ./data/images/hybrid_v03_smoothed.png 4
+python bin/png2bbc.py --quiet -o build/image_rocka_1.bin ./data/images/lrocka_v03.png 4
+python bin/png2bbc.py --quiet -o build/image_rocka_2.bin ./data/images/lrockb_v04.png 4
 
 rem python bin/png2bbc.py --quiet -o build/slide_dates.bin ./data/images/slide_01_dates_v3.png 4
 python bin/png2bbc.py --quiet -o build/slide_beach.bin ./data/detexted/slide_02_beach_v4_notext.png 4
 python bin/png2bbc.py --quiet -o build/slide_chips.bin ./data/detexted/slide_03_chipshop_alt_v4_notext.png 4
 python bin/png2bbc.py --quiet -o build/slide_floppies.bin ./data/detexted/slide_04_floppytoss_v7_notext.png 4
 python bin/png2bbc.py --quiet -o build/slide_djset.bin ./data/detexted/slide_05_djsets_v4_notext.png 4
-python bin/png2bbc.py --quiet -o build/slide_firealarm.bin ./data/detexted/slide_06_firealarm_v4_notext.png 4
+python bin/png2bbc.py --quiet -o build/slide_firealarm.bin ./data/detexted/slide_06_firealarm_v6_notext.png 4
 python bin/png2bbc.py --quiet -o build/slide_kitchen.bin ./data/detexted/slide_07_kitchen_v4_notext.png 4
 python bin/png2bbc.py --quiet -o build/slide_patarty.bin ./data/detexted/slide_08_patarty_v3_notext.png 4
 
@@ -45,7 +50,7 @@ bin\exomizer.exe level -M256 -c build/image_a.bin@0x0000 -o build/image_a.exo
 bin\exomizer.exe level -M256 -c build/image_nova.bin@0x0000 -o build/image_nova.exo
 bin\exomizer.exe level -M256 -c build/image_nova3.bin@0x0000 -o build/image_nova3.exo
 bin\exomizer.exe level -M256 -c build/image_nova2020.bin@0x0000 -o build/image_nova2020.exo
-bin\exomizer.exe level -M256 -c build/image_bs_logo.bin@0x0000 -o build/image_bs_logo.exo
+rem bin\exomizer.exe level -M256 -c build/image_bs_logo.bin@0x0000 -o build/image_bs_logo.exo
 bin\exomizer.exe level -M256 -c build/image_bs_logo2.bin@0x0000 -o build/image_bs_logo2.exo
 bin\exomizer.exe level -M256 -c build/image_tmt_logo.bin@0x0000 -o build/image_tmt_logo.exo
 bin\exomizer.exe level -M256 -c build/image_tmt_logo2.bin@0x0000 -o build/image_tmt_logo2.exo

@@ -207,6 +207,22 @@ INCLUDE "src/debug_tracker.h.asm"
 .zp_end
 
 \ ******************************************************************
+\ *	DATA LOADED INTO LOWER RAM
+\ ******************************************************************
+
+TABLES_SPACE = &200
+
+ORG &D00 - TABLES_SPACE
+GUARD &D00
+
+.tables_start
+include "src/control_codes.asm"
+include "src/anims_data.asm"
+.tables_end
+
+SAVE "build/TABLES", tables_start, tables_end
+
+\ ******************************************************************
 \ *	BSS DATA IN LOWER RAM
 \ ******************************************************************
 
@@ -261,6 +277,14 @@ GUARD screen3_addr + RELOC_SPACE
 	ldx #HI(reloc_to_start)
 	ldy #HI(reloc_to_end - reloc_to_start + &ff)
 	jsr disksys_copy_block
+
+    \\ Load tables in lower RAM
+    {
+        ldx #LO(tables_filename)
+        ldy #HI(tables_filename)
+        lda #HI(tables_start)
+        jsr disksys_load_file
+    }
 
     \\ Load music into SWRAM (if available)
     {
@@ -766,14 +790,12 @@ include "lib/disksys.asm"
 
 .data_start
 
+.tables_filename    EQUS "TABLES", 13
 .events_filename    EQUS "EVENTS", 13
 .music_filename     EQUS "MUSIC", 13
 .bank0_filename     EQUS "BANK0", 13
 .bank1_filename     EQUS "BANK1", 13
 .bank2_filename     EQUS "BANK2", 13
-
-include "src/control_codes.asm"
-include "src/anims_data.asm"
 
 .data_end
 
@@ -914,6 +936,7 @@ PRINT "FX SIZE (screen_ctrl) =", ~(fx_font-fx_screen_ctrl)
 PRINT "FX SIZE (font_plot) =", ~(fx_end-fx_font)
 PRINT "LIBRARY size =",~library_end-library_start
 PRINT "DATA size =",~data_end-data_start
+PRINT "TABLES size =",~tables_end-tables_start
 PRINT "RELOC size =",~reloc_from_end-reloc_from_start
 PRINT "BSS size =",~bss_end-bss_start
 PRINT "------"
@@ -929,7 +952,36 @@ CLEAR &8000, &C000
 ORG &8000
 GUARD &C000
 .bank0_start
-include "src/image_assets.asm"
+
+.exo_image_big_n
+INCBIN "build/image_n.exo"
+.exo_image_big_o
+INCBIN "build/image_o.exo"
+.exo_image_big_v
+INCBIN "build/image_v.exo"
+.exo_image_big_a
+INCBIN "build/image_a.exo"
+.exo_image_nova
+INCBIN "build/image_nova.exo"
+.exo_image_nova_2020
+INCBIN "build/image_nova_url.exo"
+.exo_image_bs_logo2
+INCBIN "build/image_bs_logo2.exo"
+.exo_image_tmt_logo
+INCBIN "build/image_tmt_logo.exo"
+.exo_slide_beach
+INCBIN "build/slide_beach.exo"
+.exo_slide_chips
+INCBIN "build/slide_chips.exo"
+.exo_slide_patarty
+INCBIN "build/slide_patarty.exo"
+.exo_image_bbc_owl
+INCBIN "build/image_bbc_owl.exo"
+.exo_slide_floppy
+INCBIN "build/slide_floppies.exo"
+.exo_slide_djsets
+INCBIN "build/slide_djset.exo"
+
 .bank0_end
 
 SAVE "build/BANK0", bank0_start, bank0_end, bank0_start
@@ -962,6 +1014,18 @@ INCBIN "build/anim_faces.exo"
 INCBIN "build/anim_square.exo"
 .exo_anims_kaleidoscope
 INCBIN "build/anim_kaleidoscope.exo"
+
+.exo_slide_firealarm
+INCBIN "build/slide_firealarm.exo"
+.exo_slide_nova_url
+INCBIN "build/image_nova_url.exo"
+.exo_slide_atari_bee
+INCBIN "build/image_atari_bee.exo"
+.exo_slide_half_bee
+INCBIN "build/image_half_bee.exo"
+.exo_slide_rocka1
+INCBIN "build/image_rocka_1.exo"
+
 .bank1_end
 
 SAVE "build/BANK1", bank1_start, bank1_end, bank1_start

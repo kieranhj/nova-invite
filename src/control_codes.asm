@@ -25,23 +25,23 @@
 
 .image_table
 {
-    EQUW exo_image_big_n            ; c100
-    EQUW exo_image_big_o            ; c101
-    EQUW exo_image_big_v            ; c102
-    EQUW exo_image_big_a            ; c103
-    EQUW exo_image_nova             ; c104
-    EQUW exo_image_nova_2020        ; c105
-    EQUW 0                          ; c106
-    EQUW exo_image_bs_logo2         ; c107
-    EQUW exo_image_tmt_logo         ; c108
-    EQUW 0                          ; c109
-    EQUW 0                          ; c10A
-    EQUW exo_slide_chips            ; c10B
-    EQUW exo_slide_patarty          ; c10C
-    EQUW exo_image_bbc_owl          ; c10D
-    EQUW exo_slide_beach            ; c10E
-    EQUW exo_slide_floppy           ; c10F
-    EQUW exo_slide_djsets           ; c110
+    EQUW exo_image_big_n,        SLOT_BANK0 ; c100
+    EQUW exo_image_big_o,        SLOT_BANK0 ; c101
+    EQUW exo_image_big_v,        SLOT_BANK0 ; c102
+    EQUW exo_image_big_a,        SLOT_BANK0 ; c103
+    EQUW exo_image_nova,         SLOT_BANK0 ; c104
+    EQUW exo_image_nova_2020,    SLOT_BANK0 ; c105
+    EQUW 0, 0                          ; c106
+    EQUW exo_image_bs_logo2,     SLOT_BANK0 ; c107
+    EQUW exo_image_tmt_logo,     SLOT_BANK0 ; c108
+    EQUW 0, 0                          ; c109
+    EQUW 0, 0                          ; c10A
+    EQUW exo_slide_chips,        SLOT_BANK0 ; c10B
+    EQUW exo_slide_patarty,      SLOT_BANK0 ; c10C
+    EQUW exo_image_bbc_owl,      SLOT_BANK0 ; c10D
+    EQUW exo_slide_beach,        SLOT_BANK0 ; c10E
+    EQUW exo_slide_floppy,       SLOT_BANK0 ; c10F
+    EQUW exo_slide_djsets,       SLOT_BANK0 ; c110
 }
 
 .anims_table

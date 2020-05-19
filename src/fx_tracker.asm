@@ -439,7 +439,12 @@ ENDMACRO
 .decrunch_image
 {
     pha
-    txa:asl a:tax 
+    txa:asl a:asl a:tax 
+    ldy image_table+2, X
+    ; SWRAM_SELECT
+    lda swram_slots_base, y
+    sta &f4:sta &fe30
+
     ldy image_table+1, X
     IF _DEBUG
     {
@@ -451,7 +456,6 @@ ENDMACRO
     ENDIF
     lda image_table+0, X
     tax
-    SWRAM_SELECT SLOT_BANK0
     pla
     jmp decrunch_to_page_A
 }

@@ -3,8 +3,8 @@
 \ *	DISC BUILD
 \ ******************************************************************
 
-LOAD_ADDRESS = &FF1100
-EXEC_ADDRESS = &FF1100
+LOAD_ADDRESS = &FF0E00
+EXEC_ADDRESS = &FF0E00
 SWRAM_ADDRESS = &8000
 
 PUTTEXT "src/boot.txt", "!BOOT", &FFFFFF, 0

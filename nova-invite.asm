@@ -211,8 +211,8 @@ INCLUDE "src/debug_tracker.h.asm"
 \ ******************************************************************
 
 RELOC_SPACE = &300
-ORG &E00
-GUARD &E00 + RELOC_SPACE - 1
+ORG &D00 - RELOC_SPACE
+GUARD &D00
 .reloc_to_start
 .mod15_plus1_asl4_table
 skip &100
@@ -234,7 +234,7 @@ skip 14
 \ *	CODE START
 \ ******************************************************************
 
-ORG &1100
+ORG &E00
 GUARD screen3_addr + RELOC_SPACE
 
 .start

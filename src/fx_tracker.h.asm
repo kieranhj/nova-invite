@@ -11,6 +11,11 @@
 .events_code        skip 1
 .events_data        skip 1
 
+.prev_code          skip 1
+.prev_data          skip 1
+.temp_code          skip 1
+.temp_data          skip 1
+
 .preload_ptr        skip 2
 .preload_pattern    skip 1
 .preload_line       skip 1

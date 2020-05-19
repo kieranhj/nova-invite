@@ -46,8 +46,9 @@ ENDMACRO
     ldx event_data+2, Y         ; skip first two flag bytes
     lda event_data+3, Y
     tay
-    rts
 }
+.another_return
+    rts
 
 .events_init
 {
@@ -79,7 +80,7 @@ ENDMACRO
 
     \\ Process an event as soon as the line delay reaches 0.
     dec events_delay
-    bne return
+    bne another_return
 
     .process_event
     lda events_line
@@ -118,7 +119,7 @@ ENDMACRO
 
     .process_line
     iny
-    IF _DEBUG
+    IF _DEBUG AND 0
     {
         cmp #120        ; No note.
         beq ok
@@ -127,7 +128,7 @@ ENDMACRO
     }
     ENDIF
     ; EVENTS_GET_BYTE
-    IF _DEBUG
+    IF _DEBUG AND 0
     lda (events_ptr), Y
     {
         beq ok          ; No instrument
@@ -143,22 +144,15 @@ ENDMACRO
     bne done_events
 
     lda (events_ptr), Y:iny     ; EVENTS_GET_BYTE
-    sta events_data             ; Effect value: low byte = data
+    sta temp_data               ; Effect value: low byte = data
 
     lda (events_ptr), Y:iny     ; EVENTS_GET_BYTE
-    sta events_code             ; Effect value: high byte = code
-
-    \\ Events handler
-    asl a:asl a:tax
-    lda event_fn_table+0, X
-    sta jmp_to_handler+1
-    lda event_fn_table+1, X
-    sta jmp_to_handler+2
-
+                                ; Effect value: high byte = code
     sty temp_y+1
-    lda events_data
-    .jmp_to_handler
-    jsr &FFFF
+
+    ; temp_code and temp_data
+    jsr call_event_handler
+
     .temp_y
     ldy #0
     bne events_loop
@@ -178,11 +172,52 @@ ENDMACRO
         inc events_ptr+1
         .no_carry
     }
-
-    .return
 }
 .preload_return
     rts
+
+; A = event code, uses temp_data
+.call_event_handler
+{
+    sta temp_code
+
+    \\ Lookup events handler fn.
+    asl a:asl a:tax
+    lda event_fn_table+3, X
+    beq no_preload
+
+    \\ If we have a preload then remember the last event.
+    lda events_code:sta prev_code
+    lda events_data:sta prev_data
+
+    .no_preload
+    lda event_fn_table+0, X
+    sta jmp_to_handler+1
+    lda event_fn_table+1, X
+    sta jmp_to_handler+2
+
+    ; A = events data passed to handler.
+    lda temp_data
+    .jmp_to_handler
+    jsr &FFFF
+
+    ; Update events vars afterwards - these are private!
+    lda temp_code:sta events_code
+    lda temp_data:sta events_data
+    rts
+}
+
+; Switch back to the previous handler.
+.call_prev_handler
+{
+    inc reverse_buffers
+    lda prev_data
+    sta temp_data
+    lda prev_code
+    jsr call_event_handler
+    dec reverse_buffers
+    rts
+}
 
 .preload_update
 {
@@ -238,19 +273,19 @@ ENDMACRO
 
     .process_line
     iny
-    IF _DEBUG
+    IF _DEBUG AND 0
     {
         cmp #120        ; No note.
-        ;BRK            ; doesn't really matter if we have a note!
+        BRK            ; doesn't really matter if we have a note!
         .ok
     }
     ENDIF
     ; PRELOAD_GET_BYTE
-    IF _DEBUG
+    IF _DEBUG AND 0
     lda (preload_ptr), Y
     {
         beq ok          ; No instrument
-        ;BRK            ; doesn't really matter if we have an instrument!
+        BRK            ; doesn't really matter if we have an instrument!
         .ok
     }
     ENDIF
@@ -308,9 +343,9 @@ ENDMACRO
 
 .handle_set_colour
 {
-    eor #7
     tax
     and #&0f
+    eor #7
     cpx #&10
     bcs not_fg
     \\ Image foreground colour
@@ -332,9 +367,26 @@ ENDMACRO
     rts
 
     .not_static_fg
+    cpx #&40
+    bcs not_static_bg
     \\ Static background colour
     sta static_bg_colour
     rts
+
+    .not_static_bg
+    \\ Special Fx colours
+    eor #7
+    cpx #&50
+    bcs not_vubars
+    jmp set_vubars_colour
+
+    .not_vubars
+    cpx #&60
+    bcs not_small_bars
+    jmp set_small_bars_colour
+
+    .not_small_bars
+    jmp set_large_bars_colour
 }
 
 .handle_ctrl_code
@@ -352,7 +404,7 @@ ENDMACRO
     lda last_bg_colour:jsr set_mode4_bg_colour
     jsr set_per_frame_do_nothing
     jsr set_per_irq_do_nothing
-    jmp display_next_buffer
+    jmp display_next_or_prev_buffer
 }
 
 MACRO REQUEST_TASK
@@ -481,7 +533,7 @@ ENDMACRO
 {
     jsr set_mode_8
     jsr set_per_irq_do_nothing
-    jmp display_next_buffer
+    jmp display_next_or_prev_buffer
 }
 
 ; A = fx no.

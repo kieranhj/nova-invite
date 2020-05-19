@@ -186,6 +186,7 @@ INCLUDE "lib/exo.h.asm"
 .display_buffer_HI  skip 1
 .next_buffer_HI     skip 1
 .prev_buffer_HI     skip 1
+.reverse_buffers    skip 1
 
 .task_request       skip 1
 .seed               skip 2
@@ -592,6 +593,12 @@ GUARD screen3_addr + RELOC_SPACE
 
 .old_irqv   EQUW &FFFF
 
+.display_next_or_prev_buffer
+{
+    lda reverse_buffers
+    bne display_prev_buffer
+}
+\\ Fall through!
 .display_next_buffer
 {
     ; display->prev

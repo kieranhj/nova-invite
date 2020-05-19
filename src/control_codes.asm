@@ -9,7 +9,7 @@
     EQUW show_screen                ; c001
     EQUW swap_to_prev_screen_image  ; c002
     EQUW swap_to_prev_screen_anim   ; c003
-;    EQUW 0                          ; c004
+    EQUW call_prev_handler          ; c004
 ;    EQUW 0                          ; c005
 ;    EQUW 0                          ; c006
 ;    EQUW 0                          ; c007
@@ -72,18 +72,6 @@
     EQUW prepare_hbars,         handle_copper_bars  ; c403
     EQUW prepare_dbars,         handle_copper_bars  ; c404
     EQUW prepare_vubars,        handle_vubars       ; c405
-    EQUW 0,                     set_vubars_colour   ; c406
-    EQUW 0,                     set_vubars_colour   ; c407
-    EQUW 0,                     set_vubars_colour   ; c408
-    EQUW 0,                     set_vubars_colour   ; c409
-    EQUW 0,                     set_small_bars_colour   ; c40A
-    EQUW 0,                     set_small_bars_colour   ; c40B
-    EQUW 0,                     set_small_bars_colour   ; c40C
-    EQUW 0,                     set_small_bars_colour   ; c40D
-    EQUW 0,                     set_large_bars_colour   ; c40E
-    EQUW 0,                     set_large_bars_colour   ; c40F
-    EQUW 0,                     set_large_bars_colour   ; c410
-    EQUW 0,                     set_large_bars_colour   ; c411
 }
 
 .anims_ramp_table

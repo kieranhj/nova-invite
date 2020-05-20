@@ -3,6 +3,8 @@
 \ *	SPECIAL FX
 \ ******************************************************************
 
+SLOT_SPECIAL_FX = SLOT_BANK0
+
 ; A = next screen buffer HI
 ; X = display screen buffer HI
 ; Y = prev screen buffer HI
@@ -235,7 +237,7 @@ quad_writeptr = temp+3
 .prepare_hbars
 {
     pha
-    SWRAM_SELECT SLOT_MUSIC     ; fixed SWRAM! TODO!
+    SWRAM_SELECT SLOT_SPECIAL_FX     ; fixed SWRAM! TODO!
     ldx #LO(exo_anims_hbars)
     ldy #HI(exo_anims_hbars)
     pla; A contains next_buffer_HI
@@ -245,7 +247,7 @@ quad_writeptr = temp+3
 .prepare_dbars
 {
     pha
-    SWRAM_SELECT SLOT_MUSIC     ; fixed SWRAM! TODO!
+    SWRAM_SELECT SLOT_SPECIAL_FX     ; fixed SWRAM! TODO!
     ldx #LO(exo_anims_dbars)
     ldy #HI(exo_anims_dbars)
     pla; A contains next_buffer_HI
@@ -349,7 +351,7 @@ quad_writeptr = temp+3
 .prepare_vubars
 {
     PHA
-    SWRAM_SELECT SLOT_MUSIC     ; fixed SWRAM! TODO!
+    SWRAM_SELECT SLOT_SPECIAL_FX     ; fixed SWRAM! TODO!
     ldx #LO(exo_anims_vupal)
     ldy #HI(exo_anims_vupal)
     PLA ; A contains next_buffer_HI

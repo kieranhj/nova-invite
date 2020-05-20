@@ -959,6 +959,15 @@ INCBIN "build/slide_floppies.exo"
 .exo_slide_djsets
 INCBIN "build/slide_djset.exo"
 
+.special_fx_data_start
+.exo_anims_hbars
+INCBIN "build/anim_hbars.exo"
+.exo_anims_dbars
+INCBIN "build/anim_dbars.exo"
+.exo_anims_vupal
+INCBIN "build/anim_vupal.exo"
+.special_fx_data_end
+
 .bank0_end
 
 SAVE "build/BANK0", bank0_start, bank0_end, bank0_start
@@ -967,6 +976,7 @@ PRINT "------"
 PRINT "BANK 0"
 PRINT "------"
 PRINT "SIZE =", ~bank0_end-bank0_start
+PRINT "SPECIAL FX DATA size =", ~special_fx_data_end-special_fx_data_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%
 PRINT "------"
@@ -1047,6 +1057,7 @@ PRINT "------"
 PRINT "BANK 2"
 PRINT "------"
 PRINT "SIZE =", ~bank2_end-bank2_start
+PRINT "DEBUG CODE size =",~debug_end-debug_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%
 PRINT "------"
@@ -1062,15 +1073,6 @@ GUARD &C000
 .music_start
 include "src/music.asm"
 .music_end
-
-.special_fx_data_start
-.exo_anims_hbars
-INCBIN "build/anim_hbars.exo"
-.exo_anims_dbars
-INCBIN "build/anim_dbars.exo"
-.exo_anims_vupal
-INCBIN "build/anim_vupal.exo"
-.special_fx_data_end
 
 .font_data
 INCBIN "build/font24x36_rle.bin"
@@ -1108,10 +1110,8 @@ PRINT "------"
 PRINT "BANK 3"
 PRINT "------"
 PRINT "MUSIC size =", ~music_end-music_start
-PRINT "SPECIAL FX DATA size =", ~special_fx_data_end-special_fx_data_start
 PRINT "FONT DATA size =", ~font_data_end-font_data
 PRINT "TEXT BLOCK size =", ~text_block_end-text_block_start
-PRINT "DEBUG CODE size =",~debug_end-debug_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%
 PRINT "------"
@@ -1123,6 +1123,7 @@ PRINT "------"
 HAZEL_START=&C300       ; looks like first two pages are DFS catalog + scratch
 HAZEL_TOP=&DF00         ; looks like last page is FS control data
 
+CLEAR &C000, &E000
 ORG HAZEL_START
 GUARD HAZEL_TOP
 .event_data

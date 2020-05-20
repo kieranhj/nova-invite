@@ -1,0 +1,1391 @@
+Building PNGS...
+[16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16]
+59 glyphs at 1888 bytes BBC data
+[16, 16, 24, 24, 24, 16, 24, 16, 16, 16, 24, 16, 16, 16, 16, 16, 24, 16, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 16, 16, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 24, 16, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24]
+59 glyphs at 2599 bytes BBC data
+plus 118 bytes header
+ Reading "build/image_n.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 1616.0 bits ~202 bytes
+ pass 2: optimizing ..
+
+  size 1593.0 bits ~200 bytes
+ pass 3: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 4675012000000000,0000,0000002235004670,033613572001200D
+ Length of crunched data: 228 bytes.
+ Crunched data reduced 7964 bytes (97.22%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 248 and
+  the safety offset is 2.
+ Writing 230 bytes to "build/image_n.exo".
+ Reading "build/image_o.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 5581.0 bits ~698 bytes
+ pass 2: optimizing ..
+
+  size 5524.0 bits ~691 bytes
+ pass 3: optimizing ..
+
+  size 5522.0 bits ~691 bytes
+ pass 4: optimizing ..
+
+  size 5517.0 bits ~690 bytes
+ pass 5: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2356523325000000,0200,0467534226751004,0456733367689AAC
+ Length of crunched data: 718 bytes.
+ Crunched data reduced 7474 bytes (91.24%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 197 and
+  the safety offset is 2.
+ Writing 720 bytes to "build/image_o.exo".
+ Reading "build/image_v.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 2795.0 bits ~350 bytes
+ pass 2: optimizing ..
+
+  size 2767.0 bits ~346 bytes
+ pass 3: optimizing ..
+
+  size 2765.0 bits ~346 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 3536654330000000,0110,4580472222346222,064512780012300D
+ Length of crunched data: 374 bytes.
+ Crunched data reduced 7818 bytes (95.43%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 241 and
+  the safety offset is 2.
+ Writing 376 bytes to "build/image_v.exo".
+ Reading "build/image_a.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 3348.0 bits ~419 bytes
+ pass 2: optimizing ..
+
+  size 3301.0 bits ~413 bytes
+ pass 3: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 3536450251301230,0000,0571122203472042,14625781012300C9
+ Length of crunched data: 441 bytes.
+ Crunched data reduced 7751 bytes (94.62%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 223 and
+  the safety offset is 2.
+ Writing 443 bytes to "build/image_a.exo".
+ Reading "build/image_nova.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 5023.0 bits ~628 bytes
+ pass 2: optimizing ..
+
+  size 4966.0 bits ~621 bytes
+ pass 3: optimizing ..
+
+  size 4962.0 bits ~621 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2345670000000000,0120,0120454552255165,036745335674486A
+ Length of crunched data: 649 bytes.
+ Crunched data reduced 7543 bytes (92.08%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 253 and
+  the safety offset is 2.
+ Writing 651 bytes to "build/image_nova.exo".
+ Reading "build/image_nova3.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 9693.0 bits ~1212 bytes
+ pass 2: optimizing ..
+
+  size 9563.0 bits ~1196 bytes
+ pass 3: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2234304670200000,0030,0532342524061634,0354674676869A8B
+ Length of crunched data: 1224 bytes.
+ Crunched data reduced 6968 bytes (85.06%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 1226 bytes to "build/image_nova3.exo".
+ Reading "build/image_nova2020.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 8758.0 bits ~1095 bytes
+ pass 2: optimizing ..
+
+  size 8596.0 bits ~1075 bytes
+ pass 3: optimizing ..
+
+  size 8589.0 bits ~1074 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 3343412670000000,0100,0064531645072073,0354673676389A9A
+ Length of crunched data: 1102 bytes.
+ Crunched data reduced 7090 bytes (86.55%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 1104 bytes to "build/image_nova2020.exo".
+ Reading "build/image_bs_logo2.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 825.0 bits ~104 bytes
+ pass 2: optimizing ..
+
+  size 805.0 bits ~101 bytes
+ pass 3: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 3764500200000000,0110,0000000000000000,0120164750205A2C
+ Length of crunched data: 129 bytes.
+ Crunched data reduced 8063 bytes (98.43%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 131 bytes to "build/image_bs_logo2.exo".
+ Reading "build/image_tmt_logo.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 5847.0 bits ~731 bytes
+ pass 2: optimizing ..
+
+  size 5716.0 bits ~715 bytes
+ pass 3: optimizing ..
+
+  size 5690.0 bits ~712 bytes
+ pass 4: optimizing ..
+
+  size 5686.0 bits ~711 bytes
+ pass 5: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2247560200000000,0020,0450507522562794,046753120388848B
+ Length of crunched data: 739 bytes.
+ Crunched data reduced 7453 bytes (90.98%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 741 bytes to "build/image_tmt_logo.exo".
+ Reading "build/image_wsm_graf.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 13017.0 bits ~1628 bytes
+ pass 2: optimizing ..
+
+  size 12949.0 bits ~1619 bytes
+ pass 3: optimizing ..
+
+  size 12940.0 bits ~1618 bytes
+ pass 4: optimizing ..
+
+  size 12930.0 bits ~1617 bytes
+ pass 5: optimizing ..
+
+  size 12924.0 bits ~1616 bytes
+ pass 6: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 1123554522241560,0120,0241004470445489,05673437786988AC
+ Length of crunched data: 1644 bytes.
+ Crunched data reduced 6548 bytes (79.93%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 1646 bytes to "build/image_wsm_graf.exo".
+ Reading "build/image_bbc_owl.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 9170.0 bits ~1147 bytes
+ pass 2: optimizing ..
+
+  size 9119.0 bits ~1140 bytes
+ pass 3: optimizing ..
+
+  size 9112.0 bits ~1139 bytes
+ pass 4: optimizing ..
+
+  size 9110.0 bits ~1139 bytes
+ pass 5: optimizing ..
+
+  size 9109.0 bits ~1139 bytes
+ pass 6: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2233454546541000,0100,3416065260266600,14675388258008AC
+ Length of crunched data: 1167 bytes.
+ Crunched data reduced 7025 bytes (85.75%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 251 and
+  the safety offset is 2.
+ Writing 1169 bytes to "build/image_bbc_owl.exo".
+ Reading "build/image_nova_url.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 8756.0 bits ~1095 bytes
+ pass 2: optimizing ..
+
+  size 8668.0 bits ~1084 bytes
+ pass 3: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2233446700000000,0210,0440536051565781,03456662108309BC
+ Length of crunched data: 1112 bytes.
+ Crunched data reduced 7080 bytes (86.43%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 250 and
+  the safety offset is 2.
+ Writing 1114 bytes to "build/image_nova_url.exo".
+ Reading "build/image_atari_bee.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 4089.0 bits ~512 bytes
+ pass 2: optimizing ..
+
+  size 4077.0 bits ~510 bytes
+ pass 3: optimizing ..
+
+  size 4070.0 bits ~509 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 3456170000000000,0120,0000000223005670,04346471208588AC
+ Length of crunched data: 537 bytes.
+ Crunched data reduced 7655 bytes (93.44%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 252 and
+  the safety offset is 2.
+ Writing 539 bytes to "build/image_atari_bee.exo".
+ Reading "build/image_half_bee.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 7940.0 bits ~993 bytes
+ pass 2: optimizing ..
+
+  size 7919.0 bits ~990 bytes
+ pass 3: optimizing ..
+
+  size 7900.0 bits ~988 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 3335541427000000,0000,0103452156165583,034657278708A19C
+ Length of crunched data: 1016 bytes.
+ Crunched data reduced 7176 bytes (87.60%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 1018 bytes to "build/image_half_bee.exo".
+ Reading "build/image_rocka_1.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 12580.0 bits ~1573 bytes
+ pass 2: optimizing ..
+
+  size 12371.0 bits ~1547 bytes
+ pass 3: optimizing ..
+
+  size 12363.0 bits ~1546 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 1124653530012000,0212,0476540236875588,034675120838A9AC
+ Length of crunched data: 1574 bytes.
+ Crunched data reduced 6618 bytes (80.79%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 177 and
+  the safety offset is 2.
+ Writing 1576 bytes to "build/image_rocka_1.exo".
+ Reading "build/image_rocka_2.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 16812.0 bits ~2102 bytes
+ pass 2: optimizing ..
+
+  size 16694.0 bits ~2087 bytes
+ pass 3: optimizing ..
+
+  size 16645.0 bits ~2081 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 1111473413450141,0222,0436755587688196,03576412038899AC
+ Length of crunched data: 2109 bytes.
+ Crunched data reduced 6083 bytes (74.26%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 2111 bytes to "build/image_rocka_2.exo".
+ Reading "build/slide_beach.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 21203.0 bits ~2651 bytes
+ pass 2: optimizing ..
+
+  size 21119.0 bits ~2640 bytes
+ pass 3: optimizing ..
+
+  size 21113.0 bits ~2640 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 0002503761230000,2233,3454756676786868,022576142008899C
+ Length of crunched data: 2668 bytes.
+ Crunched data reduced 5524 bytes (67.43%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 2670 bytes to "build/slide_beach.exo".
+ Reading "build/slide_chips.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 11456.0 bits ~1432 bytes
+ pass 2: optimizing ..
+
+  size 11396.0 bits ~1425 bytes
+ pass 3: optimizing ..
+
+  size 11370.0 bits ~1422 bytes
+ pass 4: optimizing ..
+
+  size 11363.0 bits ~1421 bytes
+ pass 5: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 1225674110000000,0232,03120466644676A6,054762326888899C
+ Length of crunched data: 1449 bytes.
+ Crunched data reduced 6743 bytes (82.31%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 1451 bytes to "build/slide_chips.exo".
+ Reading "build/slide_floppies.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 7187.0 bits ~899 bytes
+ pass 2: optimizing ..
+
+  size 7132.0 bits ~892 bytes
+ pass 3: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2245621700000000,0100,0675340576325208,02567134083258AC
+ Length of crunched data: 920 bytes.
+ Crunched data reduced 7272 bytes (88.77%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 922 bytes to "build/slide_floppies.exo".
+ Reading "build/slide_djset.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 30800.0 bits ~3850 bytes
+ pass 2: optimizing ..
+
+  size 30651.0 bits ~3832 bytes
+ pass 3: optimizing ..
+
+  size 30608.0 bits ~3826 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 0001152147600000,1223,2235666334676779,012046753388789C
+ Length of crunched data: 3855 bytes.
+ Crunched data reduced 4337 bytes (52.94%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 254 and
+  the safety offset is 2.
+ Writing 3857 bytes to "build/slide_djset.exo".
+ Reading "build/slide_firealarm.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 5979.0 bits ~748 bytes
+ pass 2: optimizing ..
+
+  size 5940.0 bits ~743 bytes
+ pass 3: optimizing ..
+
+  size 5915.0 bits ~740 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2246616250000000,0020,0452762042675431,03156742048899AC
+ Length of crunched data: 768 bytes.
+ Crunched data reduced 7424 bytes (90.62%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 770 bytes to "build/slide_firealarm.exo".
+ Reading "build/slide_kitchen.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 29564.0 bits ~3696 bytes
+ pass 2: optimizing ..
+
+  size 29483.0 bits ~3686 bytes
+ pass 3: optimizing ..
+
+  size 29476.0 bits ~3685 bytes
+ pass 4: optimizing ..
+
+  size 29465.0 bits ~3684 bytes
+ pass 5: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 0001152147600000,1223,2254666467677879,0120457622489AAC
+ Length of crunched data: 3712 bytes.
+ Crunched data reduced 4480 bytes (54.69%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 254 and
+  the safety offset is 2.
+ Writing 3714 bytes to "build/slide_kitchen.exo".
+ Reading "build/slide_patarty.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 10345.0 bits ~1294 bytes
+ pass 2: optimizing ..
+
+  size 10217.0 bits ~1278 bytes
+ pass 3: optimizing ..
+
+  size 10195.0 bits ~1275 bytes
+ pass 4: optimizing ..
+
+  size 10190.0 bits ~1274 bytes
+ pass 5: optimizing ..
+
+  size 10183.0 bits ~1273 bytes
+ pass 6: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 0002752406100000,0023,2447642224357658,034675120596768C
+ Length of crunched data: 1302 bytes.
+ Crunched data reduced 6890 bytes (84.11%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 1304 bytes to "build/slide_patarty.exo".
+ Reading "data/anims/a.sine", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 11301.0 bits ~1413 bytes
+ pass 2: optimizing ..
+
+  size 11180.0 bits ~1398 bytes
+ pass 3: optimizing ..
+
+  size 11131.0 bits ~1392 bytes
+ pass 4: optimizing ..
+
+  size 11110.0 bits ~1389 bytes
+ pass 5: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2115524157000000,0120,0300003675204091,021037653231138D
+ Length of crunched data: 1417 bytes.
+ Crunched data reduced 6775 bytes (82.70%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 1419 bytes to "build/anim_sine.exo".
+ Reading "data/anims/a.atom", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 23141.0 bits ~2893 bytes
+ pass 2: optimizing ..
+
+  size 23082.0 bits ~2886 bytes
+ pass 3: optimizing ..
+
+  size 23000.0 bits ~2875 bytes
+ pass 4: optimizing ..
+
+  size 22989.0 bits ~2874 bytes
+ pass 5: optimizing ..
+
+  size 22977.0 bits ~2873 bytes
+ pass 6: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 1124423541123000,0222,0465721103200386,0345670133788ABC
+ Length of crunched data: 2901 bytes.
+ Crunched data reduced 5291 bytes (64.59%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 118 and
+  the safety offset is 2.
+ Writing 2903 bytes to "build/anim_atom.exo".
+ Reading "data/anims/a.world", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 14251.0 bits ~1782 bytes
+ pass 2: optimizing ..
+
+  size 14196.0 bits ~1775 bytes
+ pass 3: optimizing ..
+
+  size 14162.0 bits ~1771 bytes
+ pass 4: optimizing ..
+
+  size 14157.0 bits ~1770 bytes
+ pass 5: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2233556602300000,0020,0324675467544848,02100577778989AC
+ Length of crunched data: 1798 bytes.
+ Crunched data reduced 6394 bytes (78.05%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 230 and
+  the safety offset is 2.
+ Writing 1800 bytes to "build/anim_world.exo".
+ Reading "data/anims/a.hbars", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 516.0 bits ~65 bytes
+ pass 2: optimizing ..
+
+  size 513.0 bits ~65 bytes
+ pass 3: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 6754300000000000,0000,0000000000000000,0000010012456780
+ Length of crunched data: 93 bytes.
+ Crunched data reduced 8099 bytes (98.86%)
+  Literal sequences are not used, length 1 sequences are not used,
+  length 123 mirrors are not used, max length used is 249 and
+  the safety offset is 2.
+ Writing 95 bytes to "build/anim_hbars.exo".
+ Reading "data/anims/a.dbars", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 3231.0 bits ~404 bytes
+ pass 2: optimizing ..
+
+  size 3189.0 bits ~399 bytes
+ pass 3: optimizing ..
+
+  size 3186.0 bits ~399 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2103467000000000,0110,2473004495910420,0206730407A78A2D
+ Length of crunched data: 427 bytes.
+ Crunched data reduced 7765 bytes (94.79%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 224 and
+  the safety offset is 2.
+ Writing 429 bytes to "build/anim_dbars.exo".
+ Reading "data/anims/a.burst", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 27903.0 bits ~3488 bytes
+ pass 2: optimizing ..
+
+  size 27689.0 bits ~3462 bytes
+ pass 3: optimizing ..
+
+  size 27677.0 bits ~3460 bytes
+ pass 4: optimizing ..
+
+  size 27673.0 bits ~3460 bytes
+ pass 5: optimizing ..
+
+  size 27669.0 bits ~3459 bytes
+ pass 6: optimizing ..
+
+  size 27664.0 bits ~3458 bytes
+ pass 7: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2101111012010000,0121,0363436553304766,0467533367688ABC
+ Length of crunched data: 3487 bytes.
+ Crunched data reduced 4705 bytes (57.43%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 26 and
+  the safety offset is 2.
+ Writing 3489 bytes to "build/anim_burst.exo".
+ Reading "data/anims/a.particl", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 10994.0 bits ~1375 bytes
+ pass 2: optimizing ..
+
+  size 10834.0 bits ~1355 bytes
+ pass 3: optimizing ..
+
+  size 10812.0 bits ~1352 bytes
+ pass 4: optimizing ..
+
+  size 10810.0 bits ~1352 bytes
+ pass 5: optimizing ..
+
+  size 10808.0 bits ~1351 bytes
+ pass 6: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2113656510200000,0010,0210653730019763,0225674002048AAC
+ Length of crunched data: 1380 bytes.
+ Crunched data reduced 6812 bytes (83.15%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 216 and
+  the safety offset is 2.
+ Writing 1382 bytes to "build/anim_particl.exo".
+ Reading "data/anims/a.rotor", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 25083.0 bits ~3136 bytes
+ pass 2: optimizing ..
+
+  size 24684.0 bits ~3086 bytes
+ pass 3: optimizing ..
+
+  size 24600.0 bits ~3075 bytes
+ pass 4: optimizing ..
+
+  size 24590.0 bits ~3074 bytes
+ pass 5: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 1110013645225100,0212,0301267442020336,04576311246769BC
+ Length of crunched data: 3102 bytes.
+ Crunched data reduced 5090 bytes (62.13%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 173 and
+  the safety offset is 2.
+ Writing 3104 bytes to "build/anim_rotor.exo".
+ Reading "data/anims/a.swirl", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 34447.0 bits ~4306 bytes
+ pass 2: optimizing ..
+
+  size 34374.0 bits ~4297 bytes
+ pass 3: optimizing ..
+
+  size 34281.0 bits ~4286 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 1100001011000000,0322,0334453354555469,467567667668899C
+ Length of crunched data: 4314 bytes.
+ Crunched data reduced 3878 bytes (47.34%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 16 and
+  the safety offset is 2.
+ Writing 4316 bytes to "build/anim_swirl.exo".
+ Reading "data/anims/a.tunnel", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 24043.0 bits ~3006 bytes
+ pass 2: optimizing ..
+
+  size 23785.0 bits ~2974 bytes
+ pass 3: optimizing ..
+
+  size 23740.0 bits ~2968 bytes
+ pass 4: optimizing ..
+
+  size 23734.0 bits ~2967 bytes
+ pass 5: optimizing ..
+
+  size 23724.0 bits ~2966 bytes
+ pass 6: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2100211330412500,0221,0211200751360833,0467532323779ABC
+ Length of crunched data: 2994 bytes.
+ Crunched data reduced 5198 bytes (63.45%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 88 and
+  the safety offset is 2.
+ Writing 2996 bytes to "build/anim_tunnel.exo".
+ Reading "data/anims/a.vupal", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 1212.0 bits ~152 bytes
+ pass 2: optimizing ..
+
+  size 1004.0 bits ~126 bytes
+ pass 3: optimizing ..
+
+  size 1001.0 bits ~126 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 3412567000000000,0000,0000000000000000,0123456703456783
+ Length of crunched data: 154 bytes.
+ Crunched data reduced 8038 bytes (98.12%)
+  Literal sequences are not used, length 1 sequences are not used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 156 bytes to "build/anim_vupal.exo".
+ Reading "data/anims/palette_shift_test.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 20878.0 bits ~2610 bytes
+ pass 2: optimizing ..
+
+  size 20723.0 bits ~2591 bytes
+ pass 3: optimizing ..
+
+  size 20723.0 bits ~2591 bytes
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 1110035445703000,0122,0312325465667685,021145672268A8AC
+ Length of crunched data: 2619 bytes.
+ Crunched data reduced 5573 bytes (68.03%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 250 and
+  the safety offset is 2.
+ Writing 2621 bytes to "build/anim_shift.exo".
+ Reading "build/anim_turbulent.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 17677.0 bits ~2210 bytes
+ pass 2: optimizing ..
+
+  size 17595.0 bits ~2200 bytes
+ pass 3: optimizing ..
+
+  size 17576.0 bits ~2197 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2101255266030151,0120,0324347523422053,04675322577889BC
+ Length of crunched data: 2226 bytes.
+ Crunched data reduced 5966 bytes (72.83%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 2228 bytes to "build/anim_turbulent.exo".
+ Reading "build/anim_triangle.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 13101.0 bits ~1638 bytes
+ pass 2: optimizing ..
+
+  size 12956.0 bits ~1620 bytes
+ pass 3: optimizing ..
+
+  size 12855.0 bits ~1607 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2233344050300000,0300,0120011267350402,02103675323248AD
+ Length of crunched data: 1636 bytes.
+ Crunched data reduced 6556 bytes (80.03%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 107 and
+  the safety offset is 2.
+ Writing 1638 bytes to "build/anim_triangle.exo".
+ Reading "build/anim_claw.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 16714.0 bits ~2090 bytes
+ pass 2: optimizing ..
+
+  size 16500.0 bits ~2063 bytes
+ pass 3: optimizing ..
+
+  size 16473.0 bits ~2060 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 1111335670101000,0112,0201067352203387,02256741203599AC
+ Length of crunched data: 2088 bytes.
+ Crunched data reduced 6104 bytes (74.51%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 255 and
+  the safety offset is 2.
+ Writing 2090 bytes to "build/anim_claw.exo".
+ Reading "build/anim_star.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 15807.0 bits ~1976 bytes
+ pass 2: optimizing ..
+
+  size 15603.0 bits ~1951 bytes
+ pass 3: optimizing ..
+
+  size 15580.0 bits ~1948 bytes
+ pass 4: optimizing ..
+
+  size 15526.0 bits ~1941 bytes
+ pass 5: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2001565553125000,0210,0313576120234814,03267533447789BC
+ Length of crunched data: 1969 bytes.
+ Crunched data reduced 6223 bytes (75.96%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 247 and
+  the safety offset is 2.
+ Writing 1971 bytes to "build/anim_star.exo".
+ Reading "build/anim_circle.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 16281.0 bits ~2036 bytes
+ pass 2: optimizing ..
+
+  size 16177.0 bits ~2023 bytes
+ pass 3: optimizing ..
+
+  size 16093.0 bits ~2012 bytes
+ pass 4: optimizing ..
+
+  size 16092.0 bits ~2012 bytes
+ pass 5: optimizing ..
+
+  size 16079.0 bits ~2010 bytes
+ pass 6: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2112235525500000,0300,0200010034762501,03267532322488AD
+ Length of crunched data: 2039 bytes.
+ Crunched data reduced 6153 bytes (75.11%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 158 and
+  the safety offset is 2.
+ Writing 2041 bytes to "build/anim_circle.exo".
+ Reading "build/anim_faces.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 8052.0 bits ~1007 bytes
+ pass 2: optimizing ..
+
+  size 7917.0 bits ~990 bytes
+ pass 3: optimizing ..
+
+  size 7887.0 bits ~986 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2235563524134000,0120,0010100203057624,034674322120348B
+ Length of crunched data: 1015 bytes.
+ Crunched data reduced 7177 bytes (87.61%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 231 and
+  the safety offset is 2.
+ Writing 1017 bytes to "build/anim_faces.exo".
+ Reading "build/anim_square.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 14408.0 bits ~1801 bytes
+ pass 2: optimizing ..
+
+  size 14243.0 bits ~1781 bytes
+ pass 3: optimizing ..
+
+  size 14243.0 bits ~1781 bytes
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2234242243520000,0000,034567030016A160,0365740149999AAB
+ Length of crunched data: 1809 bytes.
+ Crunched data reduced 6383 bytes (77.92%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 121 and
+  the safety offset is 2.
+ Writing 1811 bytes to "build/anim_square.exo".
+ Reading "build/anim_kaleidoscope.bin", loading from $0000 to $2000.
+ Crunching from $0000 to $2000.
+Phase 1: Instrumenting file
+-----------------------------
+ Length of indata: 8192 bytes.
+
+ Instrumenting file, done.
+
+Phase 2: Calculating encoding
+-----------------------------
+ pass 1: optimizing ..
+
+  size 22842.0 bits ~2856 bytes
+ pass 2: optimizing ..
+
+  size 22693.0 bits ~2837 bytes
+ pass 3: optimizing ..
+
+  size 22676.0 bits ~2835 bytes
+ pass 4: optimizing ..
+ Calculating encoding, done.
+
+Phase 3: Generating output file
+------------------------------
+ Enc: 2111200030000000,0011,0230054356560395,45763244766889BC
+ Length of crunched data: 2863 bytes.
+ Crunched data reduced 5329 bytes (65.05%)
+  Literal sequences are not used, length 1 sequences are used,
+  length 123 mirrors are not used, max length used is 26 and
+  the safety offset is 2.
+ Writing 2865 bytes to "build/anim_kaleidoscope.exo".

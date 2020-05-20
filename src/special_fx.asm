@@ -19,6 +19,7 @@
     sta (writeptr), Y
     iny
     bne loop
+    CHECK_SAME_PAGE_AS loop
 
     inc writeptr+1
     dex
@@ -56,6 +57,7 @@
     SET_PALETTE_REG
     dey
     bpl loop
+    CHECK_SAME_PAGE_AS loop
 
     lda #2              ; speed
     sta special_fx_vars+0
@@ -142,6 +144,7 @@ quad_writeptr = temp+3
 
     dec quad_line_count
     bne loop
+    CHECK_SAME_PAGE_AS loop
 
     rts
 }
@@ -224,6 +227,7 @@ quad_writeptr = temp+3
 
     lda quad_temp_y:clc:adc #16:tay
     bne loop
+    CHECK_SAME_PAGE_AS loop
     rts
 }
 

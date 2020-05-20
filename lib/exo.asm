@@ -18,20 +18,33 @@ decrunch_table = $101 ; yes! we have enough stack space to use page 1 here
 tabl_bi = decrunch_table
 tabl_lo = decrunch_table + 52
 tabl_hi = decrunch_table + 104
-
-.get_crunched_byte_copy
+; LDA &FFFF                             ; 4c
+.get_crunched_byte_copy                 ; 6c
 {
-        inc INPOS
-        bne s0a
-        inc INPOS+1
+        inc INPOS                       ; 5c
+        bne s0a                         ; 2/3c
+        inc INPOS+1                     ; 5c
 
-.s0a    rts
+.s0a    rts                             ; 6c
 }
-.get_crunched_byte_copy_end
+.get_crunched_byte_copy_end             ; 24c/28c
 
 IF get_crunched_byte_copy_end-get_crunched_byte_copy <> get_crunched_byte_code_end-get_crunched_byte_code
         ERROR "get_crunched_byte function size mismatch."
 ENDIF
+
+MACRO GET_CRUNCHED_BYTE_INLINE
+{
+        sty stash_y                     ; 3c
+        ldy #0                          ; 2c
+        lda (INPOS), Y                  ; 5c
+        ldy stash_y                     ; 3c
+        inc INPOS                       ; 5c
+        bne s0a                         ; 2/3c
+        inc INPOS+1                     ; 5c
+        .s0a
+}                                       ; 21c/25c
+ENDMACRO
 
 ;; refill bits is always inlined
 MACRO mac_refill_bits
@@ -164,6 +177,7 @@ ENDIF
         ror a
         dex
         bne rolle
+        CHECK_SAME_PAGE_AS rolle
         plp
 .rolled
         ror a
@@ -178,6 +192,7 @@ ENDIF
         iny
         cpy #52
         bne table_gen
+        CHECK_SAME_PAGE_AS table_gen
 ; -------------------------------------------------------------------
 ; prepare for main decruncher
         ldy zp_dest_lo
@@ -209,11 +224,13 @@ ENDIF
 .nofetch8
         inx
         bcc no_literal1
+        CHECK_SAME_PAGE_AS no_literal1
         sta zp_bitbuf
 ; -------------------------------------------------------------------
 ; check for literal byte (2 bytes)
 ;
         beq literal_start1
+        CHECK_SAME_PAGE_AS literal_start1
 ; -------------------------------------------------------------------
 ; check for decrunch done and literal sequences (4 bytes)
 ;
@@ -259,6 +276,7 @@ ENDIF
 .gbnc2_ok
         rol a
         bcs gbnc2_next
+        CHECK_SAME_PAGE_AS gbnc2_next
         tax
 ; -------------------------------------------------------------------
 ; calulate absolute offset (zp_src) (21 bytes) + get_bits macro
@@ -320,6 +338,7 @@ IF LITERAL_SEQUENCES_NOT_USED=0
 .get_literal_byte
         jsr get_crunched_byte
         bcs literal_byte_gotten
+        CHECK_SAME_PAGE_AS literal_byte_gotten
 ENDIF
 ; -------------------------------------------------------------------
 ; exit or literal sequence handling (16(12) bytes)
@@ -334,6 +353,7 @@ ENDIF
         jsr get_crunched_byte
         tax
         bcs copy_next
+        CHECK_SAME_PAGE_AS copy_next
 .decr_exit
 ENDIF
         rts

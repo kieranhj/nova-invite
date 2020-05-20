@@ -657,6 +657,8 @@ MACRO CHECK_TASK_NOT_RUNNING
 IF _DEBUG
 {
     pha
+    lda reverse_buffers     ; handler is not dependent on preload.
+    bne ok
     lda task_request
     beq ok
     DEBUG_ERROR debug_msg_error_task

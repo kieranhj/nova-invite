@@ -65,6 +65,11 @@ IF HI(P%+size) <> HI(P%)
 ENDIF
 ENDMACRO
 
+MACRO CODE_ALIGN size
+PRINT "Lost ", size, "bytes for code alignment."
+skip size
+ENDMACRO
+
 MACRO CHECK_SAME_PAGE_AS base
 IF HI(P%-1) <> HI(base)
 PRINT "WARNING! Table or branch base address",~base, "may cross page boundary at",~P%
@@ -736,6 +741,9 @@ ENDIF
 
 .main_end
 
+CODE_ALIGN 28           ; TODO - align for non-_DEBUG
+include "lib/exo.asm"
+
 \ ******************************************************************
 \ *	FX MODULES
 \ ******************************************************************
@@ -758,7 +766,6 @@ include "src/font_plot.asm"
 
 .library_start
 include "lib/screen.asm"
-include "lib/exo.asm"
 include "lib/disksys.asm"
 .library_end
 

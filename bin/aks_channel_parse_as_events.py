@@ -5,7 +5,7 @@ import binascii
 import sys
 import os
 
-BASE_ADDRESS = 0x400
+BASE_ADDRESS = 0xC300
 
 # Read 1 byte from our input file
 def get_byte(file):
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     pattern_loop = pattern_loop - BASE_ADDRESS
 
     print "Found {0} patterns.".format(len(pattern_offsets))
-    print [hex(no) for no in pattern_offsets]
+    print pattern_offsets
 
     tracks_data = []
     tracks_lengths = dict()
@@ -111,7 +111,7 @@ if __name__ == '__main__':
         if lines == -1:
             break
 
-        print 'Track with offset: {0}'.format(hex(offset))
+        print 'Track with offset: {0}'.format(offset)
         # print [hex(no) for no in track_data]
         print track_data
 

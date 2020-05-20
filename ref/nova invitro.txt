@@ -374,8 +374,8 @@ Enough time to preload 2 anims during long static and want to be able to swap be
 0: displayed 1: next 2: prev
 
 Last things to do / bugs.
-- Check everything works in non-debug build.
+- Check everything works in non-debug build. - DONE
 - Update Simon's conversion scripts. - DONE
 - Remove loading glitch. - DONE
 - Python script to parse events binary. - STARTED
-- Check no page boundary crosses in Exo decompressor.
+- Check no page boundary crosses in Exo decompressor. - DONE

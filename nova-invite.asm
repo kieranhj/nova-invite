@@ -65,6 +65,11 @@ IF HI(P%+size) <> HI(P%)
 ENDIF
 ENDMACRO
 
+MACRO CODE_ALIGN size
+PRINT "Lost ", size, "bytes for code alignment."
+skip size
+ENDMACRO
+
 MACRO CHECK_SAME_PAGE_AS base
 IF HI(P%-1) <> HI(base)
 PRINT "WARNING! Table or branch base address",~base, "may cross page boundary at",~P%
@@ -657,6 +662,8 @@ MACRO CHECK_TASK_NOT_RUNNING
 IF _DEBUG
 {
     pha
+    lda reverse_buffers     ; handler is not dependent on preload.
+    bne ok
     lda task_request
     beq ok
     DEBUG_ERROR debug_msg_error_task
@@ -734,6 +741,9 @@ ENDIF
 
 .main_end
 
+CODE_ALIGN 28           ; TODO - align for non-_DEBUG
+include "lib/exo.asm"
+
 \ ******************************************************************
 \ *	FX MODULES
 \ ******************************************************************
@@ -756,7 +766,6 @@ include "src/font_plot.asm"
 
 .library_start
 include "lib/screen.asm"
-include "lib/exo.asm"
 include "lib/disksys.asm"
 .library_end
 
@@ -1127,8 +1136,10 @@ CLEAR &C000, &E000
 ORG HAZEL_START
 GUARD HAZEL_TOP
 .event_data
-incbin "build/events.bin"
+incbin "build/events_reduced.bin"
 .event_data_end
+
+SAVE "build/EVENTS", event_data, event_data_end
 
 PRINT "------"
 PRINT "EVENTS"

@@ -43,8 +43,8 @@ ENDMACRO
 {
     asl a
     tay
-    ldx event_data+2, Y         ; skip first two flag bytes
-    lda event_data+3, Y
+    ldx event_data+0, Y
+    lda event_data+1, Y
     tay
 }
 .another_return
@@ -119,30 +119,19 @@ ENDMACRO
 
     .process_line
     iny
-    IF _DEBUG AND 0
+    sta events_count
+    IF _DEBUG
     {
-        cmp #120        ; No note.
-        beq ok
-        DEBUG_ERROR debug_msg_error_parse
+        beq not_ok
+        cmp #5
+        bcc ok
+        .not_ok
+        BRK                     ; can't have > 4 events
         .ok
     }
     ENDIF
-    ; EVENTS_GET_BYTE
-    IF _DEBUG AND 0
-    lda (events_ptr), Y
-    {
-        beq ok          ; No instrument
-        DEBUG_ERROR debug_msg_error_parse
-        .ok
-    }
-    ENDIF
-    iny
 
     .events_loop
-    lda (events_ptr), Y:iny     ; EVENTS_GET_BYTE
-    cmp #10                     ; Effect number: 10
-    bne done_events
-
     lda (events_ptr), Y:iny     ; EVENTS_GET_BYTE
     sta temp_data               ; Effect value: low byte = data
 
@@ -155,9 +144,10 @@ ENDMACRO
 
     .temp_y
     ldy #0
+
+    dec events_count
     bne events_loop
 
-    .done_events
     \\ Process next line next update
     lda #1:sta events_delay
 
@@ -273,29 +263,19 @@ ENDMACRO
 
     .process_line
     iny
-    IF _DEBUG AND 0
+    sta preload_count
+    IF _DEBUG
     {
-        cmp #120        ; No note.
-        BRK            ; doesn't really matter if we have a note!
+        beq not_ok
+        cmp #5
+        bcc ok
+        .not_ok
+        BRK                     ; can't have > 4 events
         .ok
     }
     ENDIF
-    ; PRELOAD_GET_BYTE
-    IF _DEBUG AND 0
-    lda (preload_ptr), Y
-    {
-        beq ok          ; No instrument
-        BRK            ; doesn't really matter if we have an instrument!
-        .ok
-    }
-    ENDIF
-    iny
 
     .preload_loop
-    lda (preload_ptr), Y:iny    ; PRELOAD_GET_BYTE
-    cmp #10             ; Effect number: 10
-    bne line_processed
-
     lda (preload_ptr), Y:iny    ; PRELOAD_GET_BYTE
     sta preload_data    ; Effect value: low byte = data
 
@@ -319,7 +299,8 @@ ENDMACRO
     inc preload_id
 
     .no_preload
-    jmp preload_loop
+    dec preload_count
+    bne preload_loop
 
     .line_processed
     \\ Update preload_ptr

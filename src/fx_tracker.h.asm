@@ -10,6 +10,7 @@
 .events_delay       skip 2
 .events_code        skip 1
 .events_data        skip 1
+.events_count       skip 1
 
 .prev_code          skip 1
 .prev_data          skip 1
@@ -22,6 +23,7 @@
 .preload_code       skip 1
 .preload_data       skip 1
 .preload_id         skip 1
+.preload_count      skip 1
 
 .last_fg_colour     skip 1
 .last_bg_colour     skip 1

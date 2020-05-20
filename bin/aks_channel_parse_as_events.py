@@ -17,6 +17,7 @@ if __name__ == '__main__':
 
     parser.add_argument("input", help="scene1.bin STNICCC data file [input]")
     parser.add_argument("-o", "--output", metavar="<output>", help="write new data stream <output> (default is '[input].new.bin')")
+    parser.add_argument('-v','--verbose',action='store_true',help='print track and pattern data')
     args = parser.parse_args()
 
     src = args.input
@@ -50,7 +51,9 @@ if __name__ == '__main__':
     pattern_loop = pattern_loop - BASE_ADDRESS
 
     print "Found {0} patterns.".format(len(pattern_offsets))
-    print pattern_offsets
+
+    if args.verbose:
+        print pattern_offsets
 
     tracks_data = []
     tracks_lengths = dict()
@@ -111,9 +114,10 @@ if __name__ == '__main__':
         if lines == -1:
             break
 
-        print 'Track with offset: {0}'.format(offset)
-        # print [hex(no) for no in track_data]
-        print track_data
+        if args.verbose:
+            print 'Track with offset: {0}'.format(offset)
+            # print [hex(no) for no in track_data]
+            print track_data
 
         tracks_data.append(track_data)
         tracks_lengths[offset] = track_data_length
@@ -141,7 +145,7 @@ if __name__ == '__main__':
     for track in tracks_data:
         for entry in track:
             if isinstance(entry, int):
-                data.append(entry)              # emptry cells.
+                data.append(entry)              # empty cells.
             else:
                 data.append(len(entry))         # number of effects.
                 for effect in entry:

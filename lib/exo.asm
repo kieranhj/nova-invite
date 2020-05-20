@@ -12,7 +12,7 @@ LITERAL_SEQUENCES_NOT_USED = 1
 ; shorter and slightly faster code.
 MAX_SEQUENCE_LENGTH_256 = 1
 ; Experimental.
-INLINE_GET_BYTE=1
+INLINE_GET_BYTE = 1
 
 decrunch_table = $101 ; yes! we have enough stack space to use page 1 here
 ;.decrunch_table SKIP 156
@@ -36,7 +36,7 @@ IF get_crunched_byte_copy_end-get_crunched_byte_copy <> get_crunched_byte_code_e
 ENDIF
 
 MACRO GET_CRUNCHED_BYTE
-IF INLINE_GET_BYTE
+IF INLINE_GET_BYTE = 0
         jsr get_crunched_byte
 ELSE
 {

@@ -1,4 +1,5 @@
 MODE7
+A%=0:X%=1:R%=USR(&FFF4):M%=(R%DIV256)AND255
 tstaddr = &8008
 values = &90
 unique = &80
@@ -67,10 +68,12 @@ RTS
 ]
 NEXT
 CALL CODE
-PRINT"NOVA 2020 INVITE by"'"the BITSHIFTERS COLLECTIVE"'"and TORMENT"
+PRINT"NOVA ONLINE INVITE by"'"the BITSHIFTERS COLLECTIVE"'"and TORMENT."
+PRINT'"OUTLINE ONLINE party version."
+IF NOT(M%=3 OR M%=6) THEN PRINT'"Sorry, this demo requires a BBC Master.":END
 PRINT'"Detected ";16-?&90;" SWRAM banks:";
 IF ?&90 <> 16 THEN FOR X% = ?&90 TO 15 : PRINT;" ";X%?&90; : NEXT
-IF ?&90 > (16-4) THEN PRINT'"Sorry this demo requires 4x SWRAM banks.":END
+IF ?&90 > (16-4) THEN PRINT'"Sorry, this demo requires 4x SWRAM banks.":END
 PRINT'"Loading...";
 ON ERROR ON ERROR OFF:*RUN INVITE
 *RUN INVITE

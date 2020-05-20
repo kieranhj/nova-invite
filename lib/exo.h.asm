@@ -17,3 +17,5 @@ skip 1                      ; LDA abs
 .get_crunched_byte_code
 skip 7                      ; inc INCPOS: bne no_carry: inc INPOS+1: .no_carry RTS
 .get_crunched_byte_code_end
+
+.zp_stash_y     skip 1

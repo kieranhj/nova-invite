@@ -11,6 +11,8 @@ LITERAL_SEQUENCES_NOT_USED = 1
 ; the -M256 flag) then the following line can be uncommented for
 ; shorter and slightly faster code.
 MAX_SEQUENCE_LENGTH_256 = 1
+; Experimental.
+INLINE_GET_BYTE=1
 
 decrunch_table = $101 ; yes! we have enough stack space to use page 1 here
 ;.decrunch_table SKIP 156
@@ -33,23 +35,27 @@ IF get_crunched_byte_copy_end-get_crunched_byte_copy <> get_crunched_byte_code_e
         ERROR "get_crunched_byte function size mismatch."
 ENDIF
 
-MACRO GET_CRUNCHED_BYTE_INLINE
+MACRO GET_CRUNCHED_BYTE
+IF INLINE_GET_BYTE
+        jsr get_crunched_byte
+ELSE
 {
-        sty stash_y                     ; 3c
+        sty zp_stash_y                  ; 3c
         ldy #0                          ; 2c
         lda (INPOS), Y                  ; 5c
-        ldy stash_y                     ; 3c
+        ldy zp_stash_y                  ; 3c
         inc INPOS                       ; 5c
         bne s0a                         ; 2/3c
         inc INPOS+1                     ; 5c
         .s0a
 }                                       ; 21c/25c
+ENDIF
 ENDMACRO
 
 ;; refill bits is always inlined
 MACRO mac_refill_bits
         pha
-        jsr get_crunched_byte
+        GET_CRUNCHED_BYTE
         rol a
         sta zp_bitbuf
         pla
@@ -73,7 +79,7 @@ MACRO mac_get_bits
 .gb_get_hi
         sec
         sta zp_bits_hi
-        jsr get_crunched_byte
+        GET_CRUNCHED_BYTE
 .skip
 }
 ENDMACRO
@@ -98,7 +104,8 @@ ENDMACRO
 .gb_get_hi
         sec
         sta zp_bits_hi
-        jmp get_crunched_byte
+        GET_CRUNCHED_BYTE
+        rts
 ENDIF
 ; -------------------------------------------------------------------
 ; no code below this comment has to be modified in order to generate
@@ -207,7 +214,7 @@ ENDIF
         dec zp_dest_hi
 .no_hi_decr
         dey
-        jsr get_crunched_byte
+        GET_CRUNCHED_BYTE
         sta (zp_dest_lo),y
 ; -------------------------------------------------------------------
 ; fetch sequence length index (15 bytes)
@@ -219,7 +226,7 @@ ENDIF
 .no_literal1
         asl a
         bne nofetch8
-        jsr get_crunched_byte
+        GET_CRUNCHED_BYTE
         rol a
 .nofetch8
         inx
@@ -269,7 +276,7 @@ ENDIF
         asl zp_bitbuf
         bne gbnc2_ok
         tax
-        jsr get_crunched_byte
+        GET_CRUNCHED_BYTE
         rol a
         sta zp_bitbuf
         txa
@@ -336,7 +343,9 @@ IF MAX_SEQUENCE_LENGTH_256=0
 ENDIF
 IF LITERAL_SEQUENCES_NOT_USED=0
 .get_literal_byte
-        jsr get_crunched_byte
+        php
+        GET_CRUNCHED_BYTE
+        plp
         bcs literal_byte_gotten
         CHECK_SAME_PAGE_AS literal_byte_gotten
 ENDIF
@@ -346,11 +355,11 @@ ENDIF
 .exit_or_lit_seq
 IF LITERAL_SEQUENCES_NOT_USED=0
         beq decr_exit
-        jsr get_crunched_byte
+        GET_CRUNCHED_BYTE
 IF MAX_SEQUENCE_LENGTH_256=0
         sta zp_len_hi
 ENDIF
-        jsr get_crunched_byte
+        GET_CRUNCHED_BYTE
         tax
         bcs copy_next
         CHECK_SAME_PAGE_AS copy_next

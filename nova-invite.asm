@@ -1127,8 +1127,10 @@ CLEAR &C000, &E000
 ORG HAZEL_START
 GUARD HAZEL_TOP
 .event_data
-incbin "build/events.bin"
+incbin "build/events_reduced.bin"
 .event_data_end
+
+SAVE "build/EVENTS", event_data, event_data_end
 
 PRINT "------"
 PRINT "EVENTS"

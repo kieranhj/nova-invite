@@ -16,6 +16,13 @@ if %ERRORLEVEL% neq 0 (
 	exit /b 1
 )
 
+python bin\aks_channel_parse_as_events.py build\events.bin -o build\events_reduced.bin
+
+if %ERRORLEVEL% neq 0 (
+	echo Failed to parse events file 'events.bin'...
+	exit /b 1
+)
+
 echo Building INVITE...
 bin\beebasm.exe -i nova-invite.asm -v > compile.txt
 

@@ -606,7 +606,7 @@ GUARD screen3_addr + RELOC_SPACE
     ; next->display
     ; prev->next
     ; set CRTC R12 (display HI)
-    ldx #12:stx &fe00
+    lda #12:sta &fe00
     lda next_buffer_HI
     lsr a:lsr a:lsr a
     sta &fe01
@@ -629,7 +629,7 @@ GUARD screen3_addr + RELOC_SPACE
     ; prev->display
     ; next<>next
     ; set CRTC R12 (display HI)
-    ldx #12:stx &fe00
+    lda #12:sta &fe00
     lda prev_buffer_HI
     pha
     lsr a:lsr a:lsr a

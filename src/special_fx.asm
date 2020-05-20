@@ -23,6 +23,8 @@
     inc writeptr+1
     dex
     bne loop
+    CHECK_SAME_PAGE_AS loop
+
     rts
 }
 
@@ -142,6 +144,7 @@ quad_writeptr = temp+3
 
     dec quad_line_count
     bne loop
+    CHECK_SAME_PAGE_AS loop
 
     rts
 }
@@ -180,6 +183,7 @@ quad_writeptr = temp+3
 
     lda quad_temp_y:clc:adc #16:tay
     bne loop
+    CHECK_SAME_PAGE_AS loop
     rts
 }
 
@@ -224,6 +228,7 @@ quad_writeptr = temp+3
 
     lda quad_temp_y:clc:adc #16:tay
     bne loop
+    CHECK_SAME_PAGE_AS loop
     rts
 }
 
@@ -401,8 +406,8 @@ special_fx_vubars_reg_copy = &A0
     jsr set_all_black_palette
 
     \\ TONE3 (noise) doesn't have a HI byte so make one.
-    lda VGM_FX_TONE3_LO
-    sta VGM_FX_TONE2_HI+1
+    lda vgm_fx+VGM_FX_TONE3_LO
+    sta special_fx_vars+VGM_FX_TONE2_HI+1
 
     ldx #3
     .loop

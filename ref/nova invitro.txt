@@ -354,6 +354,8 @@ Pre-mortem thoughts!
 - Preprocess the event track anyway to reduce size.
 - Could preprocess the event track to allocate screen buffers programatically?
 - Debug status bar takes up valuable preloading / preparation time!
+- Think it's OK for debug build to be Master only - use ANDY?
+- Debug code takes up RAM, moves stuff around.
 
 Silent preload?
 Enough time to preload 2 anims during long static and want to be able to swap between them rapidly.

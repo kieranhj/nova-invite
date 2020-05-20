@@ -595,6 +595,7 @@ lz_window_dst = lz_store_buffer + 1 ; window write ptr LO (2 bytes) - index, 3 r
 
     cpy #255            ; 255 signals byte extend       
     beq fetch
+    CHECK_SAME_PAGE_AS fetch
     tax
     lda zp_temp+0
 

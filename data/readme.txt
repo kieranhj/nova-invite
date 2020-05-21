@@ -2,9 +2,9 @@
 ~NOVA ONLINE INVITE~
 ~~~~~~~~~~~~~~~~~~~~
 
-Proudly brought to you by the
-BITSHIFTERS COLLECTIVE and
-TORMENT.
+Proudly brought to you by
+the BITSHIFTERS COLLECTIVE
+and TORMENT.
 
 Presented at the Outline Online
 demoparty on 23rd May 2020.
@@ -12,15 +12,15 @@ demoparty on 23rd May 2020.
 CREDITS
 ~~~~~~~
 Code by kieranhj
-Music and sequencing by Rhino
+Music, anims & sequencing by Rhino
 Graphics by Spiny
-Code by Henley
+Music code by Henley
 Additional anims by 0xC0DE
 
 THANKS
 ~~~~~~
-Inspiration for this demo came from
-the KAOS part of the Budbrain
+Inspiration for this demo came
+from the KAOS part of the Budbrain
 Megademo at the Amiga Conference 1990.
 
 A big shout out to Diablo and Pyscho

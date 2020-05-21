@@ -36,7 +36,7 @@ python bin/png2bbc.py --quiet --fixed-16 -o build/anim_triangle.bin "./data/anim
 python bin/png2bbc.py --quiet --fixed-16 -o build/anim_claw.bin "./data/anims/palette_shift_03_64x256 (claw and ball).png" 2 
 python bin/png2bbc.py --quiet --fixed-16 -o build/anim_star.bin "./data/anims/palette_shift_04_64x256 (star expand).png" 2 
 python bin/png2bbc.py --quiet --fixed-16 -o build/anim_circle.bin "./data/anims/palette_shift_05_64x256 (circle expand).png" 2 
-python bin/png2bbc.py --quiet --fixed-16 -o build/anim_faces.bin "./data/anims/palette_shift_06_64x256 (acid faces).png" 2 
+python bin/png2bbc.py --quiet --fixed-16 -o build/anim_faces.bin "./data/anims/palette_shift_06_64x256 (acid faces - MODIFIED).png" 2 
 python bin/png2bbc.py --quiet --fixed-16 -o build/anim_square.bin "./data/anims/palette_shift_07_64x256 (square dance).png" 2 
 python bin/png2bbc.py --quiet --fixed-16 -o build/anim_kaleidoscope.bin "./data/anims/palette_shift_08_64x256 (kaleidoscope).png" 2 
 

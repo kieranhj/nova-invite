@@ -1029,12 +1029,10 @@ INCBIN "build/anim_kaleidoscope.exo"
 INCBIN "build/slide_firealarm.exo"
 .exo_image_atari_bee
 INCBIN "build/image_atari_bee.exo"
-.exo_image_half_bee
-INCBIN "build/image_half_bee.exo"
 .exo_image_rocka
 INCBIN "build/image_rocka_1.exo"
-.exo_image_nova_url
-INCBIN "build/image_nova_url.exo"
+.exo_image_rocka_2
+INCBIN "build/image_rocka_2.exo"
 
 .bank1_end
 
@@ -1066,6 +1064,8 @@ INCBIN "build/anim_swirl.exo"
 INCBIN "build/anim_tunnel.exo"
 .exo_anims_particl
 INCBIN "build/anim_particl.exo"
+.exo_image_nova_url
+INCBIN "build/image_nova_url.exo"
 
 .bank2_end
 

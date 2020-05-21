@@ -3,7 +3,7 @@
 \ *	STNICC BEEB INTRO
 \ ******************************************************************
 
-_DEBUG = TRUE
+_DEBUG = FALSE
 _DEBUG_RASTERS = FALSE
 _DEBUG_BEGIN_PAUSED = _DEBUG AND FALSE
 _DEBUG_SHOW_PRELOAD = _DEBUG AND FALSE

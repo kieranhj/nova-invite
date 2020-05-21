@@ -267,6 +267,17 @@ GUARD screen3_addr + RELOC_SPACE
 	ldy #HI(reloc_to_end - reloc_to_start + &ff)
 	jsr disksys_copy_block
 
+    \\ Load debug in ANDY
+    IF _DEBUG
+    {
+        SELECT_DEBUG_SLOT
+        ldx #LO(debug_filename)
+        ldy #HI(debug_filename)
+        lda #HI(&8000)
+        jsr disksys_load_file
+    }
+    ENDIF
+
     \\ Load music into SWRAM (if available)
     {
         SWRAM_SELECT SLOT_MUSIC
@@ -780,6 +791,9 @@ include "lib/disksys.asm"
 .bank0_filename     EQUS "BANK0", 13
 .bank1_filename     EQUS "BANK1", 13
 .bank2_filename     EQUS "BANK2", 13
+IF _DEBUG
+.debug_filename     EQUS "DEBUG", 13
+ENDIF
 
 include "src/control_codes.asm"
 include "src/anims_data.asm"
@@ -1053,11 +1067,6 @@ INCBIN "build/anim_tunnel.exo"
 .exo_anims_particl
 INCBIN "build/anim_particl.exo"
 
-.debug_start
-include "src/debug_tracker.asm"
-include "lib/debug_mode4.asm"
-.debug_end
-
 .bank2_end
 
 SAVE "build/BANK2", bank2_start, bank2_end, bank2_start
@@ -1066,7 +1075,6 @@ PRINT "------"
 PRINT "BANK 2"
 PRINT "------"
 PRINT "SIZE =", ~bank2_end-bank2_start
-PRINT "DEBUG CODE size =",~debug_end-debug_start
 PRINT "HIGH WATERMARK =", ~P%
 PRINT "FREE =", ~&C000-P%
 PRINT "------"
@@ -1146,4 +1154,31 @@ PRINT "EVENTS"
 PRINT "------"
 PRINT "SIZE =", ~event_data_end-event_data
 PRINT "FREE =", ~HAZEL_TOP-event_data_end
+PRINT "------"
+
+\ ******************************************************************
+\ *	ANDY: DEBUG ONLY
+\ ******************************************************************
+
+CLEAR &8000, &9000
+ORG &8000
+GUARD &9000
+.andy_start
+
+.debug_start
+include "src/debug_tracker.asm"
+include "lib/debug_mode4.asm"
+.debug_end
+
+.andy_end
+
+SAVE "build/DEBUG", andy_start, andy_end, andy_start
+
+PRINT "----"
+PRINT "ANDY"
+PRINT "----"
+PRINT "SIZE =", ~andy_end-andy_start
+PRINT "DEBUG CODE size =",~debug_end-debug_start
+PRINT "HIGH WATERMARK =", ~P%
+PRINT "FREE =", ~&9000-P%
 PRINT "------"

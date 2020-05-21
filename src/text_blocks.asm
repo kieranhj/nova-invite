@@ -69,11 +69,13 @@ EQUS 0
 
 .text_block_greetz3
 EQUS 12; cls
-;            "|--------|"
-EQUS 31,0,0, "GREETZ*"
-EQUS 31,2,6, "BUDBRAIN"
-EQUS 31,3,11,"INVERSE"
-EQUS 31,8,16,"PHASE"
+;             "|--------|"
+EQUS 31,0,0,  "GREETZ*"
+EQUS 31,2,6,  "BUDBRAIN"
+EQUS 31,3,11, "CTRIX"
+EQUS 31,4,16, "TRIXTER"
+EQUS 31,5,21, "INVERSE"
+EQUS 31,10,26,"PHASE"
 EQUS 0
 
 .text_slide_beach

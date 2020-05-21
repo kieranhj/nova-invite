@@ -3,7 +3,8 @@
 \ *	DEBUG TRACKER HEADER
 \ ******************************************************************
 
-SLOT_DEBUG = SLOT_BANK2
+;SLOT_DEBUG = SLOT_BANK2
+BANK_ANDY = &80
 
 debug_msg_play = 0
 debug_msg_paused = 1
@@ -33,7 +34,7 @@ ENDMACRO
 MACRO SELECT_DEBUG_SLOT
 {
     lda &f4:pha
-    lda swram_slots_base + SLOT_DEBUG
+    lda #BANK_ANDY      ;swram_slots_base + SLOT_DEBUG
     sta &f4:sta &fe30
 }
 ENDMACRO

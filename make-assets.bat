@@ -19,8 +19,8 @@ python bin/png2bbc.py --quiet -o build/image_wsm_graf.bin ./data/images/wsm_graf
 python bin/png2bbc.py --quiet -o build/image_nova_url.bin ./data/images/Layout_D_v03_no_twenty.png 4 
 python bin/png2bbc.py --quiet -o build/image_atari_bee.bin ./data/images/bee_v03.png 4
 python bin/png2bbc.py --quiet -o build/image_half_bee.bin ./data/images/hybrid_v03_smoothed.png 4
-python bin/png2bbc.py --quiet -o build/image_rocka_1.bin ./data/images/lrocka_v03.png 4
-python bin/png2bbc.py --quiet -o build/image_rocka_2.bin ./data/images/lrockb_v04.png 4
+python bin/png2bbc.py --quiet -o build/image_rocka_1.bin ./data/images/lrocka_v04_resized.png 4
+python bin/png2bbc.py --quiet -o build/image_rocka_2.bin ./data/images/lrockb_v05_resized.png 4
 
 rem python bin/png2bbc.py --quiet -o build/slide_dates.bin ./data/images/slide_01_dates_v3.png 4
 python bin/png2bbc.py --quiet -o build/slide_beach.bin ./data/detexted/slide_02_beach_v4_notext.png 4

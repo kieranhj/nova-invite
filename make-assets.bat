@@ -36,9 +36,9 @@ python bin/png2bbc.py --quiet --fixed-16 -o build/anim_triangle.bin "./data/anim
 python bin/png2bbc.py --quiet --fixed-16 -o build/anim_claw.bin "./data/anims/palette_shift_03_64x256 (claw and ball).png" 2 
 python bin/png2bbc.py --quiet --fixed-16 -o build/anim_star.bin "./data/anims/palette_shift_04_64x256 (star expand).png" 2 
 python bin/png2bbc.py --quiet --fixed-16 -o build/anim_circle.bin "./data/anims/palette_shift_05_64x256 (circle expand).png" 2 
-python bin/png2bbc.py --quiet --fixed-16 -o build/anim_faces.bin "./data/anims/palette_shift_06_64x256 (acid faces - MODIFIED).png" 2 
+python bin/png2bbc.py --quiet --fixed-16 -o build/anim_faces.bin "./data/anims/palette_shift_06b_64x256 (acid faces).png" 2 
 python bin/png2bbc.py --quiet --fixed-16 -o build/anim_square.bin "./data/anims/palette_shift_07_64x256 (square dance).png" 2 
-python bin/png2bbc.py --quiet --fixed-16 -o build/anim_kaleidoscope.bin "./data/anims/palette_shift_08_64x256 (kaleidoscope).png" 2 
+python bin/png2bbc.py --quiet --fixed-16 -o build/anim_kaleidoscope.bin "./data/anims/palette_shift_08b_64x256 (kaleidoscope).png" 2 
 
 python bin\png2bbcfont.py --transparent-rgb 255 0 0 --transparent-output 0 --glyph-dim 16 16 -o build\font16.bin --quiet --max-glyphs 59 data\fonts\16_x_16_1_col.png 4
 python bin\png2bbcfont.py --transparent-rgb 0 255 0 --transparent-output 0 --glyph-dim 24 36 -o build\font24x36_rle.bin --rle --quiet data\fonts\24_x_36_1_col_v06.png 4

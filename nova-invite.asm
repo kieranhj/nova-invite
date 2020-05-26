@@ -1008,7 +1008,7 @@ PRINT "------"
 \ *	BANK 1: ANIMS
 \ ******************************************************************
 
-CLEAR &8000, &C000
+CLEAR &8000, &c000
 ORG &8000
 GUARD &C000
 .bank1_start
@@ -1018,8 +1018,6 @@ INCBIN "build/anim_triangle.exo"
 INCBIN "build/anim_star.exo"
 .exo_anims_circle
 INCBIN "build/anim_circle.exo"
-.exo_anims_faces
-INCBIN "build/anim_faces.exo"
 .exo_anims_square
 INCBIN "build/anim_square.exo"
 .exo_anims_kaleidoscope
@@ -1143,17 +1141,23 @@ HAZEL_TOP=&DF00         ; looks like last page is FS control data
 CLEAR &C000, &E000
 ORG HAZEL_START
 GUARD HAZEL_TOP
+.hazel_start
 .event_data
 incbin "build/events_reduced.bin"
 .event_data_end
 
-SAVE "build/EVENTS", event_data, event_data_end
+.exo_anims_faces
+INCBIN "build/anim_faces.exo"
+.hazel_end
+
+SAVE "build/EVENTS", hazel_start, hazel_end
 
 PRINT "------"
 PRINT "EVENTS"
 PRINT "------"
 PRINT "SIZE =", ~event_data_end-event_data
-PRINT "FREE =", ~HAZEL_TOP-event_data_end
+PRINT "HIGH WATERMARK =", ~P%
+PRINT "FREE =", ~HAZEL_TOP-hazel_end
 PRINT "------"
 
 \ ******************************************************************

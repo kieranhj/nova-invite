@@ -9,9 +9,12 @@ and TORMENT.
 Presented at the Outline Online
 demoparty on 23rd May 2020.
 
+Winning 2nd place in the combined
+demo compo!
+
 CREDITS
 ~~~~~~~
-Code by kieranhj
+Code by Kieran
 Music, anims & sequencing by Rhino
 Graphics by Spiny
 Music code by Henley
@@ -28,6 +31,13 @@ of Budbrain for such a legendary prod!
 
 Check it out:
 https://www.pouet.net/prod.php?which=4063
+
+The music and sequencing was composed
+using Arkos Tracker 2. Many thanks to
+Julien Nevo for developing this tool.
+
+Find out more:
+https://www.julien-nevo.com/arkostracker/
 
 
 CONTACT
@@ -60,3 +70,4 @@ issues.
 RELEASES
 ~~~~~~~~
 23/05/2020 - Party version
+26/05/2020 - Final version

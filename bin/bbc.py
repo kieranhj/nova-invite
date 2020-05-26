@@ -70,7 +70,8 @@ def find_closest_fixed(p):
         dr=p[0]-fixed_16_colours[i][0]
         dg=p[1]-fixed_16_colours[i][1]
         db=p[2]-fixed_16_colours[i][2]
-        dist_sq=dr*dr+dg*dg+db*db
+        #dist_sq=dr*dr+dg*dg+db*db
+        dist_sq=abs(dr)+abs(dg)+abs(db)
 
         if best_dist_sq is None or dist_sq<best_dist_sq:
             best_dist_sq=dist_sq

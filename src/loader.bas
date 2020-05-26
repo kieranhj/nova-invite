@@ -14,7 +14,7 @@ P%=CODE
 [OPT P
 SEI
 LDY #15        \\ unique values (-1) to find
-STY UsrDDR     \\ set user via DDRB low bits as output - required for Solidisk SW RAM
+\\STY UsrDDR     \\ set user via DDRB low bits as output - required for Solidisk SW RAM
 TYA            \\ A can start anywhere less than 256-64 as it just needs to allow for enough numbers not to clash with rom, tst and uninitialised tst values
 .next_val
 LDX #15        \\ sideways bank
@@ -35,7 +35,7 @@ BPL next_val
 \\ Try to swap each rom value with a unique test value - top down wouldn't work for Solidisk
 LDX #0         \\ count up to allow for Solidisk only having 3 select bits
 .swap
-STX UsrDat     \\ set Solidisk SWRAM index
+\\STX UsrDat     \\ set Solidisk SWRAM index
 STX RamSel     \\ set RamSel incase it is used
 STX RomSel     \\ set RomSel as it will be needed to read, but is also sometimes used to select write
 LDA unique,X
@@ -51,7 +51,7 @@ STX RomSel
 LDA tstaddr
 CMP unique,X   \\ if it has changed, but is not this value, it will be picked up in a later bank
 BNE not_swr
-STX UsrDat     \\ set Solidisk SWRAM index
+\\STX UsrDat     \\ set Solidisk SWRAM index
 STX RamSel     \\ set RamSel incase it is used
 LDA values,X
 STA tstaddr
@@ -69,11 +69,13 @@ RTS
 NEXT
 CALL CODE
 PRINT"NOVA ONLINE INVITE by"'"the BITSHIFTERS COLLECTIVE"'"and TORMENT."
-PRINT'"OUTLINE ONLINE party version."
+PRINT'"(Final version)"
+PRINT'"Winning 2nd place in the combined"'"demo compo at the OUTLINE ONLINE party!"
 IF NOT(M%=3 OR M%=6) THEN PRINT'"Sorry, this demo requires a BBC Master.":END
 PRINT'"Detected ";16-?&90;" SWRAM banks:";
 IF ?&90 <> 16 THEN FOR X% = ?&90 TO 15 : PRINT;" ";X%?&90; : NEXT
 IF ?&90 > (16-4) THEN PRINT'"Sorry, this demo requires 4x SWRAM banks.":END
+IF PAGE > &E00 THEN PRINT'"Sorry, this demo requires PAGE at &E00.":END
 PRINT'"Loading...";
 ON ERROR ON ERROR OFF:*RUN INVITE
 *RUN INVITE

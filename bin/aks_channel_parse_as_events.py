@@ -141,6 +141,8 @@ if __name__ == '__main__':
     data.append(BASE_ADDRESS % 256)
     data.append(BASE_ADDRESS >> 8)
 
+    count = 0
+
     # Output tracks.
     for track in tracks_data:
         for entry in track:
@@ -151,8 +153,11 @@ if __name__ == '__main__':
                 for effect in entry:
                     data.append(effect % 256)   # event data
                     data.append(effect >> 8)    # event code
+                    count += 1
 
     assert(len(data) == offset_to_track)
+
+    print "Found {0} events total.".format(count)
 
     output_file = open(dst, 'wb')
     print "Writing {0} bytes to output.".format(len(data))

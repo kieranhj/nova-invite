@@ -57,7 +57,7 @@
     EQUW 0,                         0   ; c203
     EQUW exo_anims_star,            SLOT_BANK1   ; c204
     EQUW exo_anims_circle,          SLOT_BANK1   ; c205
-    EQUW exo_anims_faces,           SLOT_BANK1   ; c206
+    EQUW exo_anims_faces,           SLOT_MUSIC   ; c206
     EQUW exo_anims_square,          SLOT_BANK1   ; c207
     EQUW exo_anims_kaleidoscope,    SLOT_BANK1   ; c208
     EQUW 0,                         0   ; c209

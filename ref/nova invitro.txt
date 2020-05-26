@@ -379,3 +379,11 @@ Last things to do / bugs.
 - Remove loading glitch. - DONE
 - Python script to parse events binary. - STARTED
 - Check no page boundary crosses in Exo decompressor. - DONE
+
+Final count:
+- 25 patterns / tracks
+- 1851 events
+- 74 events / pattern
+- 5375 bytes
+Predictably compresses well to 1507 bytes.
+Technically need random access for events, as patterns can reuse tracks.

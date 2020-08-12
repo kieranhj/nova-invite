@@ -71,7 +71,7 @@ CALL CODE
 PRINT"NOVA ONLINE INVITE by"'"the BITSHIFTERS COLLECTIVE"'"and TORMENT."
 PRINT'"(Final version)"
 PRINT'"Winning 2nd place in the combined"'"demo compo at the OUTLINE ONLINE party!"
-IF NOT(M%=3 OR M%=6) THEN PRINT'"Sorry, this demo requires a BBC Master.":END
+IF NOT(M%=3 OR M%=5) THEN PRINT'"Sorry, this demo requires a BBC Master.":END
 PRINT'"Detected ";16-?&90;" SWRAM banks:";
 IF ?&90 <> 16 THEN FOR X% = ?&90 TO 15 : PRINT;" ";X%?&90; : NEXT
 IF ?&90 > (16-4) THEN PRINT'"Sorry, this demo requires 4x SWRAM banks.":END

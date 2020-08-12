@@ -71,3 +71,4 @@ RELEASES
 ~~~~~~~~
 23/05/2020 - Party version
 26/05/2020 - Final version
+03/06/2020 - Fix Master Compact check

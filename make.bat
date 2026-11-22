@@ -7,6 +7,8 @@ echo "Usage: make <AKS filename>"
 exit /b 1
 
 :args_count_ok
+rem bin\beebasm.exe no longer runs (missing DLL); default to beebasm 1.11 in D:\beeb\third-party (same output).
+if "%BEEBASM%"=="" set BEEBASM=..\..\third-party\beebasm\beebasm.exe
 mkdir build
 echo Building EVENTS...
 bin\SongToRaw.exe -c 4 --dontEncodeSongSubsongMetadata --dontEncodeReferenceTables --dontEncodeSpeedTracks --dontEncodeEventTracks --dontEncodeInstruments --dontEncodeArpeggios --dontEncodePitches --dontEncodetranspositionsInLinker --dontEncodeHeightsInLinker -bin -adr 0xC300 %1 build\events.bin
@@ -24,7 +26,7 @@ if %ERRORLEVEL% neq 0 (
 )
 
 echo Building INVITE...
-bin\beebasm.exe -i nova-invite.asm -v > compile.txt
+%BEEBASM% -i nova-invite.asm -v > compile.txt
 
 if %ERRORLEVEL% neq 0 (
 	echo Failed to build code!
@@ -33,7 +35,7 @@ if %ERRORLEVEL% neq 0 (
 
 echo Building DISC...
 mkdir disc
-bin\beebasm.exe -i disc-build.asm -do disc\nova-invite.ssd -title NOVA-INVITE -opt 3 -v
+%BEEBASM% -i disc-build.asm -do disc\nova-invite.ssd -title NOVA-INVITE -opt 3 -v
 
 if %ERRORLEVEL% neq 0 (
 	echo Failed to build disc image 'nova-invite.ssd'

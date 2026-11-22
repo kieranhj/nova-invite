@@ -8,9 +8,9 @@ def save_file(header,data,path,options):
     if path is not None:
         with open(path,'wb') as f:
             if header is not None:
-                f.write(''.join([chr(x) for x in header]))
+                f.write(bytes(bytearray(header)))
 
-            f.write(''.join([chr(x) for x in data]))
+            f.write(bytes(bytearray(data)))
 
         if options.inf:
             with open('%s.inf'%path,'wt') as f: pass
@@ -20,11 +20,11 @@ def save_file(header,data,path,options):
 
 def main(options):
     if options.mode<0 or options.mode>6:
-        print>>sys.stderr,'FATAL: invalid mode: %d'%options.mode
+        print('FATAL: invalid mode: %d'%options.mode, file=sys.stderr)
         sys.exit(1)
 
     if options.glyph_dim is None:
-        print>>sys.stderr,'FATAL: glyph dimensions are required'
+        print('FATAL: glyph dimensions are required', file=sys.stderr)
         sys.exit(1)
 
     if options.mode in [0,3,4,6]:
@@ -43,18 +43,18 @@ def main(options):
     
     if options.palette is not None:
         if len(options.palette)!=len(palette):
-            print>>sys.stderr,'FATAL: invalid mode %d palette - must have %d entries'%(options.mode,n)
+            print('FATAL: invalid mode %d palette - must have %d entries'%(options.mode,n), file=sys.stderr)
             sys.exit(1)
 
         palette=[]
         for i in range(len(options.palette)):
             if options.palette[i] not in "01234567":
-                print>>sys.stderr,'FATAL: invalid BBC colour: %s'%options.palette[i]
+                print('FATAL: invalid BBC colour: %s'%options.palette[i], file=sys.stderr)
                 sys.exit(1)
 
             for j in range(len(options.palette)):
                 if i!=j and options.palette[i]==options.palette[j]:
-                    print>>sys.stderr,'FATAL: duplicate BBC colour: %s'%options.palette[i]
+                    print('FATAL: duplicate BBC colour: %s'%options.palette[i], file=sys.stderr)
                     sys.exit(1)
 
             palette.append(int(options.palette[i]))
@@ -121,7 +121,7 @@ def main(options):
 
         glyph_widths.append(w)
     
-    print glyph_widths
+    print(glyph_widths)
 
     pixel_data=[]
     data_offsets=[]
@@ -181,15 +181,15 @@ def main(options):
         if options.max_glyphs is not None and glyphs>=options.max_glyphs:
             break
 
-    print '%d glyphs at %d bytes BBC data'%(glyphs,len(pixel_data))
+    print('%d glyphs at %d bytes BBC data'%(glyphs,len(pixel_data)))
 
     header_data = []
     if options.rle:
         for offset in data_offsets:
             a=offset + glyphs*2
             header_data.append(a % 256)
-            header_data.append(a / 256)
-        print 'plus %d bytes header'%(len(header_data))
+            header_data.append(a // 256)
+        print('plus %d bytes header'%(len(header_data)))
 
     save_file(header_data,pixel_data,options.output_path,options)
 

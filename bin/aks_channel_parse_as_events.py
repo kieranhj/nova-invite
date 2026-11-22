@@ -50,10 +50,10 @@ if __name__ == '__main__':
     pattern_loop = get_byte(input_file) | get_byte(input_file) << 8
     pattern_loop = pattern_loop - BASE_ADDRESS
 
-    print "Found {0} patterns.".format(len(pattern_offsets))
+    print("Found {0} patterns.".format(len(pattern_offsets)))
 
     if args.verbose:
-        print pattern_offsets
+        print(pattern_offsets)
 
     tracks_data = []
     tracks_lengths = dict()
@@ -115,9 +115,9 @@ if __name__ == '__main__':
             break
 
         if args.verbose:
-            print 'Track with offset: {0}'.format(offset)
+            print('Track with offset: {0}'.format(offset))
             # print [hex(no) for no in track_data]
-            print track_data
+            print(track_data)
 
         tracks_data.append(track_data)
         tracks_lengths[offset] = track_data_length
@@ -127,7 +127,7 @@ if __name__ == '__main__':
 
     data = bytearray()
 
-    print "Found {0} tracks.".format(tracks)
+    print("Found {0} tracks.".format(tracks))
 
     # Output header.
     for pattern in pattern_offsets:
@@ -157,9 +157,9 @@ if __name__ == '__main__':
 
     assert(len(data) == offset_to_track)
 
-    print "Found {0} events total.".format(count)
+    print("Found {0} events total.".format(count))
 
     output_file = open(dst, 'wb')
-    print "Writing {0} bytes to output.".format(len(data))
+    print("Writing {0} bytes to output.".format(len(data)))
     output_file.write(data)
     output_file.close()

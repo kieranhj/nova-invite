@@ -18,8 +18,8 @@ The NOVA 2020 online party invite for the BBC Micro (Bitshifters): palette-cycli
 
 ## Build and run
 - `make`: runs `make.bat data\music\Acid_demo_21.aks` (the song added in the final-version commit; override with `make AKS=...`). Other targets: `make assets`, `make music`, `make help`.
-- **Currently fails**: `bin\aks_channel_parse_as_events.py` is Python 2 (`print` statements) and only Python 3 is installed. Needs a small port to Python 3; `bin\png2bbcfont.py` (used by `make assets`) and `bin\shellcmd.py` have Python 2 prints too.
-- Tools: everything is in `bin\` (this repo uses its own `bin\beebasm.exe`, not D:\beeb\Bin); `python` on PATH.
+- Works (2026-11-22). The Python tools in `bin\` (aks_channel_parse_as_events, png2bbc, png2bbcfont, bbc, png, shellcmd, adf_create, and vgmpacker's modules lz4enc/huffman/vgmparser) were ported to Python 3 on 2026-11-22; their output is byte-identical to the 2020 build (events, all images/fonts/anims, the music .vgc, and `disc\nova-invite.ssd`).
+- Tools: `bin\` (SongToRaw/SongToYM, exomizer); `python` (3) on PATH. `bin\beebasm.exe` no longer runs (missing DLL), so `make.bat`/`make-rhino.bat` use `%BEEBASM%`, default `..\..\third-party\beebasm\beebasm.exe` (beebasm 1.11, same output).
 - Output: `disc\nova-invite.ssd`. `run.bat` copies it to `..\jsbeeb-kieranhj\discs` and opens `runme.url` (local jsbeeb).
 
 ## Local changes
@@ -27,7 +27,7 @@ The NOVA 2020 online party invite for the BBC Micro (Bitshifters): palette-cycli
 
 ## Status and next steps
 - Released and finished (final-version merged 2020-05-26; Compact fix 2020-08-12). The uncommitted change is just debug switched on; probably revert rather than commit.
-- To build again: port `bin\aks_channel_parse_as_events.py` (and any other Python 2 tools) to Python 3.
+- Builds again with plain `make` (Python 3 port, 2026-11-22). vgmpacker's `-n` (Huffman) option was not exercised by the build and is untested on Python 3.
 
 ## See also
 - `README.md`; Arkos Tracker 2: https://www.julien-nevo.com/arkostracker/

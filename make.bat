@@ -7,8 +7,8 @@ echo "Usage: make <AKS filename>"
 exit /b 1
 
 :args_count_ok
-rem bin\beebasm.exe no longer runs (missing DLL); default to beebasm 1.11 in D:\beeb\third-party (same output).
-if "%BEEBASM%"=="" set BEEBASM=..\..\third-party\beebasm\beebasm.exe
+rem bin\beebasm.exe no longer runs (missing DLL); default to beebasm 1.11 in D:\tools\beeb\Bin (same output).
+if "%BEEBASM%"=="" set BEEBASM=..\..\Bin\beebasm.exe
 mkdir build
 echo Building EVENTS...
 bin\SongToRaw.exe -c 4 --dontEncodeSongSubsongMetadata --dontEncodeReferenceTables --dontEncodeSpeedTracks --dontEncodeEventTracks --dontEncodeInstruments --dontEncodeArpeggios --dontEncodePitches --dontEncodetranspositionsInLinker --dontEncodeHeightsInLinker -bin -adr 0xC300 %1 build\events.bin

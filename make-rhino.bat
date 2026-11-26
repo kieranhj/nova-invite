@@ -7,8 +7,8 @@ echo "Usage: make-rhino <AKS filename>"
 exit /b 1
 
 :args_count_ok
-rem bin\beebasm.exe no longer runs (missing DLL); default to beebasm 1.11 in D:\beeb\third-party (same output).
-if "%BEEBASM%"=="" set BEEBASM=..\..\third-party\beebasm\beebasm.exe
+rem bin\beebasm.exe no longer runs (missing DLL); default to beebasm 1.11 in D:\tools\beeb\Bin (same output).
+if "%BEEBASM%"=="" set BEEBASM=..\..\Bin\beebasm.exe
 mkdir build
 echo Building MUSIC...
 bin\SongToYM.exe --psg 1 %1 build\acid_demo.ym

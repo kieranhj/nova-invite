@@ -20,7 +20,7 @@ The NOVA 2020 online party invite for the BBC Micro (Bitshifters): palette-cycli
 - `make`: runs `make.bat data\music\Acid_demo_21.aks` (the song added in the final-version commit; override with `make AKS=...`). Other targets: `make assets`, `make music`, `make help`.
 - Works (2026-11-22). The Python tools in `bin\` (aks_channel_parse_as_events, png2bbc, png2bbcfont, bbc, png, shellcmd, adf_create, and vgmpacker's modules lz4enc/huffman/vgmparser) were ported to Python 3 on 2026-11-22; their output is byte-identical to the 2020 build (events, all images/fonts/anims, the music .vgc, and `disc\nova-invite.ssd`).
 - Tools: `bin\` (SongToRaw/SongToYM, exomizer); `python` (3) on PATH. `bin\beebasm.exe` no longer runs (missing DLL), so `make.bat`/`make-rhino.bat` use `%BEEBASM%`, default `..\..\third-party\beebasm\beebasm.exe` (beebasm 1.11, same output).
-- Output: `disc\nova-invite.ssd`. `run.bat` copies it to `..\jsbeeb-kieranhj\discs` and opens `runme.url` (local jsbeeb).
+- Output: `disc\nova-invite.ssd`. Run: jsbeeb-kieranhj, the local jsbeeb clone it used, was deleted on 2026-11-27 (the fork is on GitHub), and `run.bat` with it; open the disc at https://bbc.xania.org or in b2.
 
 ## Local changes
 - Uncommitted: `nova-invite.asm` sets `_DEBUG = TRUE` and `disc-build.asm` puts the `DEBUG` file on the disc (a debug build). Also on `wip/2026-11-tidy` (pushed 2026-11-21).
